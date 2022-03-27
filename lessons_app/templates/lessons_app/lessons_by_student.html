@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>Name: {{ request.user.first_name }}</p>
+<h3>My lessons</h3>
+{% for lesson in lessons %}
+<p>{{ lesson }}</p>
+{% endfor %}
+{% endblock content %}

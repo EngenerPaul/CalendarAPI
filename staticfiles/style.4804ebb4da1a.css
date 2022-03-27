@@ -1,0 +1,43 @@
+body {
+    background: rgb(245, 245, 241); /* Цвет фона */
+}
+
+/* base.html */
+/* Создание горизонтальной прокрутки */
+.testimonial-group > .row {
+overflow-x: auto;
+white-space: nowrap;
+}
+.testimonial-group > .row > .col-sm-4 {
+display: inline-block;
+float: none;
+}
+
+/* index.html */
+.card {
+    margin-bottom: 15px; /* добавляет расстояние между карточками */
+}
+
+.card-body {
+    padding-top: 0px; /* убирает отступ от границы в карточке */
+}
+
+.card-body-green {
+    padding: 16px;
+    padding-top: 0px;
+    background-color: rgb(181, 255, 230) /* выделение цветом дорогих карточек */
+}
+
+.card-cross {
+    height: 12px; /* устанавливает расстояние от крестика до текста карточки */
+}
+
+.card-cross-label {
+    float:right; /* перемещает крестик удаления карточки вправо */
+    height: 12px; 
+}
+
+.card-title a {
+    color: black; /* Убирает синие выделение цвета ссылок в карточке */
+    text-decoration: none; /* Убирает подчеркивание ссылок в карточке */
+}
