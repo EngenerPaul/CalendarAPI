@@ -9,9 +9,21 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.hashers import make_password
+
+from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
 
 from .models import Lesson
 from .forms import RegisterUserForm, AuthUserForm, AddLessonForm
+from .serializer import UserSerializer, LessonSerializer,\
+                        LessonAdminSerializer,\
+                        RegistrationSerializer, DelUserSerializer
 
 
 class LessonView(ListView):
@@ -83,18 +95,6 @@ class CustomLogOut(LogoutView):
     next_page = reverse_lazy('home_url')
 
 
-# class Profile(LoginRequiredMixin, TemplateView):
-#     """User profile"""
-
-#     model = User
-#     template_name = 'lessons_app/profile.html'
-#     context_object_name = 'user'
-
-#     def get_queryset(self):
-#         queryset = User.objects.get(pk=self.request.user.pk)
-#         return queryset
-
-
 class AddLessonView(LoginRequiredMixin, CreateView):
     model = Lesson
     template_name = 'lessons_app/add_lesson.html'
@@ -108,3 +108,105 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         self.object.student_id = self.request.user.pk
         self.object.save()
         return HttpResponseRedirect(reverse_lazy(self.success_url))
+
+
+#################################################################
+#                            DRF API                            #
+#################################################################
+
+class RegistrationAPI(CreateAPIView):
+    """ Registration new users """
+
+    queryset = User.objects.all()
+    serializer_class = RegistrationSerializer
+    permission_classes = [AllowAny]
+
+
+class DeleteUserAPI(DestroyAPIView):
+    """ Delete user """
+
+    queryset = User.objects.all()
+    serializer_class = DelUserSerializer
+    permission_classes = [IsAdminUser]
+
+
+class UsersAPI(ListAPIView):
+    """ Gets user list """
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
+
+
+class RelevantLessonsAPI(ListAPIView):
+    """ Gets relevant lesson list """
+
+    queryset = Lesson.objects.filter(date__gte=date.today())
+    serializer_class = LessonSerializer
+    permission_classes = [AllowAny]
+
+
+class LessonsViewSet(viewsets.ModelViewSet):
+    """ ViewSet of own relevant lessons for authenticated user.
+    Request type: GET, POST, PUT, PATCH, DELETE """
+
+    serializer_class = LessonSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self, request):
+        queryset = Lesson.objects.filter(
+            student=request.user,
+            date__gte=date.today()
+        )
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset(request))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(request, serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED,
+                        headers=headers)
+
+    def perform_create(self, request, serializer):
+        serializer.save(student_id=request.user.pk)
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset(self.request))
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        assert lookup_url_kwarg in self.kwargs, (
+            'Expected view %s to be called with a URL keyword argument '
+            'named "%s". Fix your URL conf, or set the `.lookup_field` '
+            'attribute on the view correctly.' %
+            (self.__class__.__name__, lookup_url_kwarg)
+        )
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+
+class LessonsAdminViewSet(viewsets.ModelViewSet):
+    """ ViewSet of all lessons """
+
+    queryset = Lesson.objects.all()
+    serializer_class = LessonAdminSerializer
+    permission_classes = [IsAdminUser]
+
+
+class RelevantLessonsAdminViewSet(viewsets.ModelViewSet):
+    """ ViewSet of all relevant lessons """
+
+    queryset = Lesson.objects.filter(date__gte=date.today())
+    serializer_class = LessonAdminSerializer
+    permission_classes = [IsAdminUser]
