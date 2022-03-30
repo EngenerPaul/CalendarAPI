@@ -6,11 +6,17 @@ from django.urls import reverse
 
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    theme = models.CharField(max_length=100, default='Consultation')
-    created_at = models.DateTimeField(auto_now_add=True)
-    salary = models.IntegerField(
-        validators=(MinValueValidator(700), MaxValueValidator(1500))
+    theme = models.CharField(
+        max_length=100,
+        default='Consultation',
+        blank=True,
+        null=True
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    salary = models.IntegerField()
+    # salary = models.IntegerField(
+    #     validators=(MinValueValidator(700), MaxValueValidator(1500))
+    # )
     time = models.TimeField()
     date = models.DateField()
 

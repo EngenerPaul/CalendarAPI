@@ -5,10 +5,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
 from .models import Lesson
+from .validators import AdminValidator, UserValidator
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    """ Registraion new user """
+    """ Registraion new user (allow any) """
 
     class Meta:
         model = User
@@ -57,7 +58,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class DelUserSerializer(serializers.ModelSerializer):
-    """ Deletion user """
+    """ Deletion user (admin only) """
 
     class Meta:
         modal = User
@@ -65,7 +66,7 @@ class DelUserSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """ Get User info """
+    """ Get User info (admin only) """
 
     id = serializers.StringRelatedField(read_only=True)
 
@@ -75,18 +76,24 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    """ ViewSet of lesson """
+    """ ViewSet of lesson (allow any (GET) or Authorized only (OTHER)) """
 
     student = PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Lesson
         fields = ('id', 'student', 'theme', 'salary', 'time', 'date')
+        validators = [
+            UserValidator(queryset=Lesson.objects.all())
+        ]
 
 
 class LessonAdminSerializer(serializers.ModelSerializer):
-    """ Admin viewset of lesson """
+    """ Admin viewset of lesson (admin only) """
 
     class Meta:
         model = Lesson
         fields = ('id', 'student', 'theme', 'salary', 'time', 'date')
+        validators = [
+            AdminValidator(queryset=Lesson.objects.all())
+        ]

@@ -3,13 +3,11 @@ from datetime import date
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, DetailView, View, \
-                                 DeleteView, TemplateView, UpdateView
+from django.views.generic import ListView, CreateView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.hashers import make_password
 
 from rest_framework import viewsets
 from rest_framework import status
