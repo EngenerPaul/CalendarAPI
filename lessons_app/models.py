@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 
 
@@ -14,9 +13,6 @@ class Lesson(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     salary = models.IntegerField()
-    # salary = models.IntegerField(
-    #     validators=(MinValueValidator(700), MaxValueValidator(1500))
-    # )
     time = models.TimeField()
     date = models.DateField()
 

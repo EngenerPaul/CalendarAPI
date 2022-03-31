@@ -45,11 +45,26 @@
             <a href="https://www.python.org/"><img src="{% static 'img/python.png'%}" alt="" style="float:right;" height='80'></a>
             {% if messages %}
             <div style="position: relative; top: 80px; left: 100%; width: 250px;">
-                <div class="alert alert-success" style="right: 250px; text-align: center;">
-                    {% for mes in messages %}
-                        {{ mes }}
-                    {% endfor %}
-                </div>
+                
+                    {% for message in messages %}
+                    {% if message.tags == "error" %}
+                    <div class="alert alert-danger" style="right: 250px; text-align: center;">
+                        {{ message }}
+                    </div>
+                    {% elif message.tags == "success" %}
+                    <div class="alert alert-success" style="right: 250px; text-align: center;">
+                        {{ message }}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning" style="right: 250px; text-align: center;">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                
+                {% endfor %}
+                
+                    
+                
             </div>
             
             {% endif %}

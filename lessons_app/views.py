@@ -2,8 +2,9 @@ from datetime import date
 
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -19,7 +20,7 @@ from rest_framework.generics import get_object_or_404
 
 from .models import Lesson
 from .forms import RegisterUserForm, AuthUserForm, AddLessonForm
-from .serializer import UserSerializer, LessonSerializer,\
+from .serializers import UserSerializer, LessonSerializer,\
                         LessonAdminSerializer,\
                         RegistrationSerializer, DelUserSerializer
 
@@ -100,8 +101,14 @@ class AddLessonView(LoginRequiredMixin, CreateView):
     success_url = 'home_url'
     login_url = 'login_url'
 
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid(request, form):
+            return self.form_valid(form)
+        else:
+            return redirect('add_lesson_url')
+
     def form_valid(self, form):
-        """If the form is valid, save the associated model."""
         self.object = form.save(commit=False)
         self.object.student_id = self.request.user.pk
         self.object.save()
