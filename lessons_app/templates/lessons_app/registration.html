@@ -4,10 +4,12 @@
 
 <h3>Registration</h3>
 <div class="row">
-    <div class="col-6">
+    <div class="col" style="max-width: 400px;">
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            
+            {{ form.as_table }}
+            
             <button type='submit' class='btn btn-primary btn-block'>Send</button>
         </form>
     </div>

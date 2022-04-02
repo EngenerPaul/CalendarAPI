@@ -20,61 +20,18 @@
 {% include 'inc/_about_me.html' %}
 {% endblock about_me %}
 
-<div class="container" style="margin-top: 30px; margin-bottom: 15px;">
-    {{ request.user }} | {{ request.user.is_authenticated }}
-        <hr>
-    <div class="row">
-        <div class="col-md-2" width='200'>
-            <img src="{% static 'img/picture.png'%}" alt="" height='160'>
-        </div>
-        <div class="col-md-4">
-            <h3><a href="{% url 'home_url' %}" style="color: black; text-decoration: none;">Сережа & Компания</a></h3>
-            <p>Директор: Тепляков Сергей<br>Исполнительный директор: Гвидо ван Россум</p>
-            <p style="min-width: 500px;">
-                <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >To schedule</a>
-                <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}">My lessons</a>
-                {% if request.user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'logout_url' %}">Log out</a>
-                {% else %}
-                <a class="btn btn-primary" href="{% url 'login_url' %}">Log in</a>
-                <a class="btn btn-primary" href="{% url 'registration_url'%}">Registration</a>
-                {% endif %}
-            </p>
-        </div>
-        <div class="col" style="min-height: 140;">
-            <a href="https://www.python.org/"><img src="{% static 'img/python.png'%}" alt="" style="float:right;" height='80'></a>
-            {% if messages %}
-            <div style="position: relative; top: 80px; left: 100%; width: 250px;">
-                
-                    {% for message in messages %}
-                    {% if message.tags == "error" %}
-                    <div class="alert alert-danger" style="right: 250px; text-align: center;">
-                        {{ message }}
-                    </div>
-                    {% elif message.tags == "success" %}
-                    <div class="alert alert-success" style="right: 250px; text-align: center;">
-                        {{ message }}
-                    </div>
-                    {% else %}
-                    <div class="alert alert-warning" style="right: 250px; text-align: center;">
-                        {{ message }}
-                    </div>
-                    {% endif %}
-                
-                {% endfor %}
-                
-                    
-                
-            </div>
-            
-            {% endif %}
-        </div>
-    </div>
-</div>
+{% block header %}
+{% include 'inc/_header.html' %}
+{% endblock header %}
 
 <hr>
 
 <div class="container">
+  
+    {% block messages %}
+    {% include 'inc/_messages.html' %}
+    {% endblock messages %}
+
     {% block content %}
     {% endblock content %}
 </div>

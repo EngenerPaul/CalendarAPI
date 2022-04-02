@@ -1,38 +1,50 @@
+from copy import deepcopy
 from datetime import date
 
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.hashers import make_password
 
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView
+from rest_framework.generics import (
+    ListAPIView, CreateAPIView, DestroyAPIView, GenericAPIView,
+    get_object_or_404
+)
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework.generics import get_object_or_404
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.exceptions import ValidationError
 
-from .models import Lesson
+from .models import Lesson, UserDetail
 from .forms import RegisterUserForm, AuthUserForm, AddLessonForm
-from .serializers import UserSerializer, LessonSerializer,\
-                        LessonAdminSerializer,\
-                        RegistrationSerializer, DelUserSerializer
+from .serializers import (
+    UserSerializer, LessonSerializer, LessonAdminSerializer,
+    RegistrationSerializer, DelUserSerializer
+)
 
 
 class LessonView(ListView):
+    """ Get relevant lesson list """
 
     model = Lesson
     template_name = 'lessons_app/index.html'
     context_object_name = 'lessons'
 
     def get_queryset(self):
-        all_lessons = self.model.objects.filter(date__gte=date.today())
+        all_lessons = self.model.objects.filter(
+            date__gte=date.today()).select_related(
+                'student',
+                'student__details'
+            )
         lessons = {}
         for item in all_lessons:
             if item.date in lessons:
@@ -43,6 +55,7 @@ class LessonView(ListView):
 
 
 class LessonByUser(LoginRequiredMixin, ListView):
+    """ Get relevant lesson list for every student """
 
     model = Lesson
     template_name = 'lessons_app/lessons_by_student.html'
@@ -69,23 +82,94 @@ class CustomLoginView(LoginView):
         return self.success_url
 
 
+# class CustomRegistration(CreateView):
+#     """Registration"""
+
+#     model = User
+#     template_name = 'lessons_app/registration.html'
+#     form_class = RegisterUserForm
+#     success_url = reverse_lazy('home_url')
+
+#     def post(self, request, *args, **kwargs):
+#         form = self.get_form()
+#         if form.is_valid():
+#             return self.form_valid(request, form)
+#         else:
+#             return self.form_invalid(form)
+
+#     def form_valid(self, request, form):
+#         """the method is overridden added auto-authentication"""
+
+#         form_valid = super().form_valid(form)
+#         messages.success(request, "Registration completed")
+#         username = form.cleaned_data['username']
+#         password = form.cleaned_data['password']
+#         auth_user = authenticate(username=username, password=password)
+#         login(self.request, auth_user)
+#         return form_valid
+
+
 class CustomRegistration(CreateView):
     """Registration"""
 
-    model = User
+    # model = User
     template_name = 'lessons_app/registration.html'
-    form_class = RegisterUserForm
     success_url = reverse_lazy('home_url')
 
-    def form_valid(self, form):
-        """the method is overridden added auto-authentication"""
+    def get(self, request, *args, **kwargs):
+        form = RegisterUserForm()
+        return render(request, 'lessons_app/registration.html', {'form': form})
 
-        form_valid = super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            return self.form_valid(request, form)
+        else:
+            messages.error(request, "Error")
+            return redirect('registration_url')
+
+    def form_valid(self, request, form):
+        """ Create user and userdetail records and also added
+        auto-authentication """
+
+        user = User()
+        user.username = form.cleaned_data['username']
+        user.password = make_password(form.cleaned_data['password'])
+        user.first_name = form.cleaned_data['first_name']
+
+        userdetail = UserDetail()
+        userdetail.user = user
+
+        try:
+            int(form.cleaned_data['phone'])
+        except BaseException:
+            messages.error(request, "Phone number must be digits only")
+            return redirect('registration_url')
+        if len(form.cleaned_data['phone']) != 11:
+            messages.error(request, "Phone number must contain 11 digits")
+            return redirect('registration_url')
+        userdetail.phone = form.cleaned_data['phone']
+
+        if form.cleaned_data['relation'] == 'WhatsApp':
+            userdetail.whatsapp = True
+        elif form.cleaned_data['relation'] == 'Telegram':
+            userdetail.telegram = True
+        elif form.cleaned_data['relation'] == 'Both':
+            userdetail.whatsapp = True
+            userdetail.telegram = True
+        else:
+            messages.error(request, "Error of way of communication")
+            return redirect('registration_url')
+
+        user.save()
+        userdetail.save()
+
+        messages.success(request, "Registration completed")
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         auth_user = authenticate(username=username, password=password)
         login(self.request, auth_user)
-        return form_valid
+        return redirect('home_url')
 
 
 class CustomLogOut(LogoutView):
@@ -95,6 +179,8 @@ class CustomLogOut(LogoutView):
 
 
 class AddLessonView(LoginRequiredMixin, CreateView):
+    """ Create a new lesson """
+
     model = Lesson
     template_name = 'lessons_app/add_lesson.html'
     form_class = AddLessonForm
@@ -104,27 +190,98 @@ class AddLessonView(LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid(request, form):
-            return self.form_valid(form)
+            return self.form_valid(request, form)
         else:
             return redirect('add_lesson_url')
 
-    def form_valid(self, form):
+    def form_valid(self, request, form):
         self.object = form.save(commit=False)
         self.object.student_id = self.request.user.pk
         self.object.save()
+        messages.success(
+            request,
+            f"Lesson successfully created. Date: {self.object.date}. "
+            f"Time: {self.object.time}."
+        )
         return HttpResponseRedirect(reverse_lazy(self.success_url))
+
+
+class DeleteLessonView(DeleteView):
+    """ Delete lesson by user """
+
+    model = Lesson
+    template_name = 'lesson_by_student_url'
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('lesson_by_student_url')
 
 
 #################################################################
 #                            DRF API                            #
 #################################################################
 
-class RegistrationAPI(CreateAPIView):
-    """ Registration new users """
+# class RegistrationAPI(CreateAPIView):
+#     """ Registration new users """
 
-    queryset = User.objects.all()
+#     queryset = User.objects.all()
+#     serializer_class = RegistrationSerializer
+#     permission_classes = [AllowAny]
+
+
+class RegistrationAPI(CreateAPIView):
+    """ Registration new users.
+    get_serializer(), get_serializer_class(),
+    get_serializer_context() uses from GenericAPIView.
+    get_success_headers() uses from CreateModelMixin"""
+
     serializer_class = RegistrationSerializer
     permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = User()
+        user.username = serializer.data['username']
+        user.password = make_password(serializer.data['password'])
+        user.first_name = serializer.data['first_name']
+
+        userdetail = UserDetail()
+        userdetail.user = user
+        
+        try:
+            int(serializer.data['phone'])
+        except BaseException:
+            raise ValidationError("Phone number must be digits only")
+        if len(serializer.data['phone']) != 11:
+            raise ValidationError("Phone number must contain 11 digits")
+        userdetail.phone = serializer.data['phone']
+
+        if serializer.data['relation'] == 'WhatsApp':
+            userdetail.whatsapp = True
+        elif serializer.data['relation'] == 'Telegram':
+            userdetail.telegram = True
+        elif serializer.data['relation'] == 'Both':
+            userdetail.whatsapp = True
+            userdetail.telegram = True
+        else:
+            raise ValidationError("Error of way of communication")
+
+        user.save()
+        userdetail.save()
+
+        obj = deepcopy(serializer.data)
+        obj['id'] = user.id
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            obj,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
 
 
 class DeleteUserAPI(DestroyAPIView):
@@ -138,9 +295,14 @@ class DeleteUserAPI(DestroyAPIView):
 class UsersAPI(ListAPIView):
     """ Gets user list """
 
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('pk').select_related('details')
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class RelevantLessonsAPI(ListAPIView):

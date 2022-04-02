@@ -2,11 +2,12 @@ from unicodedata import name
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import CustomRegistration, CustomLogOut, CustomLoginView,\
-                   AddLessonView, LessonView, LessonByUser,\
-                   UsersAPI, RegistrationAPI, RelevantLessonsAPI,\
-                   LessonsViewSet, LessonsAdminViewSet,\
-                   RelevantLessonsAdminViewSet, DeleteUserAPI
+from .views import (
+    CustomRegistration, CustomLogOut, CustomLoginView, AddLessonView,
+    DeleteLessonView, LessonView, LessonByUser, UsersAPI, RegistrationAPI,
+    RelevantLessonsAPI, LessonsViewSet, LessonsAdminViewSet,
+    RelevantLessonsAdminViewSet, DeleteUserAPI
+)
 
 router = DefaultRouter()
 router.register('api/set-my-lessons', LessonsViewSet,
@@ -21,6 +22,8 @@ urlpatterns = [
     path('logout', CustomLogOut.as_view(), name='logout_url'),
     path('login', CustomLoginView.as_view(), name='login_url'),
     path('add_lesson', AddLessonView.as_view(), name='add_lesson_url'),
+    path('delete_lesson/<int:pk>/', DeleteLessonView.as_view(),
+         name='del_lesson_url'),
 
     # API
     path('api/registration', RegistrationAPI.as_view()),

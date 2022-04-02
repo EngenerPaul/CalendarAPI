@@ -1,9 +1,56 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <p>Name: {{ request.user.first_name }}</p>
 <h3>My lessons</h3>
-{% for lesson in lessons %}
-<p>{{ lesson }}</p>
-{% endfor %}
+<div class="container testimonial-group">
+    <div class="row">
+        <div class="table">
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th style="width: 5%; text-align: center; min-width: 60px;" ><h5>Id</h5></th>
+                        <th style="width: 45%; text-align: center;" ><h5>Theme</h5></th>
+                        <th style="width: 15%; text-align: center; min-width: 130px;" ><h5>Date</h5></th>
+                        <th style="width: 15%; text-align: center; min-width: 100px;" ><h5>Time</h5></th>
+                        <th style="width: 10%; text-align: center; min-width: 70px;" ><h5>Cost</h5></th>
+                        <th style="width: 10%; min-width: 100px;" ></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lesson in lessons %}
+                    <tr>
+                        <th style="vertical-align: middle; text-align: center;">
+                            {{ lesson.id }}
+                        </th>
+                        <th style="vertical-align: middle; min-width: 150px; max-width: 500px; white-space: normal">
+                            {{ lesson.theme }}
+                        </th>
+                        <th style="vertical-align: middle; text-align: center;">
+                            {{ lesson.date|date:"j b, D" }}
+                        </th>
+                        <th style="vertical-align: middle; text-align: center;">
+                            {{ lesson.time|date:"G:i" }}
+                        </th>
+                        <th style="vertical-align: middle; text-align: center;">
+                            {{ lesson.salary }} ₽
+                        </th>
+                        <th style="vertical-align: middle; text-align: center;">
+                            <form id="delete_{{ lesson.pk }}" action="{% url 'del_lesson_url' lesson.pk %}" method="post">
+                                {% csrf_token %}
+                                <button type='submit' class='btn btn-danger btn-block' style="padding: 6px 12px 6px 6px; width: 100%; width: 50px; padding: 6px 0px;">
+                                    <img src="{% static 'img/white-cross.png' %}" alt="delete" width="20px">
+                                </button>
+                            </form>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
 {% endblock content %}

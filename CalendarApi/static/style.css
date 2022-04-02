@@ -22,3 +22,20 @@ float: none;
     padding-top: 10px; /* убирает отступ от границы в карточке */
 }
 
+.theme {
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    padding: 5px; /* Поля вокруг текста */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+}
+
+.card a {
+    text-decoration: none;
+    color: black;
+}
+
+.d-block > .row > p > a {
+    padding: 6px;
+    text-align: center;
+    margin: 3px 5px;
+}

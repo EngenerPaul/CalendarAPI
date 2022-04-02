@@ -1,7 +1,6 @@
 import datetime
 
 from django import forms
-from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
@@ -14,43 +13,93 @@ from CalendarApi.constraints import (
 )
 
 
-class RegisterUserForm(forms.ModelForm):
+# class RegisterUserForm(forms.ModelForm):
+#     """Form for registration
+#     Use in views - CustomRegistration, template - registration.html"""
+
+#     class Meta:
+#         model = User
+#         fields = ('username', 'first_name', 'password')
+#         labels = {
+#             'username': 'Login',
+#             'first_name': 'Name',
+#             'password': 'Password',
+#         }
+#         widgets = {
+#             'username': forms.TextInput(attrs={
+#                 'class': 'form-control',
+#                 'placeholder': 'Enter your login'
+#             }),
+#             'first_name': forms.TextInput(attrs={
+#                 'class': 'form-control',
+#                 'placeholder': 'Enter your name'
+#             }),
+#             'password': forms.TextInput(attrs={
+#                 'class': 'form-control',
+#                 'placeholder': 'Enter your password'
+#             })
+#         }
+#         help_texts = {
+#             'username': None,
+#         }
+
+#     # .\venv\Lib\site-packages\django\contrib\auth\forms.py
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.set_password(self.cleaned_data["password"])
+#         if commit:
+#             user.save()
+#         return user
+
+
+class RegisterUserForm(forms.Form):
     """Form for registration
     Use in views - CustomRegistration, template - registration.html"""
 
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'password')
-        labels = {
-            'username': 'Login',
-            'first_name': 'Name',
-            'password': 'Password',
-        }
-        widgets = {
-            'username': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter your login'
-            }),
-            'first_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter your name'
-            }),
-            'password': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter your password'
-            })
-        }
-        help_texts = {
-            'username': None,
-        }
-
-    # .\venv\Lib\site-packages\django\contrib\auth\forms.py
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-        return user
+    username = forms.CharField(
+        label='Username',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your login',
+            'style': 'margin-bottom: 10px'
+        })
+    )
+    password = forms.CharField(
+        label='Password',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your password',
+            'style': 'margin-bottom: 10px'
+        })
+    )
+    first_name = forms.CharField(
+        label='Name',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your name',
+            'style': 'margin-bottom: 10px'
+        })
+    )
+    phone = forms.CharField(
+        label='Phone',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '89001234567',
+            'style': 'margin-bottom: 10px'
+        })
+    )
+    choice = [
+        ('WhatsApp', 'WhatsApp'),
+        ('Telegram', 'Telegram'),
+        ('Both', 'Both')
+    ]
+    relation = forms.ChoiceField(
+        choices=choice,
+        label='Way of communication',
+        widget=forms.RadioSelect(attrs={
+            'style': 'margin-bottom: 10px'
+        })
+    )
 
 
 class AuthUserForm(AuthenticationForm, forms.ModelForm):

@@ -12,15 +12,31 @@
                     
                     {% for lesson in lesson_by_day %}
                     <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">{{lesson.theme}}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{lesson.student.first_name}}</h6>
-                            <div class="row justify-content-center">
-                                <div class="col-md-4">{{lesson.time}}</div>
-                                <div class="col-md-4">{{lesson.salary}} руб.</div>
+                        {% if request.user.is_staff %}
+                        <!-- Link is a modal trigger -->
+                        <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_lesson_{{lesson.pk}}">
+                        {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <div class="theme">
+                                        {{lesson.theme}}
+                                    </div>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{lesson.student.first_name|truncatewords:1}}</h6>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-4" style="min-width: 60px; max-width: 100px; padding: 0px 4px;">{{lesson.time|date:"G:i"}}</div>
+                                    {% if request.user.is_staff %}
+                                    <div class="col-md-4" style="min-width: 60px; max-width: 100px; padding: 0px 4px;">{{lesson.salary}} ₽</div>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
+                        {% if request.user.is_staff %}
+                        </a>
+                        {% endif %}
                     </div>
+                    {% if request.user.is_staff %}
+                    {% include "lessons_app/inc/_lesson_modal.html" %}
+                    {% endif %}
                     {% endfor %}
                     
                 </div>

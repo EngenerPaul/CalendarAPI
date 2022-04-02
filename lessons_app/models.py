@@ -26,3 +26,18 @@ class Lesson(models.Model):
 
     def get_absolute_url(self):
         return reverse('add_lesson_url', kwargs={'pk': self.pk})
+
+
+class UserDetail(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+                                related_name='details')
+    phone = models.CharField(max_length=11)
+    telegram = models.BooleanField(default=False)
+    whatsapp = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'Detail'
+        verbose_name_plural = 'Details'
+
+    def __str__(self):
+        return f'The UserDetail class: id = {self.user}'
