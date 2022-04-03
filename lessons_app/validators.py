@@ -84,13 +84,13 @@ class UserValidator():
         elif С_morning_time <= time < С_morning_time_markup:
             if salary < C_salary_high:
                 raise ValidationError(
-                    f"in the morning ({С_morning_time}-{С_morning_time_markup}"
+                    f"In the morning ({С_morning_time}-{С_morning_time_markup}"
                     f" hours) the cost of the lesson is {C_salary_high}"
                 )
         elif C_evening_time_markup <= time < C_evening_time:
             if salary < C_salary_high:
                 raise ValidationError(
-                    f"in the evening ({C_evening_time_markup}-{C_evening_time}"
+                    f"In the evening ({C_evening_time_markup}-{C_evening_time}"
                     f" hours) the cost of the lesson is {C_salary_high}"
                 )
         elif time > C_evening_time:

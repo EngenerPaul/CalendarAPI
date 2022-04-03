@@ -251,7 +251,7 @@ class RegistrationAPI(CreateAPIView):
 
         userdetail = UserDetail()
         userdetail.user = user
-        
+
         try:
             int(serializer.data['phone'])
         except BaseException:
