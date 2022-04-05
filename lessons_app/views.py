@@ -4,6 +4,7 @@ from datetime import date
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.utils.translation import gettext as _
 from django.views.generic import ListView, CreateView, DeleteView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -11,7 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.hashers import make_password
-from django.utils.translation import gettext as _
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from rest_framework import viewsets
 from rest_framework import status
@@ -26,7 +27,9 @@ from rest_framework.mixins import CreateModelMixin
 from rest_framework.exceptions import ValidationError
 
 from .models import Lesson, UserDetail
-from .forms import RegisterUserForm, AuthUserForm, AddLessonForm
+from .forms import (
+    RegisterUserForm, AuthUserForm, AddLessonForm, AddLessonAdminForm
+)
 from .serializers import (
     UserSerializer, LessonSerializer, LessonAdminSerializer,
     RegistrationSerializer, DelUserSerializer
@@ -188,6 +191,11 @@ class AddLessonView(LoginRequiredMixin, CreateView):
     success_url = 'home_url'
     login_url = 'login_url'
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return redirect('add_lesson_admin_url')
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid(request, form):
@@ -208,7 +216,7 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
 
-class DeleteLessonView(DeleteView):
+class DeleteLessonView(LoginRequiredMixin, DeleteView):
     """ Delete lesson by user """
 
     model = Lesson
@@ -218,7 +226,7 @@ class DeleteLessonView(DeleteView):
         return reverse_lazy('lesson_by_student_url')
 
     def post(self, request, *args, **kwargs):
-        # pass request into form_valid()
+        # passes the request to form_valid()
         self.object = self.get_object()
         form = self.get_form()
         if form.is_valid():
@@ -239,6 +247,36 @@ class DeleteLessonView(DeleteView):
         )
         return HttpResponseRedirect(success_url)
 
+
+class AddLessonAdmin(LoginRequiredMixin, CreateView):
+    """ Create lesson for students by admin """
+
+    model = Lesson
+    template_name = 'lessons_app/add_lesson.html'
+    form_class = AddLessonAdminForm
+    success_url = 'home_url'
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return redirect('add_lesson_url')
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid(request, form):
+            return self.form_valid(request, form)
+        else:
+            return redirect('add_lesson_url')
+
+    def form_valid(self, request, form):
+        self.object = form.save()
+        messages.success(
+            request,
+            _("Lesson successfully created. Date: {0}. Time: {1}.").format(
+                self.object.date, self.object.time
+            )
+        )
+        return HttpResponseRedirect(reverse_lazy(self.success_url))
 
 
 #################################################################

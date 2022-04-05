@@ -126,6 +126,7 @@ class AuthUserForm(AuthenticationForm, forms.ModelForm):
 
 
 class AddLessonForm(forms.ModelForm):
+    """ Create a new lesson by students """
 
     class Meta:
         model = Lesson
@@ -261,6 +262,93 @@ class AddLessonForm(forms.ModelForm):
                 return False
         elif time > C_evening_time:
             messages.error(request, _("The time {} is too late").format(time))
+            return False
+
+        queryset = Lesson.objects.filter(date=date).values_list('time')
+        times = [item[0] for item in queryset]
+
+        for t1 in times:
+            t2 = datetime.time(t1.hour+1, t1.minute, t1.second)
+            if t1 <= time < t2:
+                messages.error(
+                    request,
+                    _("Some lesson is already scheduled for {} that "
+                      "day").format(t1)
+                )
+                return False
+
+        return super().is_valid()
+
+
+class AddLessonAdminForm(forms.ModelForm):
+    """ Create a new lesson for students by admin """
+
+    class Meta:
+        model = Lesson
+        fields = ('student', 'theme', 'salary', 'time', 'date')
+        labels = {
+            'student': _('Student'),
+            'theme': _('Theme'),
+            'salary': _('Pay'),
+            'time': _('Time'),
+            'date': _('Date')
+        }
+        widgets = {
+            'student': forms.Select(attrs={
+                'class': 'form-control',
+                'size': 10
+            }),
+            'theme': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': _('optional')
+            }),
+            'salary': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'value': C_salary_common
+            }),
+            'time': forms.TimeInput(attrs={
+                'class': 'form-control',
+                'placeholder': '00:00:00'
+            }),
+            'date': forms.DateInput(format=r'%d.%m.%Y', attrs={
+                'class': 'form-control',
+                'placeholder': '2022-12-31'
+            }),
+        }
+
+    def is_valid(self, request, form):
+        """ Checking the overlap of lessons on each other - for all
+        (lesson duration = 1 hour) """
+
+        salary = form['salary'].value()
+        time = form['time'].value()
+        date = form['date'].value()
+
+        try:
+            salary = int(salary)
+        except BaseException:
+            messages.error(request,
+                           _('Payment must be integer'))
+            return False
+
+        try:
+            time = datetime.datetime.strptime(time, r"%H:%M").time()
+        except BaseException:
+            try:
+                time = datetime.datetime.strptime(time, r"%H:%M:%S").time()
+            except BaseException:
+                messages.error(
+                    request,
+                    _("Time must be in 'hours:minutes' or "
+                      "'hours:minutes:seconds' format")
+                )
+                return False
+
+        try:
+            date = datetime.datetime.strptime(date, r"%Y-%m-%d").date()
+        except BaseException:
+            messages.error(request,
+                           _("Date must be in 'year-month-day' format"))
             return False
 
         queryset = Lesson.objects.filter(date=date).values_list('time')

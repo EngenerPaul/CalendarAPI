@@ -15,9 +15,10 @@
                     <h6 style="margin-bottom: 15px;">{% translate "Teacher: Teplyakov Sergey" %}</h6>
                 </div>
                 <p style="min-width: 430px;">
-                    <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >{% translate "To schedule" %}</a>
                     {% if user.is_staff %}
+                    <a class="btn btn-primary" href="{% url 'add_lesson_admin_url' %}" >{% translate "To schedule" %}</a>
                     {% else %}
+                    <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >{% translate "Sign up" %}</a>
                     <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}">{% translate "My lessons" %}</a>
                     {% endif %}
                     {% if request.user.is_authenticated %}
