@@ -10,7 +10,7 @@ from .models import Lesson
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
     C_evening_time, C_salary_common, C_salary_high, C_salary_max, C_timedelta,
-    C_datedelta
+    C_datedelta, C_lesson_threshold
 )
 
 
@@ -166,6 +166,7 @@ class AddLessonForm(forms.ModelForm):
         5. checking the lead time - for users only
         (you can not add a lesson earlier than 6 hours)
         6. checking for cost limits (700<=salary) - for users only
+        7. check of lesson cost when numbers lesson todate is big - for users
         """
 
         salary = form['salary'].value()
@@ -277,6 +278,17 @@ class AddLessonForm(forms.ModelForm):
                 )
                 return False
 
+        if len(queryset) >= C_lesson_threshold:
+            if salary < C_salary_high:
+                messages.error(
+                    request,
+                    _("Amount of lessons today is greater than or equel "
+                      "to {0}. Lesson cost is {1} ₽").format(
+                        C_lesson_threshold, C_salary_high
+                    )
+                )
+                return False
+
         return super().is_valid()
 
 
@@ -349,6 +361,13 @@ class AddLessonAdminForm(forms.ModelForm):
         except BaseException:
             messages.error(request,
                            _("Date must be in 'year-month-day' format"))
+            return False
+
+        if form['student'].value() == '':
+            messages.error(
+                request,
+                _("Please, select a student")
+            )
             return False
 
         queryset = Lesson.objects.filter(date=date).values_list('time')

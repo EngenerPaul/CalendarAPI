@@ -8,7 +8,7 @@ from rest_framework.utils.representation import smart_repr
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
     C_evening_time, C_salary_common, C_salary_high, C_salary_max, C_timedelta,
-    C_datedelta
+    C_datedelta, C_lesson_threshold
 )
 
 
@@ -20,6 +20,7 @@ class AdminValidator():
         self.message = _("Some lesson is already scheduled for {} that day")
 
     def __call__(self, attrs):
+        student = attrs['student']
         time = attrs['time']
         date = attrs['date']
 
@@ -30,6 +31,9 @@ class AdminValidator():
             t2 = datetime.time(t1.hour+1, t1.minute, t1.second)
             if t1 <= time < t2:
                 raise ValidationError(self.message.format(t1))
+
+        if student == '':
+            raise ValidationError(_("Please, select a student"))
 
     def __repr__(self):
         return '<%s(queryset=%s)>' % (
@@ -48,6 +52,7 @@ class UserValidator():
     5. checking the lead time - for users only
     (you can not add a lesson earlier than 6 hours)
     6. checking for cost limits (700<=salary) - for users only
+    7. check of lesson cost when numbers lesson todate is big - for users only
     """
 
     def __init__(self, queryset):
@@ -113,6 +118,15 @@ class UserValidator():
                 raise ValidationError(
                     _("Some lesson is already scheduled for "
                       "{} that day").format(t1)
+                )
+
+        if len(self.queryset) >= C_lesson_threshold:
+            if salary < C_salary_high:
+                raise ValidationError(
+                    _("Amount of lessons today is greater than or equel "
+                      "to {0}. Lesson cost is {1} ₽").format(
+                        C_lesson_threshold, C_salary_high
+                    )
                 )
 
     def __repr__(self):

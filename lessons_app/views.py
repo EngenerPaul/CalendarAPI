@@ -266,6 +266,7 @@ class AddLessonAdmin(LoginRequiredMixin, CreateView):
         if form.is_valid(request, form):
             return self.form_valid(request, form)
         else:
+            # return self.form_invalid(form)
             return redirect('add_lesson_url')
 
     def form_valid(self, request, form):
