@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 
 <div class="container" style="margin-top: 30px; margin-bottom: 15px;">
     <div class="d-none d-md-block">
@@ -10,20 +11,20 @@
             </div>
             <div class="col-md-3" style="min-width: 440px;">
                 <div class="d-none d-md-block">
-                    <h2 style="margin-top: 5px; margin-bottom: 20px;"><a href="{% url 'home_url' %}" style="color: black; text-decoration: none;">Sergey & Company</a></h2>
-                    <h6 style="margin-bottom: 15px;">Teacher: Teplyakov Sergey</h6>
+                    <h2 style="margin-top: 5px; margin-bottom: 20px;"><a href="{% url 'home_url' %}" style="color: black; text-decoration: none;">{% translate "Sergey & Company" %}</a></h2>
+                    <h6 style="margin-bottom: 15px;">{% translate "Teacher: Teplyakov Sergey" %}</h6>
                 </div>
                 <p style="min-width: 430px;">
-                    <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >To schedule</a>
+                    <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >{% translate "To schedule" %}</a>
                     {% if user.is_staff %}
                     {% else %}
-                    <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}">My lessons</a>
+                    <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}">{% translate "My lessons" %}</a>
                     {% endif %}
                     {% if request.user.is_authenticated %}
-                    <a class="btn btn-primary" href="{% url 'logout_url' %}">Log out</a>
+                    <a class="btn btn-primary" href="{% url 'logout_url' %}">{% translate "Log out" %}</a>
                     {% else %}
-                    <a class="btn btn-primary" href="{% url 'login_url' %}">Log in</a>
-                    <a class="btn btn-primary" href="{% url 'registration_url'%}">Registration</a>
+                    <a class="btn btn-primary" href="{% url 'login_url' %}">{% translate "Log in" %}</a>
+                    <a class="btn btn-primary" href="{% url 'registration_url'%}">{% translate "Registration" %}</a>
                     {% endif %}
                 </p>
             </div>
@@ -36,20 +37,20 @@
     </div>
     <div class="d-block d-sm-block d-md-none">
         <h1 style="text-align: center;  margin-bottom: 10px;">
-            <a href="{% url 'home_url' %}" style="color: black; text-decoration: none;">Sergey & Company</a>
+            <a href="{% url 'home_url' %}" style="color: black; text-decoration: none;">{% translate "Sergey & Company" %}</a>
         </h1>
         <div class="row" style="text-align: center;">
             <p>
-                <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" style="min-width: 120px;">To schedule</a>
+                <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" style="min-width: 120px;">{% translate "To schedule" %}</a>
                 {% if user.is_staff %}
                 {% else %}
-                <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}" style="min-width: 115px;">My lessons</a>
+                <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}" style="min-width: 115px;">{% translate "My lessons" %}</a>
                 {% endif %}
                 {% if request.user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'logout_url' %}" style="min-width: 90px;">Log out</a>
+                <a class="btn btn-primary" href="{% url 'logout_url' %}" style="min-width: 90px;">{% translate "Log out" %}</a>
                 {% else %}
-                <a class="btn btn-primary" href="{% url 'login_url' %}" style="min-width: 70px; ">Log in</a>
-                <a class="btn btn-primary" href="{% url 'registration_url'%}" style="min-width: 125px;">Registration</a>
+                <a class="btn btn-primary" href="{% url 'login_url' %}" style="min-width: 70px; ">{% translate "Log in" %}</a>
+                <a class="btn btn-primary" href="{% url 'registration_url'%}" style="min-width: 125px;">{% translate "Registration" %}</a>
                 {% endif %}
                 
             </p>

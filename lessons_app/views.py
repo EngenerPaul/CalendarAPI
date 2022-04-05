@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.hashers import make_password
+from django.utils.translation import gettext as _
 
 from rest_framework import viewsets
 from rest_framework import status
@@ -143,10 +144,10 @@ class CustomRegistration(CreateView):
         try:
             int(form.cleaned_data['phone'])
         except BaseException:
-            messages.error(request, "Phone number must be digits only")
+            messages.error(request, _("Phone number must be digits only"))
             return redirect('registration_url')
         if len(form.cleaned_data['phone']) != 11:
-            messages.error(request, "Phone number must contain 11 digits")
+            messages.error(request, _("Phone number must contain 11 digits"))
             return redirect('registration_url')
         userdetail.phone = form.cleaned_data['phone']
 
@@ -158,13 +159,13 @@ class CustomRegistration(CreateView):
             userdetail.whatsapp = True
             userdetail.telegram = True
         else:
-            messages.error(request, "Error of way of communication")
+            messages.error(request, _("Error of way of communication"))
             return redirect('registration_url')
 
         user.save()
         userdetail.save()
 
-        messages.success(request, "Registration completed")
+        messages.success(request, _("Registration completed"))
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         auth_user = authenticate(username=username, password=password)
@@ -200,8 +201,9 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         self.object.save()
         messages.success(
             request,
-            f"Lesson successfully created. Date: {self.object.date}. "
-            f"Time: {self.object.time}."
+            _("Lesson successfully created. Date: {0}. Time: {1}.").format(
+                self.object.date, self.object.time
+            )
         )
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
@@ -214,6 +216,29 @@ class DeleteLessonView(DeleteView):
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('lesson_by_student_url')
+
+    def post(self, request, *args, **kwargs):
+        # pass request into form_valid()
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(request, form)
+        else:
+            messages.error(
+                request,
+                _("Error: the lesson wasn't deleted")
+            )
+            return self.form_invalid(form)
+
+    def form_valid(self, request, form):
+        success_url = self.get_success_url()
+        self.object.delete()
+        messages.success(
+            request,
+            _("The lesson successfully deleted")
+        )
+        return HttpResponseRedirect(success_url)
+
 
 
 #################################################################
@@ -255,9 +280,9 @@ class RegistrationAPI(CreateAPIView):
         try:
             int(serializer.data['phone'])
         except BaseException:
-            raise ValidationError("Phone number must be digits only")
+            raise ValidationError(_("Phone number must be digits only"))
         if len(serializer.data['phone']) != 11:
-            raise ValidationError("Phone number must contain 11 digits")
+            raise ValidationError(_("Phone number must contain 11 digits"))
         userdetail.phone = serializer.data['phone']
 
         if serializer.data['relation'] == 'WhatsApp':
@@ -268,7 +293,7 @@ class RegistrationAPI(CreateAPIView):
             userdetail.whatsapp = True
             userdetail.telegram = True
         else:
-            raise ValidationError("Error of way of communication")
+            raise ValidationError(_("Error of way of communication"))
 
         user.save()
         userdetail.save()

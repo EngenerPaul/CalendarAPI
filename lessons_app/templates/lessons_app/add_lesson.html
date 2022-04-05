@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <div class="row">
@@ -6,7 +7,7 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type='submit' class='btn btn-primary btn-block'>Add lesson</button>
+            <button type='submit' class='btn btn-primary btn-block'>{% translate "Add lesson" %}</button>
         </div>
     </div> 
 </form>

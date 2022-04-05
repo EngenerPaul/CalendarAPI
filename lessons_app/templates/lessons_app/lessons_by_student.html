@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
-<p>Name: {{ request.user.first_name }}</p>
-<h3>My lessons</h3>
+<p>{% translate "Name" %}: {{ request.user.first_name }}</p>
+<h3>{% translate "My lessons" %}</h3>
 <div class="container testimonial-group">
     <div class="row">
         <div class="table">
@@ -11,10 +12,10 @@
                 <thead class="thead-light">
                     <tr>
                         <th style="width: 5%; text-align: center; min-width: 60px;" ><h5>Id</h5></th>
-                        <th style="width: 45%; text-align: center;" ><h5>Theme</h5></th>
-                        <th style="width: 15%; text-align: center; min-width: 130px;" ><h5>Date</h5></th>
-                        <th style="width: 15%; text-align: center; min-width: 100px;" ><h5>Time</h5></th>
-                        <th style="width: 10%; text-align: center; min-width: 70px;" ><h5>Cost</h5></th>
+                        <th style="width: 45%; text-align: center;" ><h5>{% translate "Theme" %}</h5></th>
+                        <th style="width: 15%; text-align: center; min-width: 130px;" ><h5>{% translate "Date" %}</h5></th>
+                        <th style="width: 15%; text-align: center; min-width: 100px;" ><h5>{% translate "Time" %}</h5></th>
+                        <th style="width: 10%; text-align: center; min-width: 70px;" ><h5>{% translate "Cost" %}</h5></th>
                         <th style="width: 10%; min-width: 100px;" ></th>
                     </tr>
                 </thead>

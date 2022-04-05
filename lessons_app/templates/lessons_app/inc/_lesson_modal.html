@@ -1,28 +1,30 @@
+{% load i18n %}
+
 <div class="modal fade" id="M_lesson_{{lesson.pk}}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="white-space: normal">
-                    Student: {{ lesson.student.first_name }}
+                    {% translate "Student" %}: {{ lesson.student.first_name }}
                     
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <p style="white-space: normal; text-align: left; padding: 10px;">
-                <b>Student id:</b> {{ lesson.student.pk }}<br>
-                <b>Lessons id:</b> {{ lesson.pk }}<br>
-                <b>Phone:</b> {{ lesson.student.details.phone }}<br>
+                <b>{% translate "Student id" %}:</b> {{ lesson.student.pk }}<br>
+                <b>{% translate "Lessons id" %}:</b> {{ lesson.pk }}<br>
+                <b>{% translate "Phone" %}:</b> {{ lesson.student.details.phone }}<br>
                 {% if lesson.student.details.telegram and lesson.student.details.whatsapp %}
-                <b>Way of communication:</b> Telegram and WhatsApp<br>
+                <b>{% translate "Way of communication" %}:</b> Telegram {% translate "and" %} WhatsApp<br>
                 {% elif lesson.student.details.telegram %}
-                <b>Way of communication:</b> Telegram<br>
+                <b>{% translate "Way of communication" %}:</b> Telegram<br>
                 {% elif lesson.student.details.whatsapp %}
-                <b>Way of communication:</b> WhatsApp<br>
+                <b>{% translate "Way of communication" %}:</b> WhatsApp<br>
                 {% endif %}
-                <b>Salary:</b> {{ lesson.salary }} ₽<br>
-                <b>Date:</b> {{ lesson.date|date:"j F, D" }}<br>
-                <b>Time:</b> {{ lesson.time|date:"G:i" }}<br>
-                <b>Theme:</b> {{ lesson.theme }}
+                <b>{% translate "Salary" %}:</b> {{ lesson.salary }} ₽<br>
+                <b>{% translate "Date" %}:</b> {{ lesson.date|date:"j E, D" }}<br>
+                <b>{% translate "Time" %}:</b> {{ lesson.time|date:"G:i" }}<br>
+                <b>{% translate "Theme" %}:</b> {{ lesson.theme }}
             </p>
         </div>
     </div>

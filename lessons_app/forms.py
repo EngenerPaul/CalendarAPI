@@ -4,6 +4,7 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
+from django.utils.translation import gettext as _
 
 from .models import Lesson
 from CalendarApi.constraints import (
@@ -57,31 +58,31 @@ class RegisterUserForm(forms.Form):
     Use in views - CustomRegistration, template - registration.html"""
 
     username = forms.CharField(
-        label='Username',
+        label=_('Username'),
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter your login',
+            'placeholder': _('Enter your login'),
             'style': 'margin-bottom: 10px'
         })
     )
     password = forms.CharField(
-        label='Password',
+        label=_('Password'),
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter your password',
+            'placeholder': _('Enter your password'),
             'style': 'margin-bottom: 10px'
         })
     )
     first_name = forms.CharField(
-        label='Name',
+        label=_('Name'),
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter your name',
+            'placeholder': _('Enter your name'),
             'style': 'margin-bottom: 10px'
         })
     )
     phone = forms.CharField(
-        label='Phone',
+        label=_('Phone'),
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': '89001234567',
@@ -95,7 +96,7 @@ class RegisterUserForm(forms.Form):
     ]
     relation = forms.ChoiceField(
         choices=choice,
-        label='Way of communication',
+        label=_('Way of communication'),
         widget=forms.RadioSelect(attrs={
             'style': 'margin-bottom: 10px'
         })
@@ -119,9 +120,9 @@ class AuthUserForm(AuthenticationForm, forms.ModelForm):
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
             self.fields['username'].widget.attrs[
-                'placeholder'] = 'Укажите Ваше имя'
+                'placeholder'] = _('Enter your username')
             self.fields['password'].widget.attrs[
-                'placeholder'] = 'Введите пароль'
+                'placeholder'] = _('Enter your password')
 
 
 class AddLessonForm(forms.ModelForm):
@@ -130,15 +131,15 @@ class AddLessonForm(forms.ModelForm):
         model = Lesson
         fields = ('theme', 'salary', 'time', 'date')
         labels = {
-            'theme': 'Theme',
-            'salary': 'Pay',
-            'time': 'Time',
-            'date': 'Date'
+            'theme': _('Theme'),
+            'salary': _('Pay'),
+            'time': _('Time'),
+            'date': _('Date')
         }
         widgets = {
             'theme': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'optional'
+                'placeholder': _('optional')
             }),
             'salary': forms.NumberInput(attrs={
                 'class': 'form-control',
@@ -174,7 +175,7 @@ class AddLessonForm(forms.ModelForm):
             salary = int(salary)
         except BaseException:
             messages.error(request,
-                           'Payment must be integer')
+                           _('Payment must be integer'))
             return False
 
         try:
@@ -185,8 +186,8 @@ class AddLessonForm(forms.ModelForm):
             except BaseException:
                 messages.error(
                     request,
-                    "Time must be in 'hours:minutes' or "
-                    "'hours:minutes:seconds' format"
+                    _("Time must be in 'hours:minutes' or "
+                      "'hours:minutes:seconds' format")
                 )
                 return False
 
@@ -194,7 +195,7 @@ class AddLessonForm(forms.ModelForm):
             date = datetime.datetime.strptime(date, r"%Y-%m-%d").date()
         except BaseException:
             messages.error(request,
-                           "Date must be in 'year-month-day' format")
+                           _("Date must be in 'year-month-day' format"))
             return False
 
         dt_now = datetime.datetime.now()
@@ -202,47 +203,49 @@ class AddLessonForm(forms.ModelForm):
         if salary < C_salary_common:
             messages.error(
                 request,
-                f'The minimum cost of a lesson is {C_salary_common}'
+                _('The minimum cost of a lesson is {}').format(C_salary_common)
             )
             return False
         elif salary > C_salary_max:
             messages.error(
                 request,
-                f'Perfaps you made a mistake in the cost ({salary}₽)'
+                _('Perfaps you made a mistake in the cost')
             )
             return False
 
         if date < dt_now.date():
             messages.error(
                 request,
-                f"The date {date} has already arrived"
+                _("The date {} has already arrived").format(date)
             )
             return False
         elif date > (dt_now + C_datedelta).date():
             messages.error(
                 request,
-                f"Please don't book a lesson earlier then {C_datedelta} "
-                f"days in advace"
+                _("Please don't book a lesson earlier then {} "
+                  "days in advace").format(C_datedelta)
             )
             return False
 
         if datetime.datetime.combine(date, time) < dt_now + C_timedelta:
             messages.error(
                 request,
-                f"Please, sign up for a lesson {C_timedelta} hours before to "
-                f"start"
+                _("Please, sign up for a lesson {} hours before to "
+                  "start").format(C_timedelta)
             )
             return False
 
         if time < С_morning_time:
-            messages.error(request, f"The time {time} is too early")
+            messages.error(request, _("The time {} is too early").format(time))
             return False
         elif С_morning_time <= time < С_morning_time_markup:
             if salary < C_salary_high:
                 messages.error(
                     request,
-                    f"in the morning ({С_morning_time}-{С_morning_time_markup}"
-                    f" hours) the cost of the lesson is {C_salary_high}"
+                    _("in the morning ({0}-{1} hours) the cost of the lesson"
+                      " is {2}").format(
+                        С_morning_time, С_morning_time_markup, C_salary_high
+                    )
                 )
                 return False
 
@@ -250,12 +253,14 @@ class AddLessonForm(forms.ModelForm):
             if salary < C_salary_high:
                 messages.error(
                     request,
-                    f"in the evening ({C_evening_time_markup}-{C_evening_time}"
-                    f" hours) the cost of the lesson is {C_salary_high}"
+                    _("in the evening ({0}-{1} hours) the cost of the lesson"
+                      " is {2}").format(
+                          C_evening_time_markup, C_evening_time, C_salary_high
+                      )
                 )
                 return False
         elif time > C_evening_time:
-            messages.error(request, f"The time {time} is too late")
+            messages.error(request, _("The time {} is too late").format(time))
             return False
 
         queryset = Lesson.objects.filter(date=date).values_list('time')
@@ -266,7 +271,8 @@ class AddLessonForm(forms.ModelForm):
             if t1 <= time < t2:
                 messages.error(
                     request,
-                    f"Some lesson is already scheduled for {t1} that day"
+                    _("Some lesson is already scheduled for {} that "
+                      "day").format(t1)
                 )
                 return False
 

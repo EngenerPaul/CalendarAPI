@@ -1,7 +1,10 @@
 import datetime
 
+from django.utils.translation import gettext as _
+
 from rest_framework.exceptions import ValidationError
 from rest_framework.utils.representation import smart_repr
+
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
     C_evening_time, C_salary_common, C_salary_high, C_salary_max, C_timedelta,
@@ -14,7 +17,7 @@ class AdminValidator():
 
     def __init__(self, queryset):
         self.queryset = queryset
-        self.message = "Some lesson is already scheduled for {} that day"
+        self.message = _("Some lesson is already scheduled for {} that day")
 
     def __call__(self, attrs):
         time = attrs['time']
@@ -58,43 +61,48 @@ class UserValidator():
 
         if salary < C_salary_common:
             raise ValidationError(
-                f'The minimum cost of a lesson is {C_salary_common}'
+                _('The minimum cost of a lesson is {}').format(C_salary_common)
             )
         elif salary > C_salary_max:
             raise ValidationError(
-                f'Perfaps you made a mistake in the cost ({salary}₽)'
+                _('Perfaps you made a mistake in the cost')
             )
 
         if date < dt_now.date():
-            raise ValidationError(f"The date {date} has already arrived")
+            raise ValidationError(_("The date {} has already arrived").format(
+                date))
         elif date > (dt_now + C_datedelta).date():
             raise ValidationError(
-                f"Please don't book a lesson earlier then {C_datedelta} "
-                f"days in advace"
+                _("Please don't book a lesson earlier then {} "
+                  "days in advace").format(C_datedelta)
             )
 
         if datetime.datetime.combine(date, time) < dt_now + C_timedelta:
             raise ValidationError(
-                f"Please, sign up for a lesson {C_timedelta} hours before to "
-                f"start"
+                _("Please, sign up for a lesson {} hours before to "
+                  "start").format(C_timedelta)
             )
 
         if time < С_morning_time:
-            raise ValidationError(f"The time {time} is too early")
+            raise ValidationError(_("The time {} is too early").format(time))
         elif С_morning_time <= time < С_morning_time_markup:
             if salary < C_salary_high:
                 raise ValidationError(
-                    f"In the morning ({С_morning_time}-{С_morning_time_markup}"
-                    f" hours) the cost of the lesson is {C_salary_high}"
+                    _("In the morning ({0}-{1} hours) the cost of the lesson"
+                      " is {2}").format(
+                          С_morning_time, С_morning_time_markup, C_salary_high
+                    )
                 )
         elif C_evening_time_markup <= time < C_evening_time:
             if salary < C_salary_high:
                 raise ValidationError(
-                    f"In the evening ({C_evening_time_markup}-{C_evening_time}"
-                    f" hours) the cost of the lesson is {C_salary_high}"
+                    _("In the evening ({0}-{1}"
+                      " hours) the cost of the lesson is {2}").format(
+                          C_evening_time_markup, C_evening_time, C_salary_high
+                      )
                 )
         elif time > C_evening_time:
-            raise ValidationError(f"The time {time} is too late")
+            raise ValidationError(_("The time {} is too late").format(time))
 
         self.queryset = self.queryset.filter(date=date).values_list('time')
         times = [item[0] for item in self.queryset]
@@ -103,8 +111,8 @@ class UserValidator():
             t2 = datetime.time(t1.hour+1, t1.minute, t1.second)
             if t1 <= time < t2:
                 raise ValidationError(
-                    f"Some lesson is already scheduled for "
-                    f"{t1} that day"
+                    _("Some lesson is already scheduled for "
+                      "{} that day").format(t1)
                 )
 
     def __repr__(self):

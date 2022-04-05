@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     theme = models.CharField(
         max_length=100,
-        default='Consultation',
+        default=_('Consultation'),
         blank=True,
         null=True
     )
@@ -17,12 +18,12 @@ class Lesson(models.Model):
     date = models.DateField()
 
     class Meta:
-        verbose_name = 'Lesson'
-        verbose_name_plural = 'Lessons'
+        verbose_name = _('Lesson')
+        verbose_name_plural = _('Lessons')
         ordering = ('date', 'time')
 
     def __str__(self):
-        return f'The Lesson class: id = {self.pk}'
+        return _('The Lesson class: id = {}').format(self.pk)
 
     def get_absolute_url(self):
         return reverse('add_lesson_url', kwargs={'pk': self.pk})
@@ -36,8 +37,8 @@ class UserDetail(models.Model):
     whatsapp = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = 'Detail'
-        verbose_name_plural = 'Details'
+        verbose_name = _('Details')
+        verbose_name_plural = _('Details')
 
     def __str__(self):
-        return f'The UserDetail class: id = {self.user}'
+        return _('The UserDetail class: id = {}').format(self.user)
