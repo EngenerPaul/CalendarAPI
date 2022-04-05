@@ -2,7 +2,6 @@
 {% load i18n %}
 
 {% block content %}
-
 <div class="container testimonial-group">
     <div class="row text-center">
         <div class="row flex-nowrap">
@@ -17,7 +16,11 @@
                         <!-- Link is a modal trigger -->
                         <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_lesson_{{lesson.pk}}">
                         {% endif %}
+                            {% if request.user == lesson.student %}
+                            <div class="card-body" style="background-color: rgb(167, 255, 226);">
+                            {% else %}
                             <div class="card-body">
+                            {% endif %}
                                 <h5 class="card-title">
                                     <div class="theme">
                                         {{lesson.theme}}

@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     CustomRegistration, CustomLogOut, CustomLoginView, AddLessonView,
-    DeleteLessonView, LessonView, LessonByUser, AddLessonAdmin,
+    DeleteLessonView, LessonView, LessonByUser, AddLessonAdmin, Info,
     UsersAPI, RegistrationAPI, RelevantLessonsAPI, LessonsViewSet,
     LessonsAdminViewSet, RelevantLessonsAdminViewSet, DeleteUserAPI,
 )
@@ -25,6 +25,7 @@ urlpatterns = [
          name='add_lesson_admin_url'),
     path('delete-lesson/<int:pk>/', DeleteLessonView.as_view(),
          name='del_lesson_url'),
+    path('info', Info.as_view(), name='info_url'),
 
     # API
     path('api/registration', RegistrationAPI.as_view()),

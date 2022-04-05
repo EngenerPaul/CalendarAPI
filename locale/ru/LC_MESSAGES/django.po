@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-06 00:00+0400\n"
+"POT-Creation-Date: 2022-04-06 01:50+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,34 +24,38 @@ msgstr ""
 msgid "Do programming, not war"
 msgstr "Занимайтесь программированием, а не войной"
 
-#: .\templates\inc\_header.html:14 .\templates\inc\_header.html:41
+#: .\templates\inc\_header.html:14 .\templates\inc\_header.html:44
 msgid "Sergey & Company"
 msgstr ""
 
-#: .\templates\inc\_header.html:15
-msgid "Teacher: Teplyakov Sergey"
-msgstr "Преподаватель: Тепляков Сергей"
+#: .\templates\inc\_header.html:16
+msgid "Teacher: "
+msgstr "Преподаватель: "
 
-#: .\templates\inc\_header.html:19 .\templates\inc\_header.html:45
+#: .\templates\inc\_header.html:17
+msgid "Teplyakov Sergey"
+msgstr "Тепляков Сергей"
+
+#: .\templates\inc\_header.html:22 .\templates\inc\_header.html:48
 msgid "To schedule"
 msgstr "Запланировать"
 
-#: .\templates\inc\_header.html:21
+#: .\templates\inc\_header.html:24
 msgid "Sign up"
 msgstr "Записаться"
 
-#: .\templates\inc\_header.html:22 .\templates\inc\_header.html:48
+#: .\templates\inc\_header.html:25 .\templates\inc\_header.html:51
 msgid "My lessons"
 msgstr "Мои уроки"
 
-#: .\templates\inc\_header.html:25 .\templates\inc\_header.html:51
+#: .\templates\inc\_header.html:28 .\templates\inc\_header.html:54
 msgid "Log out"
 msgstr "Выйти"
 
-#: .\templates\inc\_header.html:27 .\templates\inc\_header.html:53
+#: .\templates\inc\_header.html:30 .\templates\inc\_header.html:56
 msgid "Log in"
 msgstr "Войти"
 
-#: .\templates\inc\_header.html:28 .\templates\inc\_header.html:54
+#: .\templates\inc\_header.html:31 .\templates\inc\_header.html:57
 msgid "Registration"
 msgstr "Регистрация"

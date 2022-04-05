@@ -2,10 +2,10 @@ from copy import deepcopy
 from datetime import date
 
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
-from django.views.generic import ListView, CreateView, DeleteView
+from django.views.generic import ListView, CreateView, DeleteView, View
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -278,6 +278,13 @@ class AddLessonAdmin(LoginRequiredMixin, CreateView):
             )
         )
         return HttpResponseRedirect(reverse_lazy(self.success_url))
+
+
+class Info(View):
+    """ All information about me """
+
+    def get(self, request, *arg, **kwargs):
+        return render(request, 'lessons_app/info.html')
 
 
 #################################################################

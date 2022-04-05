@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-06 00:00+0400\n"
+"POT-Creation-Date: 2022-04-06 01:50+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgid "Enter your password"
 msgstr "Введите Ваш пароль"
 
 #: .\lessons_app\forms.py:77
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:6
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:7
 msgid "Name"
 msgstr "Имя"
 
@@ -146,7 +146,9 @@ msgstr "На это уремя уже существует запись"
 #, python-brace-format
 msgid ""
 "Amount of lessons today is greater than or equel to {0}. Lesson cost is {1} ₽"
-msgstr "Количество уроков в этот день равно или превышает {0}. Стоимость урока - {1} ₽"
+msgstr ""
+"Количество уроков в этот день равно или превышает {0}. Стоимость урока - {1} "
+"₽"
 
 #: .\lessons_app\forms.py:302
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:8
@@ -181,7 +183,11 @@ msgstr "Детали"
 msgid "The UserDetail class: id = {}"
 msgstr "Класс UserDetail: id = {}"
 
-#: .\lessons_app\templates\lessons_app\add_lesson.html:10
+#: .\lessons_app\templates\lessons_app\add_lesson.html:5
+msgid "To schedule"
+msgstr "Запланировать"
+
+#: .\lessons_app\templates\lessons_app\add_lesson.html:11
 msgid "Add lesson"
 msgstr "Создать"
 
@@ -201,7 +207,11 @@ msgstr "и"
 msgid "Salary"
 msgstr "Оплата"
 
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:7
+#: .\lessons_app\templates\lessons_app\info.html:6
+msgid "About me"
+msgstr "Обо мне"
+
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:6
 msgid "My lessons"
 msgstr "Мои уроки"
 
@@ -231,17 +241,17 @@ msgstr "Утром с {0} до {1} стоимость урока составл�
 msgid "In the evening ({0}-{1} hours) the cost of the lesson is {2}"
 msgstr "Вечером с {0} до {1} стоимость урока составляет {2}"
 
-#: .\lessons_app\views.py:150 .\lessons_app\views.py:322
+#: .\lessons_app\views.py:150 .\lessons_app\views.py:329
 msgid "Phone number must be digits only"
 msgstr "Номер телефона должен состоять из чисел"
 
-#: .\lessons_app\views.py:153 .\lessons_app\views.py:324
+#: .\lessons_app\views.py:153 .\lessons_app\views.py:331
 #, fuzzy
 #| msgid "Phone number must be digits only"
 msgid "Phone number must contain 11 digits"
 msgstr "Номер телефона должен содержать 11 чисел"
 
-#: .\lessons_app\views.py:165 .\lessons_app\views.py:335
+#: .\lessons_app\views.py:165 .\lessons_app\views.py:342
 msgid "Error of way of communication"
 msgstr "Укажите способ связи"
 
