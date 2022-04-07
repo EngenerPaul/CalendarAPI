@@ -1,5 +1,5 @@
 from copy import deepcopy
-from datetime import date
+from datetime import date, timedelta, datetime
 
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
@@ -44,17 +44,16 @@ class LessonView(ListView):
     context_object_name = 'lessons'
 
     def get_queryset(self):
+        dt_today = date.today()
         all_lessons = self.model.objects.filter(
-            date__gte=date.today()).select_related(
+            date__gte=dt_today).select_related(
                 'student',
                 'student__details'
             )
-        lessons = {}
+
+        lessons = {dt_today + timedelta(days=i): [] for i in range(8)}
         for item in all_lessons:
-            if item.date in lessons:
-                lessons[item.date].append(item)
-            else:
-                lessons[item.date] = [item]
+            lessons[item.date].append(item)
         return lessons
 
 

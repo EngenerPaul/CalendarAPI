@@ -225,7 +225,7 @@ class AddLessonForm(forms.ModelForm):
             messages.error(
                 request,
                 _("Please don't book a lesson earlier then {} "
-                  "days in advace").format(C_datedelta)
+                  "days in advace").format(C_datedelta.days)
             )
             return False
 
