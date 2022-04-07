@@ -53,6 +53,8 @@ class LessonView(ListView):
 
         lessons = {dt_today + timedelta(days=i): [] for i in range(8)}
         for item in all_lessons:
+            if item.date not in lessons.keys():
+                continue
             lessons[item.date].append(item)
         return lessons
 

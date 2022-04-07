@@ -383,4 +383,13 @@ class AddLessonAdminForm(forms.ModelForm):
                 )
                 return False
 
+        dt_now = datetime.datetime.now()
+        if date > (dt_now + C_datedelta).date():
+            messages.error(
+                request,
+                _("Please don't book a lesson earlier then {} "
+                  "days in advace").format(C_datedelta.days)
+            )
+            return False
+
         return super().is_valid()
