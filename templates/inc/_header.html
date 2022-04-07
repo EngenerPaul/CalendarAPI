@@ -20,10 +20,10 @@
                 <p style="min-width: 430px;">
                     {% if user.is_staff %}
                     <a class="btn btn-primary" href="{% url 'add_lesson_admin_url' %}" >{% translate "To schedule" %}</a>
-                    {% else %}
+                    {% elif user.is_authenticated %}
                     <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >{% translate "Sign up" %}</a>
                     <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}">{% translate "My lessons" %}</a>
-                    {% endif %}
+                    {% else %}{% endif %}
                     {% if request.user.is_authenticated %}
                     <a class="btn btn-primary" href="{% url 'logout_url' %}">{% translate "Log out" %}</a>
                     {% else %}
@@ -49,11 +49,12 @@
         </h6>
         <div class="row" style="text-align: center;">
             <p>
-                <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" style="min-width: 120px;">{% translate "To schedule" %}</a>
                 {% if user.is_staff %}
-                {% else %}
-                <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}" style="min-width: 115px;">{% translate "My lessons" %}</a>
-                {% endif %}
+                <a class="btn btn-primary" href="{% url 'add_lesson_admin_url' %}" >{% translate "To schedule" %}</a>
+                {% elif user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >{% translate "Sign up" %}</a>
+                <a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}">{% translate "My lessons" %}</a>
+                {% else %}{% endif %}
                 {% if request.user.is_authenticated %}
                 <a class="btn btn-primary" href="{% url 'logout_url' %}" style="min-width: 90px;">{% translate "Log out" %}</a>
                 {% else %}

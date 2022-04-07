@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-06 01:50+0400\n"
+"POT-Creation-Date: 2022-04-07 18:58+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #: .\lessons_app\forms.py:61
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr "Логин"
 
 #: .\lessons_app\forms.py:64
 msgid "Enter your login"
@@ -39,7 +39,7 @@ msgstr "Введите Ваш пароль"
 #: .\lessons_app\forms.py:77
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:7
 msgid "Name"
-msgstr "Имя"
+msgstr "Ваше имя"
 
 #: .\lessons_app\forms.py:80
 msgid "Enter your name"
