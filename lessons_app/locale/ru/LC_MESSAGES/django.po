@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-08 14:54+0400\n"
+"POT-Creation-Date: 2022-04-08 18:33+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -253,16 +253,32 @@ msgstr "Оплата"
 msgid "Log in"
 msgstr "Войти"
 
-#: .\lessons_app\templates\lessons_app\registration.html:6
+#: .\lessons_app\templates\lessons_app\registration.html:7
 msgid "Registration"
 msgstr "Регистрация"
 
-#: .\lessons_app\templates\lessons_app\registration.html:35
-#: .\lessons_app\templates\lessons_app\registration.html:43
+#: .\lessons_app\templates\lessons_app\registration.html:36
+#: .\lessons_app\templates\lessons_app\registration.html:44
 msgid "options"
 msgstr "необязательно"
 
-#: .\lessons_app\templates\lessons_app\registration.html:48
+#: .\lessons_app\templates\lessons_app\registration.html:49
+msgid "How to find out a telegram nickname on a "
+msgstr "Как узнать никнейм в телеграм на "
+
+#: .\lessons_app\templates\lessons_app\registration.html:50
+msgid "computer"
+msgstr "компьютере"
+
+#: .\lessons_app\templates\lessons_app\registration.html:51
+msgid " and "
+msgstr " и "
+
+#: .\lessons_app\templates\lessons_app\registration.html:52
+msgid "phone"
+msgstr "телефоне"
+
+#: .\lessons_app\templates\lessons_app\registration.html:55
 msgid "Send"
 msgstr "Отправить"
 
@@ -292,6 +308,3 @@ msgstr "Произошла ошибка: урок не удален"
 #: .\lessons_app\views.py:202
 msgid "The lesson successfully deleted"
 msgstr "Урок успешно удален"
-
-#~ msgid "Error of way of communication"
-#~ msgstr "Укажите способ связи"

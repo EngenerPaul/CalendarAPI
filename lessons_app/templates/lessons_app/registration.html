@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load i18n %}
 
 {% block content %}
@@ -44,10 +45,19 @@
                 <div class="invalid-feedback">
                     {{ form.telegram.errors }}
                 </div>
+                <p style="color: black; font-size: 9pt; margin: 3px 0px;">
+                    {% translate "How to find out a telegram nickname on a " %}
+                    <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#telegram_computer">{% translate "computer" %}</a>
+                    {% translate " and " %}
+                    <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#telegram_phone">{% translate "phone" %}</a>?
+                </p>
             </p>
             <button type='submit' class='btn btn-primary btn-block'>{% translate "Send" %}</button>
         </form>
     </div>
 </div>
+
+{% include 'lessons_app/inc/telegram_modal_for_computer.html' %}
+{% include 'lessons_app/inc/telegram_modal_for_phone.html' %}
 
 {% endblock content %}
