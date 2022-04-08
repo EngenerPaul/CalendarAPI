@@ -146,6 +146,8 @@ class AddLessonForm(forms.ModelForm):
             'time': _('Time'),
             'date': _('Date')
         }
+        choice = ['Monday','Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        choice = [(i, i) for i in choice]
         widgets = {
             'theme': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -157,12 +159,17 @@ class AddLessonForm(forms.ModelForm):
             }),
             'time': forms.TimeInput(attrs={
                 'class': 'form-control',
-                'placeholder': '00:00:00'
+                'placeholder': '00:00'
             }),
-            'date': forms.DateInput(format=r'%d.%m.%Y', attrs={
+            # 'date': forms.DateInput(format=r'%d.%m.%Y', attrs={
+            #     'class': 'form-control',
+            #     'placeholder': '2022-12-31',
+            #     'value': '2022-08-'
+            # }),
+            'date': forms.Select(choices=choice, attrs={
                 'class': 'form-control',
-                'placeholder': '2022-12-31'
-            }),
+                # 'style': 'bottom: 0px;'
+            })
         }
 
     def is_valid(self, request, form):
@@ -190,17 +197,20 @@ class AddLessonForm(forms.ModelForm):
             return False
 
         try:
-            time = datetime.datetime.strptime(time, r"%H:%M").time()
+            time = datetime.datetime.strptime(time, r"%H").time()
         except BaseException:
             try:
-                time = datetime.datetime.strptime(time, r"%H:%M:%S").time()
+                time = datetime.datetime.strptime(time, r"%H:%M").time()
             except BaseException:
-                messages.error(
-                    request,
-                    _("Time must be in 'hours:minutes' or "
-                      "'hours:minutes:seconds' format")
-                )
-                return False
+                try:
+                    time = datetime.datetime.strptime(time, r"%H:%M:%S").time()
+                except BaseException:
+                    messages.error(
+                        request,
+                        _("Time must be in 'hours' or "
+                          "'hours:minutes' format")
+                    )
+                    return False
 
         try:
             date = datetime.datetime.strptime(date, r"%Y-%m-%d").date()
@@ -210,6 +220,10 @@ class AddLessonForm(forms.ModelForm):
             return False
 
         dt_now = datetime.datetime.now()
+
+        if time.minute != 0 or time.second != 0:
+            messages.error(request, _("Only hours can be set"))
+            return False
 
         if salary < C_salary_common:
             messages.error(

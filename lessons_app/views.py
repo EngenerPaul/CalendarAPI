@@ -59,7 +59,7 @@ class LessonView(ListView):
         return lessons
 
 
-class LessonByUser(LoginRequiredMixin, ListView):
+class LessonByUserView(LoginRequiredMixin, ListView):
     """ Get relevant lesson list for every student """
 
     model = Lesson
@@ -87,7 +87,7 @@ class CustomLoginView(LoginView):
         return self.success_url
 
 
-class CustomRegistration(CreateView):
+class CustomRegistrationView(CreateView):
     """Registration"""
 
     # model = User
@@ -132,7 +132,7 @@ class CustomRegistration(CreateView):
         return redirect('home_url')
 
 
-class CustomLogOut(LogoutView):
+class CustomLogOutView(LogoutView):
     """LogOut"""
 
     next_page = reverse_lazy('home_url')
@@ -204,7 +204,7 @@ class DeleteLessonView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class AddLessonAdmin(LoginRequiredMixin, CreateView):
+class AddLessonAdminView(LoginRequiredMixin, CreateView):
     """ Create lesson for students by admin """
 
     model = Lesson
@@ -236,7 +236,7 @@ class AddLessonAdmin(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
 
-class Info(View):
+class InfoView(View):
     """ All information about me """
 
     def get(self, request, *arg, **kwargs):
