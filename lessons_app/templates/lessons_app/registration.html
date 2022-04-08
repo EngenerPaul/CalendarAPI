@@ -8,7 +8,43 @@
     <div class="col" style="max-width: 400px;">
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
+            <p>
+                <label for="id_username" class="form-label">{{ form.username.label }}</label>
+                {{ form.username }}
+                <div class="invalid-feedback">
+                    {{ form.username.errors }}
+                </div>
+            </p>
+            <p>
+                <label for="id_password" class="form-label">{{ form.password.label }}</label>
+                {{ form.password }}
+                <div class="invalid-feedback">
+                    {{ form.password.errors }}
+                </div>
+            </p>
+            <p>
+                <label for="id_first_name" class="form-label">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+                <div class="invalid-feedback">
+                    {{ form.first_name.errors }}
+                </div>
+            </p>
+            <p>
+                <label for="id_phone" class="form-label">{{ form.phone.label }}</label>
+                {{ form.phone }}
+                <div style="margin-bottom: 0; margin-left: 13px; margin-top: -18px;color: #8f9397; font-size: 10pt;">{% translate "options" %}</div>
+                <div class="invalid-feedback">
+                    {{ form.phone.errors }}
+                </div>
+            </p>
+            <p>
+                <label for="id_telegram" class="form-label">{{ form.telegram.label }}</label>
+                {{ form.telegram }}
+                <div style="margin-bottom: 0; margin-left: 13px; margin-top: -18px;color: #8f9397; font-size: 10pt;">{% translate "options" %}</div>
+                <div class="invalid-feedback">
+                    {{ form.telegram.errors }}
+                </div>
+            </p>
             <button type='submit' class='btn btn-primary btn-block'>{% translate "Send" %}</button>
         </form>
     </div>

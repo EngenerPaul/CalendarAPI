@@ -12,6 +12,56 @@ from CalendarApi.constraints import (
 )
 
 
+class RegistrationValidator():
+    """ Check data for registration """
+
+    def __init__(self):
+        pass
+
+    def __call__(self, attrs):
+
+        # username doen't contain spaces
+        if len(attrs['username'].split()) > 1:
+            raise ValidationError(
+                _("Username doen't contain spaces")
+            )
+
+        # password doen't contain spaces
+        if len(attrs['password'].split()) > 1:
+            raise ValidationError(
+                _("Password doen't contain spaces")
+            )
+
+        # phone or telegram must exist
+        if attrs['phone'] == attrs['telegram'] == '':
+            raise ValidationError(
+                _('You must provide a phone number or telegram nickname')
+            )
+
+        # check phone format
+        if attrs['phone'] != '':
+            try:
+                int(attrs['phone'])
+            except BaseException:
+                raise ValidationError(_("Phone number must be digits only"))
+            if len(attrs['phone']) != 11:
+                raise ValidationError(_("Phone number must contain 11 digits"))
+
+        # check telegram format
+        if attrs['telegram'] != '':
+            if attrs['telegram'][0] != '@':
+                raise ValidationError(
+                    _("Telegram nickname must start with '@..'")
+                )
+            if len(attrs['telegram'].split()) > 1:
+                raise ValidationError(
+                    _("Telegram nickname doen't contain spaces")
+                )
+
+    def __repr__(self):
+        return 'RegistrationValidator class without queryset'
+
+
 class AdminValidator():
     """ Сheck for non-intersection of lessons """
 

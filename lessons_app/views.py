@@ -87,33 +87,6 @@ class CustomLoginView(LoginView):
         return self.success_url
 
 
-# class CustomRegistration(CreateView):
-#     """Registration"""
-
-#     model = User
-#     template_name = 'lessons_app/registration.html'
-#     form_class = RegisterUserForm
-#     success_url = reverse_lazy('home_url')
-
-#     def post(self, request, *args, **kwargs):
-#         form = self.get_form()
-#         if form.is_valid():
-#             return self.form_valid(request, form)
-#         else:
-#             return self.form_invalid(form)
-
-#     def form_valid(self, request, form):
-#         """the method is overridden added auto-authentication"""
-
-#         form_valid = super().form_valid(form)
-#         messages.success(request, "Registration completed")
-#         username = form.cleaned_data['username']
-#         password = form.cleaned_data['password']
-#         auth_user = authenticate(username=username, password=password)
-#         login(self.request, auth_user)
-#         return form_valid
-
-
 class CustomRegistration(CreateView):
     """Registration"""
 
@@ -127,10 +100,9 @@ class CustomRegistration(CreateView):
 
     def post(self, request, *args, **kwargs):
         form = RegisterUserForm(request.POST)
-        if form.is_valid():
+        if form.is_valid(request, form):
             return self.form_valid(request, form)
         else:
-            messages.error(request, "Error")
             return redirect('registration_url')
 
     def form_valid(self, request, form):
@@ -138,42 +110,25 @@ class CustomRegistration(CreateView):
         auto-authentication """
 
         user = User()
+        userdetail = UserDetail()
+
         user.username = form.cleaned_data['username']
         user.password = make_password(form.cleaned_data['password'])
         user.first_name = form.cleaned_data['first_name']
 
-        userdetail = UserDetail()
         userdetail.user = user
-
-        try:
-            int(form.cleaned_data['phone'])
-        except BaseException:
-            messages.error(request, _("Phone number must be digits only"))
-            return redirect('registration_url')
-        if len(form.cleaned_data['phone']) != 11:
-            messages.error(request, _("Phone number must contain 11 digits"))
-            return redirect('registration_url')
         userdetail.phone = form.cleaned_data['phone']
-
-        if form.cleaned_data['relation'] == 'WhatsApp':
-            userdetail.whatsapp = True
-        elif form.cleaned_data['relation'] == 'Telegram':
-            userdetail.telegram = True
-        elif form.cleaned_data['relation'] == 'Both':
-            userdetail.whatsapp = True
-            userdetail.telegram = True
-        else:
-            messages.error(request, _("Error of way of communication"))
-            return redirect('registration_url')
+        userdetail.telegram = form.cleaned_data['telegram']
 
         user.save()
         userdetail.save()
-
         messages.success(request, _("Registration completed"))
+
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         auth_user = authenticate(username=username, password=password)
         login(self.request, auth_user)
+
         return redirect('home_url')
 
 
@@ -292,18 +247,11 @@ class Info(View):
 #                            DRF API                            #
 #################################################################
 
-# class RegistrationAPI(CreateAPIView):
-#     """ Registration new users """
-
-#     queryset = User.objects.all()
-#     serializer_class = RegistrationSerializer
-#     permission_classes = [AllowAny]
-
 
 class RegistrationAPI(CreateAPIView):
     """ Registration new users.
-    get_serializer(), get_serializer_class(),
-    get_serializer_context() uses from GenericAPIView.
+    get_serializer(), get_serializer_class(), get_serializer_context()
+    uses from GenericAPIView.
     get_success_headers() uses from CreateModelMixin"""
 
     serializer_class = RegistrationSerializer
@@ -317,30 +265,15 @@ class RegistrationAPI(CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         user = User()
+        userdetail = UserDetail()
+
         user.username = serializer.data['username']
         user.password = make_password(serializer.data['password'])
         user.first_name = serializer.data['first_name']
 
-        userdetail = UserDetail()
         userdetail.user = user
-
-        try:
-            int(serializer.data['phone'])
-        except BaseException:
-            raise ValidationError(_("Phone number must be digits only"))
-        if len(serializer.data['phone']) != 11:
-            raise ValidationError(_("Phone number must contain 11 digits"))
         userdetail.phone = serializer.data['phone']
-
-        if serializer.data['relation'] == 'WhatsApp':
-            userdetail.whatsapp = True
-        elif serializer.data['relation'] == 'Telegram':
-            userdetail.telegram = True
-        elif serializer.data['relation'] == 'Both':
-            userdetail.whatsapp = True
-            userdetail.telegram = True
-        else:
-            raise ValidationError(_("Error of way of communication"))
+        userdetail.telegram = serializer.data['telegram']
 
         user.save()
         userdetail.save()

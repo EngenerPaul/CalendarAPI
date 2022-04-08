@@ -32,9 +32,8 @@ class Lesson(models.Model):
 class UserDetail(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 related_name='details')
-    phone = models.CharField(max_length=11)
-    telegram = models.BooleanField(default=False)
-    whatsapp = models.BooleanField(default=False)
+    phone = models.CharField(max_length=11, blank=True, null=True)
+    telegram = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
         verbose_name = _('Details')

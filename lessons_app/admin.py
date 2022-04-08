@@ -13,7 +13,7 @@ class LessonAdmin(admin.ModelAdmin):
 
 
 class InlineAdmin(admin.TabularInline):
-    list_display = ('phone',)
+    list_display = ('phone', 'telegram')
     model = UserDetail
 
 
@@ -27,7 +27,7 @@ class CustomUserAdmin(UserAdmin):
 
 
 class CustomUserDetailAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_id', 'user', 'phone', 'telegram', 'whatsapp')
+    list_display = ('id', 'user_id', 'user', 'phone', 'telegram')
     list_display_links = ('id', )
     ordering = ('user', )
     list_per_page = 50

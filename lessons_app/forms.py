@@ -14,45 +14,6 @@ from CalendarApi.constraints import (
 )
 
 
-# class RegisterUserForm(forms.ModelForm):
-#     """Form for registration
-#     Use in views - CustomRegistration, template - registration.html"""
-
-#     class Meta:
-#         model = User
-#         fields = ('username', 'first_name', 'password')
-#         labels = {
-#             'username': 'Login',
-#             'first_name': 'Name',
-#             'password': 'Password',
-#         }
-#         widgets = {
-#             'username': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': 'Enter your login'
-#             }),
-#             'first_name': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': 'Enter your name'
-#             }),
-#             'password': forms.TextInput(attrs={
-#                 'class': 'form-control',
-#                 'placeholder': 'Enter your password'
-#             })
-#         }
-#         help_texts = {
-#             'username': None,
-#         }
-
-#     # .\venv\Lib\site-packages\django\contrib\auth\forms.py
-#     def save(self, commit=True):
-#         user = super().save(commit=False)
-#         user.set_password(self.cleaned_data["password"])
-#         if commit:
-#             user.save()
-#         return user
-
-
 class RegisterUserForm(forms.Form):
     """Form for registration
     Use in views - CustomRegistration, template - registration.html"""
@@ -87,20 +48,68 @@ class RegisterUserForm(forms.Form):
             'class': 'form-control',
             'placeholder': '89001234567',
             'style': 'margin-bottom: 10px'
-        })
+        }),
+        required=False
     )
-    choice = [
-        ('WhatsApp', 'WhatsApp'),
-        ('Telegram', 'Telegram'),
-        ('Both', 'Both')
-    ]
-    relation = forms.ChoiceField(
-        choices=choice,
-        label=_('Way of communication'),
-        widget=forms.RadioSelect(attrs={
-            'style': 'margin-bottom: 10px'
-        })
+    telegram = forms.CharField(
+        label='Telegram',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '@nickname'
+        }),
+        required=False
     )
+
+    def is_valid(self, request, form) -> bool:
+
+        # username doen't contain spaces
+        if len(form['username'].value().split()) > 1:
+            messages.error(request, _("Username doen't contain spaces"))
+            return False
+
+        # password doen't contain spaces
+        if len(form['password'].value().split()) > 1:
+            messages.error(request, _("Password doen't contain spaces"))
+            return False
+
+        # phone or telegram must exist
+        if form['phone'].value() == form['telegram'].value() == '':
+            messages.error(
+                request,
+                _('You must provide a phone number or telegram nickname')
+            )
+            return False
+
+        # check phone format
+        if form['phone'].value() != '':
+            try:
+                int(form['phone'].value())
+            except BaseException:
+                messages.error(request, _("Phone number must be digits only"))
+                return False
+            if len(form['phone'].value()) != 11:
+                messages.error(
+                    request,
+                    message=_("Phone number must contain 11 digits")
+                )
+                return False
+
+        # check telegram format
+        if form['telegram'].value() != '':
+            if form['telegram'].value()[0] != '@':
+                messages.error(
+                    request,
+                    message=_("Telegram nickname must start with '@..'")
+                )
+                return False
+            if len(form['telegram'].value().split()) > 1:
+                messages.error(
+                    request,
+                    message=_("Telegram nickname doen't contain spaces")
+                )
+                return False
+
+        return super().is_valid()
 
 
 class AuthUserForm(AuthenticationForm, forms.ModelForm):
