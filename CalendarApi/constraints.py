@@ -4,7 +4,7 @@ import datetime
 С_morning_time = datetime.time(hour=8)  # start of business hours
 С_morning_time_markup = datetime.time(hour=10)  # until that time the salary is high
 C_evening_time_markup = datetime.time(hour=21)  # after that time the salary is high
-C_evening_time = datetime.time(hour=23, minute=1)  # end of business hours
+C_evening_time = datetime.time(hour=23)  # end of business hours
 
 C_salary_common = 1000  # min salary
 C_salary_high = 1300  # salary for morning and evening hours

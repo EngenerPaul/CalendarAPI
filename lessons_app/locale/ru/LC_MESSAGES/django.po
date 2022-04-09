@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-09 18:02+0400\n"
+"POT-Creation-Date: 2022-04-09 19:19+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,31 +50,31 @@ msgstr "Введите Ваше имя"
 msgid "Phone"
 msgstr "Телефон"
 
-#: .\lessons_app\forms.py:65 .\lessons_app\validators.py:26
+#: .\lessons_app\forms.py:65 .\lessons_app\validators.py:24
 msgid "Username doen't contain spaces"
 msgstr "Логин не должен содержать пробелы"
 
-#: .\lessons_app\forms.py:70 .\lessons_app\validators.py:32
+#: .\lessons_app\forms.py:70 .\lessons_app\validators.py:30
 msgid "Password doen't contain spaces"
 msgstr "Пароль не должен содержать пробелы"
 
-#: .\lessons_app\forms.py:77 .\lessons_app\validators.py:38
+#: .\lessons_app\forms.py:77 .\lessons_app\validators.py:36
 msgid "You must provide a phone number or telegram nickname"
 msgstr "Вы должны указать номер телефона или никнейм в Telegram"
 
-#: .\lessons_app\forms.py:86 .\lessons_app\validators.py:46
+#: .\lessons_app\forms.py:86 .\lessons_app\validators.py:44
 msgid "Phone number must be digits only"
 msgstr "Номер телефона должен состоять из чисел"
 
-#: .\lessons_app\forms.py:91 .\lessons_app\validators.py:48
+#: .\lessons_app\forms.py:91 .\lessons_app\validators.py:46
 msgid "Phone number must contain 11 digits"
 msgstr "Номер телефона должен содержать 11 чисел"
 
-#: .\lessons_app\forms.py:100 .\lessons_app\validators.py:54
+#: .\lessons_app\forms.py:100 .\lessons_app\validators.py:52
 msgid "Telegram nickname must start with '@..'"
 msgstr "Никнейм в Telegram начинается с '@..'"
 
-#: .\lessons_app\forms.py:106 .\lessons_app\validators.py:58
+#: .\lessons_app\forms.py:106 .\lessons_app\validators.py:56
 msgid "Telegram nickname doen't contain spaces"
 msgstr "Никнейм в Telegram не должен содержать пробелы"
 
@@ -126,28 +126,28 @@ msgstr "Дата"
 msgid "Time must be in 'hours' or 'hours:minutes' format"
 msgstr "Время должно быть формата 'час' или 'час:минута'"
 
-#: .\lessons_app\forms.py:199 .\lessons_app\validators.py:108
+#: .\lessons_app\forms.py:199 .\lessons_app\validators.py:106
 msgid "The date {} has already arrived"
 msgstr "Дата уже свершилась"
 
-#: .\lessons_app\forms.py:205 .\lessons_app\validators.py:112
+#: .\lessons_app\forms.py:205 .\lessons_app\validators.py:110
 msgid "Please don't book a lesson earlier then {} days in advace"
 msgstr "Записаться на урок можно не ранее, чем за {} дней"
 
-#: .\lessons_app\forms.py:214 .\lessons_app\validators.py:119
+#: .\lessons_app\forms.py:214 .\lessons_app\validators.py:117
 msgid "Please, sign up for a lesson {} hours before to start"
 msgstr "Пожалуйста, записывайтеся на урок за {} часа до начала"
 
-#: .\lessons_app\forms.py:221 .\lessons_app\validators.py:125
+#: .\lessons_app\forms.py:221 .\lessons_app\validators.py:123
 msgid "The time {} is too early"
 msgstr "Это время слишком раннее"
 
-#: .\lessons_app\forms.py:224 .\lessons_app\validators.py:127
+#: .\lessons_app\forms.py:224 .\lessons_app\validators.py:125
 msgid "The time {} is too late"
 msgstr "Это время слишком позднее"
 
-#: .\lessons_app\forms.py:235 .\lessons_app\validators.py:70
-#: .\lessons_app\validators.py:136
+#: .\lessons_app\forms.py:235 .\lessons_app\validators.py:68
+#: .\lessons_app\validators.py:134
 msgid "Some lesson is already scheduled for {} that day"
 msgstr "На это уремя уже существует запись"
 
@@ -161,7 +161,7 @@ msgstr "Имя студента"
 msgid "Cost"
 msgstr "Оплата"
 
-#: .\lessons_app\forms.py:310 .\lessons_app\validators.py:86
+#: .\lessons_app\forms.py:310 .\lessons_app\validators.py:84
 msgid "Please, select a student"
 msgstr "Пожалуйста выберите студента"
 
@@ -189,7 +189,12 @@ msgstr "Класс UserDetail: id = {}"
 msgid "To schedule"
 msgstr "Запланировать"
 
-#: .\lessons_app\templates\lessons_app\add_lesson.html:11
+#: .\lessons_app\templates\lessons_app\add_lesson.html:12
+#: .\lessons_app\templates\lessons_app\add_lesson.html:24
+msgid "How to find out the cost?"
+msgstr "Как узнать стоимость урока?"
+
+#: .\lessons_app\templates\lessons_app\add_lesson.html:14
 msgid "Add lesson"
 msgstr "Создать"
 
@@ -254,19 +259,35 @@ msgstr "телефоне"
 msgid "Send"
 msgstr "Отправить"
 
-#: .\lessons_app\views.py:129
+#: .\lessons_app\views.py:125
 msgid "Registration completed"
 msgstr "Регистрация завершена"
 
-#: .\lessons_app\views.py:194 .\lessons_app\views.py:273
+#: .\lessons_app\views.py:161
+msgid "The cost of a usual lesson is {} ₽"
+msgstr "Стоимость обычного урока - {} ₽"
+
+#: .\lessons_app\views.py:164
+msgid "The cost of a lesson in the early morning to {} is {} ₽."
+msgstr "Стоимость урока рано утром до {} - {} ₽."
+
+#: .\lessons_app\views.py:167
+msgid "The cost of a lesson in the late evening to {} is {} ₽."
+msgstr "Стоимость урока поздно вечером после {} - {} ₽."
+
+#: .\lessons_app\views.py:170
+msgid "The cost of a lesson when day is full ({} lessons per day) is {} ₽."
+msgstr "Стоимость урока в переполненный день ({} уроков в день) - {} ₽."
+
+#: .\lessons_app\views.py:208 .\lessons_app\views.py:287
 #, python-brace-format
 msgid "Lesson successfully created. Date: {0}. Time: {1}. Cost: {2} ₽"
 msgstr "Урок успешно создан. Дата: {0}. Время: {1}. Стоимость: {2} ₽"
 
-#: .\lessons_app\views.py:221
+#: .\lessons_app\views.py:235
 msgid "Error: the lesson wasn't deleted"
 msgstr "Произошла ошибка: урок не удален"
 
-#: .\lessons_app\views.py:230
+#: .\lessons_app\views.py:244
 msgid "The lesson successfully deleted"
 msgstr "Урок успешно удален"

@@ -6,9 +6,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.utils.representation import smart_repr
 
 from CalendarApi.constraints import (
-    С_morning_time, С_morning_time_markup, C_evening_time_markup,
-    C_evening_time, C_salary_common, C_salary_high, C_salary_max, C_timedelta,
-    C_datedelta, C_lesson_threshold
+    С_morning_time, C_evening_time, C_timedelta, C_datedelta,
 )
 
 

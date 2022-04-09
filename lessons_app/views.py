@@ -12,19 +12,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import (
-    ListAPIView, CreateAPIView, DestroyAPIView, GenericAPIView,
-    get_object_or_404
+    ListAPIView, CreateAPIView, DestroyAPIView, get_object_or_404
 )
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework.mixins import CreateModelMixin
-from rest_framework.exceptions import ValidationError
 
 from .models import Lesson, UserDetail
 from .forms import (
@@ -155,10 +151,28 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         if request.user.is_staff:
             return redirect('add_lesson_admin_url')
         form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        context = self.get_context_data()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['message_1'] = _(
+            "The cost of a usual lesson is {} ₽"
+        ).format(C_salary_common)
+        context['message_2'] = _(
+            "The cost of a lesson in the early morning to {} is {} ₽."
+        ).format(С_morning_time_markup.strftime(r'%H:%M'), C_salary_high)
+        context['message_3'] = _(
+            "The cost of a lesson in the late evening to {} is {} ₽."
+        ).format(C_evening_time_markup.strftime(r'%H:%M'), C_salary_high)
+        context['message_4'] = _(
+            "The cost of a lesson when day is full ({} lessons per day) "
+            "is {} ₽."
+        ).format(C_lesson_threshold, C_salary_high)
+        return context
 
     def post(self, request, *args, **kwargs):
-        # form = self.get_form()
         form = self.form_class(request.POST)
         if form.is_valid(request, form):
             return self.form_valid(request, form)
@@ -179,7 +193,7 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         lesson.student_id = request.user.pk
 
         is_morning = С_morning_time <= time < С_morning_time_markup
-        is_evening = C_evening_time_markup <= time < C_evening_time
+        is_evening = C_evening_time_markup <= time <= C_evening_time
         is_over = len(Lesson.objects.filter(date=date)
                       ) >= C_lesson_threshold
         if is_morning or is_evening or is_over:
@@ -397,7 +411,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
         time = serializer.validated_data['time']
         date = serializer.validated_data['date']
         is_morning = С_morning_time <= time < С_morning_time_markup
-        is_evening = C_evening_time_markup <= time < C_evening_time
+        is_evening = C_evening_time_markup <= time <= C_evening_time
         is_over = len(Lesson.objects.filter(date=date)
                       ) >= C_lesson_threshold
         if is_morning or is_evening or is_over:

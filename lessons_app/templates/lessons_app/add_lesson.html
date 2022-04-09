@@ -8,8 +8,30 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
+            <p>
+                <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_cost" style="color: black; font-size: 9pt;">{% translate "How to find out the cost?" %}</a><br>
+            </p>
             <button type='submit' class='btn btn-primary btn-block'>{% translate "Add lesson" %}</button>
         </form>
     </div> 
+</div>
+
+<div class="modal fade" id="M_cost" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="white-space: normal">
+                    {% translate "How to find out the cost?" %}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <p style="white-space: normal; text-align: left; padding: 10px;">
+                {{ message_1 }} <br>
+                {{ message_2 }} <br>
+                {{ message_3 }} <br>
+                {{ message_4 }}
+            </p>
+        </div>
+    </div>
 </div>
 {% endblock content %}
