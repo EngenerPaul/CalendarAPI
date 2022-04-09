@@ -13,18 +13,11 @@
             <p style="white-space: normal; text-align: left; padding: 10px;">
                 <b>{% translate "Student id" %}:</b> {{ lesson.student.pk }}<br>
                 <b>{% translate "Lessons id" %}:</b> {{ lesson.pk }}<br>
-                <b>{% translate "Phone" %}:</b> {{ lesson.student.details.phone }}<br>
-                {% if lesson.student.details.telegram and lesson.student.details.whatsapp %}
-                <b>{% translate "Way of communication" %}:</b> Telegram {% translate "and" %} WhatsApp<br>
-                {% elif lesson.student.details.telegram %}
-                <b>{% translate "Way of communication" %}:</b> Telegram<br>
-                {% elif lesson.student.details.whatsapp %}
-                <b>{% translate "Way of communication" %}:</b> WhatsApp<br>
-                {% endif %}
+                <b>{% translate "Phone" %}:</b> {% if lesson.student.details.phone %} {{ lesson.student.details.phone }} {% else %} ⸺ {% endif %}<br>
+                <b>{% translate "Telegram" %}:</b> {% if lesson.student.details.telegram %} {{ lesson.student.details.telegram }} {% else %} ⸺ {% endif %}<br>
                 <b>{% translate "Salary" %}:</b> {{ lesson.salary }} ₽<br>
                 <b>{% translate "Date" %}:</b> {{ lesson.date|date:"j E, D" }}<br>
-                <b>{% translate "Time" %}:</b> {{ lesson.time|date:"G:i" }}<br>
-                <b>{% translate "Theme" %}:</b> {{ lesson.theme }}
+                <b>{% translate "Time" %}:</b> {{ lesson.time|date:"G:i" }}
             </p>
         </div>
     </div>
