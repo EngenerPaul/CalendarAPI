@@ -329,6 +329,7 @@ class InfoView(View):
         context['C_evening_time_markup'] = C_evening_time_markup.strftime(
             '%H:%M')
         context['C_lesson_threshold'] = C_lesson_threshold
+        return context
 
     def my_age():
         """this function shows my age today"""
