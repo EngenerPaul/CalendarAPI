@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-09 19:19+0400\n"
+"POT-Creation-Date: 2022-04-10 02:43+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr "Занимайтесь программированием, а не во�
 msgid "Sergey & Company"
 msgstr ""
 
-#: .\templates\inc\_header.html:16 .\templates\inc\_header.html:52
+#: .\templates\inc\_header.html:17 .\templates\inc\_header.html:52
 msgid "Teacher: "
 msgstr "Преподаватель: "
 

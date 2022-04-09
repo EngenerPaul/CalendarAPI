@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-09 19:19+0400\n"
+"POT-Creation-Date: 2022-04-10 02:43+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,6 +47,7 @@ msgstr "Введите Ваше имя"
 
 #: .\lessons_app\forms.py:44
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:16
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:9
 msgid "Phone"
 msgstr "Телефон"
 
@@ -84,7 +85,7 @@ msgstr "Введите Ваш логин"
 
 #: .\lessons_app\forms.py:139 .\lessons_app\forms.py:262
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:20
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:17
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:22
 msgid "Time"
 msgstr "Время"
 
@@ -118,7 +119,7 @@ msgstr "Воскресенье"
 
 #: .\lessons_app\forms.py:169 .\lessons_app\forms.py:292
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:19
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:16
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:21
 msgid "Date"
 msgstr "Дата"
 
@@ -157,7 +158,7 @@ msgid "Student"
 msgstr "Имя студента"
 
 #: .\lessons_app\forms.py:298
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:18
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:23
 msgid "Cost"
 msgstr "Оплата"
 
@@ -207,6 +208,7 @@ msgid "Lessons id"
 msgstr "Id урока"
 
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:17
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:12
 msgid "Telegram"
 msgstr ""
 
@@ -218,13 +220,142 @@ msgstr "Оплата"
 msgid "About me"
 msgstr "Обо мне"
 
+#: .\lessons_app\templates\lessons_app\info.html:14
+#: .\lessons_app\templates\lessons_app\info.html:72
+msgid "Hello!"
+msgstr "Добрый день!"
+
+#: .\lessons_app\templates\lessons_app\info.html:16
+#: .\lessons_app\templates\lessons_app\info.html:74
+#, python-format
+msgid ""
+"I am Teplyakov Sergey (%(age)s years old). I am programming coach. I teach "
+"to work with object-oriented language <nobr>Python 3</nobr>. I taught "
+"greater than <nobr>2 000</nobr> lessons teaching peoples of all ages. I am "
+"ready to help you specific problem or conduct a training lesson based on my "
+"materials."
+msgstr ""
+"Я Тепляков Сергей (%(age)s лет) - репетитор по программированию. Обучаю "
+"работе с объектно-ориентированным языком  <nobr>Python 3</nobr>. Провел "
+"более <nobr>2 000</nobr> уроков, обучая людей всех возрастов. Готов помочь "
+"Вам в решении конкретной задачи или провести обучающий урок по моим "
+"материалам. "
+
+#: .\lessons_app\templates\lessons_app\info.html:19
+#: .\lessons_app\templates\lessons_app\info.html:77
+msgid "Professional achievements"
+msgstr "Профессиональные достижения"
+
+#: .\lessons_app\templates\lessons_app\info.html:22
+#: .\lessons_app\templates\lessons_app\info.html:80
+msgid ""
+"I have a master’s degree in information system and technology. Theme of my "
+"dissertation is “Monitoring and forecasting of georisks”. The software was "
+"created using Python, JavaScript and WebSocket technology."
+msgstr ""
+"Имею звание магистра информационных систем и технологий. Тема диссертации –  "
+"“мониторинг и прогнозирование георисков”. Программный продукт был написан на "
+"Python, JavaScript c применением технологии WebSocket"
+
+#: .\lessons_app\templates\lessons_app\info.html:24
+#: .\lessons_app\templates\lessons_app\info.html:82
+msgid "I finished course for programmer at ITMO university"
+msgstr "Завершил курс для программистов от университета ITMO"
+
+#: .\lessons_app\templates\lessons_app\info.html:25
+#: .\lessons_app\templates\lessons_app\info.html:83
+msgid ""
+"Received a patent for a computer program (use graph theory and neural "
+"networks for a travel planning)"
+msgstr ""
+"Получил патент на программу для ЭВМ (применение теории графов и нейронных "
+"сетей для планирования путешествий)"
+
+#: .\lessons_app\templates\lessons_app\info.html:26
+#: .\lessons_app\templates\lessons_app\info.html:84
+msgid "I have publications in international digest"
+msgstr "Имею публикации в международных сборниках"
+
+#: .\lessons_app\templates\lessons_app\info.html:27
+#: .\lessons_app\templates\lessons_app\info.html:85
+msgid "Develop many parsers, chat-bots and neural networks"
+msgstr "Создал множество парсеров, чат-ботов и нейронных сетей"
+
+#: .\lessons_app\templates\lessons_app\info.html:28
+#: .\lessons_app\templates\lessons_app\info.html:86
+msgid ""
+"I have experience of teaching activities at a university (St.Petersburg "
+"polytechnic university)"
+msgstr ""
+"Опыт преподавательской деятельности в вузе (Политехнический университет СПБ)"
+
+#: .\lessons_app\templates\lessons_app\info.html:32
+#: .\lessons_app\templates\lessons_app\info.html:90
+msgid "Lesson construction"
+msgstr "Построение урока"
+
+#: .\lessons_app\templates\lessons_app\info.html:33
+#: .\lessons_app\templates\lessons_app\info.html:91
+msgid ""
+"I composes a plan and presentation for every lesson. You can change ratio of "
+"theory and practice. If you want more practice (coding, analysis examples "
+"etc.), then I’m in!"
+msgstr ""
+"На каждое занятие мною будет составлен план урока и презентация. Соотношение "
+"теории и практики устанавливается по Вашему желанию. Если Вы хотите больше "
+"практики: написание кода, разбора примеров и так далее, то я только за!"
+
+#: .\lessons_app\templates\lessons_app\info.html:36
+#: .\lessons_app\templates\lessons_app\info.html:94
+msgid "Payment"
+msgstr "Оплата"
+
+#: .\lessons_app\templates\lessons_app\info.html:37
+#: .\lessons_app\templates\lessons_app\info.html:95
+#, python-format
+msgid ""
+"Payment by phone number (Tinkoff, Sber). Lesson cost is <nobr>"
+"%(C_salary_common)s</nobr> rub. Cost of an early morning (until <nobr>"
+"%(С_morning_time_markup)s</nobr>) or late evening (after <nobr>"
+"%(C_evening_time_markup)s</nobr>) lesson is <nobr>%(C_salary_high)s</nobr> "
+"rub. Also cost is <nobr>%(C_salary_high)s</nobr> rub when day is overflow "
+"(%(C_lesson_threshold)s lessons per day)."
+msgstr ""
+"Оплата по номеру телефона (Тинькофф, Сбер). Стоимость урока - <nobr>"
+"%(C_salary_common)s</nobr> руб. Рано утром (до <nobr>"
+"%(С_morning_time_markup)s</nobr>) и поздно вечером (после <nobr>"
+"%(C_evening_time_markup)s</nobr>) стоимость повышенная - <nobr>"
+"%(C_salary_high)s</nobr> руб. В переполненные дни (%(C_lesson_threshold)s "
+"урок за день) стоимость также повышенная - <nobr>%(C_salary_high)s</nobr> "
+"руб."
+
+#: .\lessons_app\templates\lessons_app\info.html:41
+#: .\lessons_app\templates\lessons_app\info.html:57
+#: .\lessons_app\templates\lessons_app\info.html:98
+msgid "Contacts"
+msgstr "Контакты"
+
+#: .\lessons_app\templates\lessons_app\info.html:43
+#: .\lessons_app\templates\lessons_app\info.html:59
+#: .\lessons_app\templates\lessons_app\info.html:100
+msgid "Phone number "
+msgstr "Номер телефона "
+
+#: .\lessons_app\templates\lessons_app\info.html:44
+#: .\lessons_app\templates\lessons_app\info.html:60
+#: .\lessons_app\templates\lessons_app\info.html:101
+msgid "Avito announcement "
+msgstr "Объявление на Авито "
+
+#: .\lessons_app\templates\lessons_app\info.html:44
+#: .\lessons_app\templates\lessons_app\info.html:60
+#: .\lessons_app\templates\lessons_app\info.html:101
+msgid "Link"
+msgstr "Ссылка"
+
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:6
 msgid "My lessons"
 msgstr "Мои уроки"
-
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:15
-msgid "Theme"
-msgstr "Тема"
 
 #: .\lessons_app\templates\lessons_app\login.html:12
 msgid "Log in"
@@ -263,23 +394,23 @@ msgstr "Отправить"
 msgid "Registration completed"
 msgstr "Регистрация завершена"
 
-#: .\lessons_app\views.py:161
+#: .\lessons_app\views.py:161 .\lessons_app\views.py:268
 msgid "The cost of a usual lesson is {} ₽"
 msgstr "Стоимость обычного урока - {} ₽"
 
-#: .\lessons_app\views.py:164
+#: .\lessons_app\views.py:164 .\lessons_app\views.py:271
 msgid "The cost of a lesson in the early morning to {} is {} ₽."
 msgstr "Стоимость урока рано утром до {} - {} ₽."
 
-#: .\lessons_app\views.py:167
+#: .\lessons_app\views.py:167 .\lessons_app\views.py:274
 msgid "The cost of a lesson in the late evening to {} is {} ₽."
 msgstr "Стоимость урока поздно вечером после {} - {} ₽."
 
-#: .\lessons_app\views.py:170
+#: .\lessons_app\views.py:170 .\lessons_app\views.py:277
 msgid "The cost of a lesson when day is full ({} lessons per day) is {} ₽."
 msgstr "Стоимость урока в переполненный день ({} уроков в день) - {} ₽."
 
-#: .\lessons_app\views.py:208 .\lessons_app\views.py:287
+#: .\lessons_app\views.py:208 .\lessons_app\views.py:306
 #, python-brace-format
 msgid "Lesson successfully created. Date: {0}. Time: {1}. Cost: {2} ₽"
 msgstr "Урок успешно создан. Дата: {0}. Время: {1}. Стоимость: {2} ₽"

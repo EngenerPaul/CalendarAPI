@@ -316,7 +316,32 @@ class InfoView(View):
     """ All information about me """
 
     def get(self, request, *arg, **kwargs):
-        return render(request, 'lessons_app/info.html')
+        context = self.get_context_data()
+        return render(request, 'lessons_app/info.html', context)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['age'] = self.my_age()
+        context['C_salary_common'] = C_salary_common
+        context['C_salary_high'] = C_salary_high
+        context['С_morning_time_markup'] = С_morning_time_markup.strftime(
+            '%H:%M')
+        context['C_evening_time_markup'] = C_evening_time_markup.strftime(
+            '%H:%M')
+        context['C_lesson_threshold'] = C_lesson_threshold
+
+    def my_age():
+        """this function shows my age today"""
+
+        today = date.today()
+        birthday = date(year=today.year, month=5, day=18)
+        birthdate = date(year=1996, month=8, day=23)
+
+        age = today.year - birthdate.year
+        if today >= birthday:
+            return age
+        else:
+            return age - 1
 
 
 #################################################################

@@ -11,42 +11,37 @@
         </div>
         
         <div>
-            <h4>Добрый день!</h4>
+            <h4>{% translate 'Hello!' %}</h4>
             <p> 
-                Я Тепляков Сергей (25 лет) - репетитор по программированию. Обучаю работе с объектно-ориентированным языком <nobr>Python 3</nobr>.
-                Провел более <nobr>2 000</nobr> уроков, обучая людей всех возрастов. Готов помочь Вам в решении конкретной задачи или провести обучающий урок по моим материалам.
+                {% blocktranslate %}I am Teplyakov Sergey ({{ age }} years old). I am programming coach. I teach to work with object-oriented language <nobr>Python 3</nobr>. I taught greater than <nobr>2 000</nobr> lessons teaching peoples of all ages. I am ready to help you specific problem or conduct a training lesson based on my materials.{% endblocktranslate %}
             </p>
             <p>
-                <h5>Профессиональные достижения</h5>
+                <h5>{% translate 'Professional achievements' %}</h5>
                 <ul style="margin-left: 600px;">
                     <li>
-                        Имею звание магистра информационных систем и технологий (тема диссертации: “мониторинг и прогнозирование георисков”). 
-                        Программный продукт был написан на Python, JS c применением технологии WebSocket
+                        {% translate 'I have a master’s degree in information system and technology. Theme of my dissertation is “Monitoring and forecasting of georisks”. The software was created using Python, JavaScript and WebSocket technology.' %}
                     </li>
-                    <li>Завершил курс для программистов от университета ITMO</li>
-                    <li>Получил патент на программу для ЭВМ (применение теории графов и нейронных сетей для планирования путешествий)</li>
-                    <li>Имею публикации в международных сборниках</li>
-                    <li>Создал множество парсеров, чат-ботов, нейронных сетей</li>
-                    <li>Опыт преподавательской деятельности в вузе (Политехнический университет СПб)</li>
+                    <li>{% translate 'I finished course for programmer at ITMO university' %}</li>
+                    <li>{% translate 'Received a patent for a computer program (use graph theory and neural networks for a travel planning)' %}</li>
+                    <li>{% translate 'I have publications in international digest' %}</li>
+                    <li>{% translate 'Develop many parsers, chat-bots and neural networks' %}</li>
+                    <li>{% translate 'I have experience of teaching activities at a university (St.Petersburg polytechnic university)' %}</li>
                 </ul>
             </p>
             <p>
-                <h5>Построение урока</h5>
-                На каждое занятие мною будет составлен план урока и презентация. Соотношение теории и практики установливается по Вашему желанию. 
-                Если Вы хотите больше практики: написание кода, разбора примеров и так далее, то я только за.
+                <h5>{% translate 'Lesson construction' %}</h5>
+                {% translate 'I composes a plan and presentation for every lesson. You can change ratio of theory and practice. If you want more practice (coding, analysis examples etc.), then I’m in!' %}
             </p>
             <p>
-                <h5>Оплата</h5>
-                Оплата по номеру телефона (Тинькофф, Сбер).
-                Стоимость урока - <nobr>1 000</nobr> руб. Рано утром <nobr>(до 10:00)</nobr> и поздно вечером <nobr>(после 21:00)</nobr> стоимость повышенная - <nobr>1 300</nobr> руб.
-                В переполненные дни (8 урок за день) стоимость также повышенная - <nobr>1 300</nobr> руб.
+                <h5>{% translate 'Payment' %}</h5>
+                {% blocktranslate %}Payment by phone number (Tinkoff, Sber). Lesson cost is <nobr>{{ C_salary_common }}</nobr> rub. Cost of an early morning (until <nobr>{{ С_morning_time_markup }}</nobr>) or late evening (after <nobr>{{ C_evening_time_markup }}</nobr>) lesson is <nobr>{{ C_salary_high }}</nobr> rub. Also cost is <nobr>{{ C_salary_high }}</nobr> rub when day is overflow ({{ C_lesson_threshold }} lessons per day).{% endblocktranslate %}
             </p>
             <div class="d-none d-sm-none d-md-none d-lg-none d-xl-none d-xxl-block">
                 <p>
-                    <h5>Контакты</h5>
+                    <h5>{% translate 'Contacts' %}</h5>
                     <ul style="margin-left: 600px;">
-                        <li>Номер телефона +7 (952) 220-16-75</li>
-                        <li>Объявление на Авито - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">Ссылка</a></li>
+                        <li>{% translate 'Phone number ' %} +7 (952) 220-16-75</li>
+                        <li>{% translate 'Avito announcement ' %} - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">{% translate 'Link' %}</a></li>
                         <li>Telegram - <a href="https://t.me/spacepython">@SpacePython</a></li>
                         <li>Discord - <a href="https://discord.com/channels/@me">teplyakovsergey#3111</a></li>
                         <li>Skype - <a href="#">live:a85c3477a38624c3</a></li>
@@ -59,13 +54,13 @@
     </div>
     <div class="d-none d-sm-none d-md-none d-lg-none d-xl-block d-xxl-none">
         <p>
-            <h5>Контакты</h5>
+            <h5>{% translate 'Contacts' %}</h5>
             <ul>
-                <li>Номер телефона +7 (952) 220-16-75</li>
-                <li>Объявление на Авито - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">Ссылка</a></li>
+                <li>{% translate 'Phone number ' %} +7 (952) 220-16-75</li>
+                <li>{% translate 'Avito announcement ' %} - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">{% translate 'Link' %}</a></li>
                 <li>Telegram - <a href="https://t.me/spacepython">@SpacePython</a></li>
                 <li>Discord - <a href="https://discord.com/channels/@me">teplyakovsergey#3111</a></li>
-                <li>Skype - <a href="https://join.skype.com/EFN0gb6LOjPS">live:a85c3477a38624c3</a></li>
+                <li>Skype - <a href="#">live:a85c3477a38624c3</a></li>
             </ul>
         </p>
     </div>
@@ -74,46 +69,41 @@
             <img src="{% static 'img/photo.jpg' %}" alt="photo" style="min-width: 150px; max-width: 500px; height: auto; margin-bottom: 20px; background-size: cover;">
         </div>
         <div>
-            <h4>Добрый день!</h4>
+            <h4>{% translate 'Hello!' %}</h4>
             <p> 
-                Я Тепляков Сергей (25 лет) - репетитор по программированию. Обучаю работе с объектно-ориентированным языком <nobr>Python 3</nobr>.
-                Провел более <nobr>2 000</nobr> уроков, обучая людей всех возрастов. Готов помочь Вам в решении конкретной задачи или провести обучающий урок по моим материалам.
+                {% blocktranslate %}I am Teplyakov Sergey ({{ age }} years old). I am programming coach. I teach to work with object-oriented language <nobr>Python 3</nobr>. I taught greater than <nobr>2 000</nobr> lessons teaching peoples of all ages. I am ready to help you specific problem or conduct a training lesson based on my materials.{% endblocktranslate %}
             </p>
             <p>
-                <h5>Профессиональные достижения</h5>
+                <h5>{% translate 'Professional achievements' %}</h5>
                 <ul>
                     <li>
-                        Имею звание магистра информационных систем и технологий (тема диссертации: “мониторинг и прогнозирование георисков”). 
-                        Программный продукт был написан на Python, JS c применением технологии WebSocket
+                        {% translate 'I have a master’s degree in information system and technology. Theme of my dissertation is “Monitoring and forecasting of georisks”. The software was created using Python, JavaScript and WebSocket technology.' %}
                     </li>
-                    <li>Завершение курса для программистов университета ITMO</li>
-                    <li>Получил патент на программу для ЭВМ (применение теории графов и нейронных сетей для планирования путешествий)</li>
-                    <li>Имею публикации в международных сборниках</li>
-                    <li>Создал множество парсеров, чат-ботов, нейронных сетей</li>
-                    <li>Опыт преподавательской деятельности в вузе (Политехнический университет СПб)</li>
+                    <li>{% translate 'I finished course for programmer at ITMO university' %}</li>
+                    <li>{% translate 'Received a patent for a computer program (use graph theory and neural networks for a travel planning)' %}</li>
+                    <li>{% translate 'I have publications in international digest' %}</li>
+                    <li>{% translate 'Develop many parsers, chat-bots and neural networks' %}</li>
+                    <li>{% translate 'I have experience of teaching activities at a university (St.Petersburg polytechnic university)' %}</li>
                 </ul>
             </p>
             <p>
-                <h5>Построение урока</h5>
-                На каждое занятие мною будет составлен план урока и презентация. Соотношение теории и практики установливается по Вашему желанию. 
-                Если Вы хотите больше практики: написание кода, разбора примеров и так далее, то я только за.
+                <h5>{% translate 'Lesson construction' %}</h5>
+                {% translate 'I composes a plan and presentation for every lesson. You can change ratio of theory and practice. If you want more practice (coding, analysis examples etc.), then I’m in!' %}
             </p>
             <p>
-                <h5>Оплата</h5>
-                Оплата по номеру телефона (Тинькофф, Сбер).<br>
-                Стоимость урока - <nobr>1 000</nobr> руб. Рано утром <nobr>(до 10:00)</nobr> и поздно вечером <nobr>(после 21:00)</nobr> стоимость повышенная - <nobr>1 300</nobr> руб.
+                <h5>{% translate 'Payment' %}</h5>
+                {% blocktranslate %}Payment by phone number (Tinkoff, Sber). Lesson cost is <nobr>{{ C_salary_common }}</nobr> rub. Cost of an early morning (until <nobr>{{ С_morning_time_markup }}</nobr>) or late evening (after <nobr>{{ C_evening_time_markup }}</nobr>) lesson is <nobr>{{ C_salary_high }}</nobr> rub. Also cost is <nobr>{{ C_salary_high }}</nobr> rub when day is overflow ({{ C_lesson_threshold }} lessons per day).{% endblocktranslate %}
             </p>
             <p>
-                <h5>Контакты</h5>
+                <h5>{% translate 'Contacts' %}</h5>
                 <ul>
-                    <li>Номер телефона +7 (952) 220-16-75</li>
-                    <li>Объявление на Авито - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">Ссылка</a></li>
+                    <li>{% translate 'Phone number ' %} +7 (952) 220-16-75</li>
+                    <li>{% translate 'Avito announcement ' %} - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">{% translate 'Link' %}</a></li>
                     <li>Telegram - <a href="https://t.me/spacepython">@SpacePython</a></li>
                     <li>Discord - <a href="https://discord.com/channels/@me">teplyakovsergey#3111</a></li>
                     <li>Skype - <a href="#">live:a85c3477a38624c3</a></li>
                 </ul>
             </p>
-            
         </div>
     </div>
 </div>
