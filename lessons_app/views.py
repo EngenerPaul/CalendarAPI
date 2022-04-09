@@ -34,6 +34,10 @@ from .serializers import (
     UserSerializer, LessonSerializer, LessonAdminSerializer,
     RegistrationSerializer, DelUserSerializer
 )
+from CalendarApi.constraints import (
+    С_morning_time, С_morning_time_markup, C_evening_time_markup,
+    C_evening_time, C_salary_common, C_salary_high, C_lesson_threshold
+)
 
 
 class LessonView(ListView):
@@ -96,7 +100,7 @@ class CustomRegistrationView(CreateView):
 
     def get(self, request, *args, **kwargs):
         form = RegisterUserForm()
-        return render(request, 'lessons_app/registration.html', {'form': form})
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         form = RegisterUserForm(request.POST)
@@ -150,23 +154,47 @@ class AddLessonView(LoginRequiredMixin, CreateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_staff:
             return redirect('add_lesson_admin_url')
-        return super().get(request, *args, **kwargs)
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
+        # form = self.get_form()
+        form = self.form_class(request.POST)
         if form.is_valid(request, form):
             return self.form_valid(request, form)
         else:
             return redirect('add_lesson_url')
 
     def form_valid(self, request, form):
-        self.object = form.save(commit=False)
-        self.object.student_id = self.request.user.pk
-        self.object.save()
+        time = str(form.cleaned_data['time']).split(':')[0]
+        time = datetime.strptime(time, r"%H").time()
+        date = datetime.strptime(
+            form.cleaned_data['date'],
+            r"%Y-%m-%d"
+        ).date()
+
+        lesson = self.model()
+        lesson.time = time
+        lesson.date = date
+        lesson.student_id = request.user.pk
+
+        is_morning = С_morning_time <= time < С_morning_time_markup
+        is_evening = C_evening_time_markup <= time < C_evening_time
+        is_over = len(Lesson.objects.filter(date=date)
+                      ) >= C_lesson_threshold
+        if is_morning or is_evening or is_over:
+            lesson.salary = C_salary_high
+        else:
+            lesson.salary = C_salary_common
+
+        lesson.save()
+
         messages.success(
             request,
-            _("Lesson successfully created. Date: {0}. Time: {1}.").format(
-                self.object.date, self.object.time
+            _("Lesson successfully created. Date: {0}. "
+              "Time: {1}. Cost: {2} ₽").format(
+                  date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
+                  lesson.salary
             )
         )
         return HttpResponseRedirect(reverse_lazy(self.success_url))
@@ -215,22 +243,37 @@ class AddLessonAdminView(LoginRequiredMixin, CreateView):
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
             return redirect('add_lesson_url')
-        return super().get(request, *args, **kwargs)
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
+        form = self.form_class(request.POST)
         if form.is_valid(request, form):
             return self.form_valid(request, form)
         else:
-            # return self.form_invalid(form)
             return redirect('add_lesson_url')
 
     def form_valid(self, request, form):
-        self.object = form.save()
+        time = str(form.cleaned_data['time']).split(':')[0]
+        time = datetime.strptime(time, r"%H").time()
+        date = datetime.strptime(
+            form.cleaned_data['date'],
+            r"%Y-%m-%d"
+        ).date()
+
+        lesson = self.model()
+        lesson.time = time
+        lesson.date = date
+        lesson.student_id = form.cleaned_data['student']
+        lesson.salary = form.cleaned_data['salary']
+        lesson.save()
+
         messages.success(
             request,
-            _("Lesson successfully created. Date: {0}. Time: {1}.").format(
-                self.object.date, self.object.time
+            _("Lesson successfully created. Date: {0}. "
+              "Time: {1}. Cost: {2} ₽").format(
+                  date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
+                  lesson.salary
             )
         )
         return HttpResponseRedirect(reverse_lazy(self.success_url))
@@ -351,7 +394,17 @@ class LessonsViewSet(viewsets.ModelViewSet):
                         headers=headers)
 
     def perform_create(self, request, serializer):
-        serializer.save(student_id=request.user.pk)
+        time = serializer.validated_data['time']
+        date = serializer.validated_data['date']
+        is_morning = С_morning_time <= time < С_morning_time_markup
+        is_evening = C_evening_time_markup <= time < C_evening_time
+        is_over = len(Lesson.objects.filter(date=date)
+                      ) >= C_lesson_threshold
+        if is_morning or is_evening or is_over:
+            salary = C_salary_high
+        else:
+            salary = C_salary_common
+        serializer.save(student_id=request.user.pk, salary=salary)
 
     def get_object(self):
         queryset = self.filter_queryset(self.get_queryset(self.request))

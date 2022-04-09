@@ -93,36 +93,17 @@ class AdminValidator():
 
 
 class UserValidator():
-    """
-    1. checking the overlap of lessons on each other - for all
-    (lesson duration = 1 hour)
-    2. check for too early and late lessons by day -  for users only
-    3. checking for too early and late lessons by the hour - for users only
-    4. checking cost of too early and late lessons by the hour - for users only
-    5. checking the lead time - for users only
-    (you can not add a lesson earlier than 6 hours)
-    6. checking for cost limits (700<=salary) - for users only
-    7. check of lesson cost when numbers lesson todate is big - for users only
-    """
+    """ Validation of creation (update) of new lesson by student """
 
     def __init__(self, queryset):
         self.queryset = queryset
 
     def __call__(self, attrs):
-        salary = attrs['salary']
         time = attrs['time']
         date = attrs['date']
         dt_now = datetime.datetime.now()
 
-        if salary < C_salary_common:
-            raise ValidationError(
-                _('The minimum cost of a lesson is {}').format(C_salary_common)
-            )
-        elif salary > C_salary_max:
-            raise ValidationError(
-                _('Perfaps you made a mistake in the cost')
-            )
-
+        # sign up is impossible for past date or today + 8 days
         if date < dt_now.date():
             raise ValidationError(_("The date {} has already arrived").format(
                 date))
@@ -132,51 +113,28 @@ class UserValidator():
                   "days in advace").format(C_datedelta)
             )
 
+        # sign up is impossible for next 3 hours
         if datetime.datetime.combine(date, time) < dt_now + C_timedelta:
             raise ValidationError(
                 _("Please, sign up for a lesson {} hours before to "
                   "start").format(C_timedelta)
             )
 
+        # constraint of working hours (8-23)
         if time < С_morning_time:
             raise ValidationError(_("The time {} is too early").format(time))
-        elif С_morning_time <= time < С_morning_time_markup:
-            if salary < C_salary_high:
-                raise ValidationError(
-                    _("In the morning ({0}-{1} hours) the cost of the lesson"
-                      " is {2}").format(
-                          С_morning_time, С_morning_time_markup, C_salary_high
-                    )
-                )
-        elif C_evening_time_markup <= time < C_evening_time:
-            if salary < C_salary_high:
-                raise ValidationError(
-                    _("In the evening ({0}-{1}"
-                      " hours) the cost of the lesson is {2}").format(
-                          C_evening_time_markup, C_evening_time, C_salary_high
-                      )
-                )
         elif time > C_evening_time:
             raise ValidationError(_("The time {} is too late").format(time))
 
+        # free time check
         self.queryset = self.queryset.filter(date=date).values_list('time')
         times = [item[0] for item in self.queryset]
-
         for t1 in times:
             t2 = datetime.time(t1.hour+1, t1.minute, t1.second)
             if t1 <= time < t2:
                 raise ValidationError(
                     _("Some lesson is already scheduled for "
                       "{} that day").format(t1)
-                )
-
-        if len(self.queryset) >= C_lesson_threshold:
-            if salary < C_salary_high:
-                raise ValidationError(
-                    _("Amount of lessons today is greater than or equel "
-                      "to {0}. Lesson cost is {1} ₽").format(
-                        C_lesson_threshold, C_salary_high
-                    )
                 )
 
     def __repr__(self):

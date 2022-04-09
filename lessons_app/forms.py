@@ -8,9 +8,7 @@ from django.utils.translation import gettext as _
 
 from .models import Lesson
 from CalendarApi.constraints import (
-    С_morning_time, С_morning_time_markup, C_evening_time_markup,
-    C_evening_time, C_salary_common, C_salary_high, C_salary_max, C_timedelta,
-    C_datedelta, C_lesson_threshold
+    С_morning_time, C_evening_time,  C_timedelta,  C_datedelta
 )
 
 
@@ -134,111 +132,68 @@ class AuthUserForm(AuthenticationForm, forms.ModelForm):
                 'placeholder'] = _('Enter your password')
 
 
-class AddLessonForm(forms.ModelForm):
-    """ Create a new lesson by students """
+class AddLessonForm(forms.Form):
+    """ Create a new lesson by student """
 
-    class Meta:
-        model = Lesson
-        fields = ('theme', 'salary', 'time', 'date')
-        labels = {
-            'theme': _('Theme'),
-            'salary': _('Pay'),
-            'time': _('Time'),
-            'date': _('Date')
-        }
-        choice = ['Monday','Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        choice = [(i, i) for i in choice]
-        widgets = {
-            'theme': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': _('optional')
-            }),
-            'salary': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'value': C_salary_common
-            }),
-            'time': forms.TimeInput(attrs={
-                'class': 'form-control',
-                'placeholder': '00:00'
-            }),
-            # 'date': forms.DateInput(format=r'%d.%m.%Y', attrs={
-            #     'class': 'form-control',
-            #     'placeholder': '2022-12-31',
-            #     'value': '2022-08-'
-            # }),
-            'date': forms.Select(choices=choice, attrs={
-                'class': 'form-control',
-                # 'style': 'bottom: 0px;'
-            })
-        }
+    time = forms.IntegerField(
+        label=_('Time'),
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': '00:00',
+            'value': 15
+        })
+    )
+
+    weekdays = {
+        'Monday': _('Monday'),
+        'Tuesday': _('Tuesday'),
+        'Wednesday': _('Wednesday'),
+        'Thursday': _('Thursday'),
+        'Friday': _('Friday'),
+        'Saturday': _('Saturday'),
+        'Sunday': _('Sunday'),
+    }
+    choice = []
+    for i in range(C_datedelta.days+1):
+        if i == 0:
+            date = datetime.date.today() + datetime.timedelta(days=i)
+            day_title = (f"{_('Today')}, "
+                         f"{datetime.datetime.strftime(date, r'%d-%m')}")
+            choice.append((date, day_title))
+            continue
+        date = datetime.date.today() + datetime.timedelta(days=i)
+        day_title = (f"{weekdays[date.strftime('%A')]}, "
+                     f"{datetime.datetime.strftime(date, r'%d-%m')}")
+        choice.append((date, day_title))
+    date = forms.CharField(
+        label=_('Date'),
+        widget=forms.Select(choices=choice, attrs={
+            'class': 'form-control'
+        })
+    )
 
     def is_valid(self, request, form):
-        """
-        1. checking the overlap of lessons on each other - for all
-        (lesson duration = 1 hour)
-        2. check for too early and late lessons by day -  for users only
-        3. checking for too early and late lessons by the hour - for users only
-        4. checking cost of too early and late lessons by the hour - users only
-        5. checking the lead time - for users only
-        (you can not add a lesson earlier than 6 hours)
-        6. checking for cost limits (700<=salary) - for users only
-        7. check of lesson cost when numbers lesson todate is big - for users
-        """
-
-        salary = form['salary'].value()
-        time = form['time'].value()
-        date = form['date'].value()
 
         try:
-            salary = int(salary)
-        except BaseException:
-            messages.error(request,
-                           _('Payment must be integer'))
-            return False
-
-        try:
+            time = str(form['time'].value()).split(':')[0]
             time = datetime.datetime.strptime(time, r"%H").time()
-        except BaseException:
-            try:
-                time = datetime.datetime.strptime(time, r"%H:%M").time()
-            except BaseException:
-                try:
-                    time = datetime.datetime.strptime(time, r"%H:%M:%S").time()
-                except BaseException:
-                    messages.error(
-                        request,
-                        _("Time must be in 'hours' or "
-                          "'hours:minutes' format")
-                    )
-                    return False
-
-        try:
-            date = datetime.datetime.strptime(date, r"%Y-%m-%d").date()
-        except BaseException:
-            messages.error(request,
-                           _("Date must be in 'year-month-day' format"))
+        except ValueError:
+            messages.error(
+                request,
+                _("Time must be in 'hours' or "
+                    "'hours:minutes' format")
+            )
             return False
+
+        date = datetime.datetime.strptime(
+            form['date'].value(),
+            r"%Y-%m-%d"
+        ).date()
 
         dt_now = datetime.datetime.now()
 
-        if time.minute != 0 or time.second != 0:
-            messages.error(request, _("Only hours can be set"))
-            return False
-
-        if salary < C_salary_common:
-            messages.error(
-                request,
-                _('The minimum cost of a lesson is {}').format(C_salary_common)
-            )
-            return False
-        elif salary > C_salary_max:
-            messages.error(
-                request,
-                _('Perfaps you made a mistake in the cost')
-            )
-            return False
-
-        if date < dt_now.date():
+        # sign up is impossible for past date or today + 8 days
+        if datetime.datetime.combine(date, time) < dt_now:
             messages.error(
                 request,
                 _("The date {} has already arrived").format(date)
@@ -252,6 +207,7 @@ class AddLessonForm(forms.ModelForm):
             )
             return False
 
+        # sign up is impossible for next 3 hours
         if datetime.datetime.combine(date, time) < dt_now + C_timedelta:
             messages.error(
                 request,
@@ -260,37 +216,17 @@ class AddLessonForm(forms.ModelForm):
             )
             return False
 
+        # constraint of working hours (8-23)
         if time < С_morning_time:
             messages.error(request, _("The time {} is too early").format(time))
             return False
-        elif С_morning_time <= time < С_morning_time_markup:
-            if salary < C_salary_high:
-                messages.error(
-                    request,
-                    _("in the morning ({0}-{1} hours) the cost of the lesson"
-                      " is {2}").format(
-                        С_morning_time, С_morning_time_markup, C_salary_high
-                    )
-                )
-                return False
-
-        elif C_evening_time_markup <= time < C_evening_time:
-            if salary < C_salary_high:
-                messages.error(
-                    request,
-                    _("in the evening ({0}-{1} hours) the cost of the lesson"
-                      " is {2}").format(
-                          C_evening_time_markup, C_evening_time, C_salary_high
-                      )
-                )
-                return False
         elif time > C_evening_time:
             messages.error(request, _("The time {} is too late").format(time))
             return False
 
+        # free time check
         queryset = Lesson.objects.filter(date=date).values_list('time')
         times = [item[0] for item in queryset]
-
         for t1 in times:
             t2 = datetime.time(t1.hour+1, t1.minute, t1.second)
             if t1 <= time < t2:
@@ -301,90 +237,72 @@ class AddLessonForm(forms.ModelForm):
                 )
                 return False
 
-        if len(queryset) >= C_lesson_threshold:
-            if salary < C_salary_high:
-                messages.error(
-                    request,
-                    _("Amount of lessons today is greater than or equel "
-                      "to {0}. Lesson cost is {1} ₽").format(
-                        C_lesson_threshold, C_salary_high
-                    )
-                )
-                return False
-
-        return super().is_valid()
+        # super consist variable because it is used by AddLessonAdminForm class
+        return super(forms.Form, self).is_valid()
 
 
-class AddLessonAdminForm(forms.ModelForm):
+class AddLessonAdminForm(forms.Form):
     """ Create a new lesson for students by admin """
 
-    class Meta:
-        model = Lesson
-        fields = ('student', 'theme', 'salary', 'time', 'date')
-        labels = {
-            'student': _('Student'),
-            'theme': _('Theme'),
-            'salary': _('Pay'),
-            'time': _('Time'),
-            'date': _('Date')
-        }
-        widgets = {
-            'student': forms.Select(attrs={
+    students = User.objects.filter(is_staff=False, is_active=True)
+    choice = []
+    for student in students:
+        choice.append((student.id, student.first_name))
+    student = forms.CharField(
+        label=_('Student'),
+        widget=forms.Select(
+            choices=choice,
+            attrs={
                 'class': 'form-control',
                 'size': 10
-            }),
-            'theme': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': _('optional')
-            }),
-            'salary': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'value': C_salary_common
-            }),
-            'time': forms.TimeInput(attrs={
-                'class': 'form-control',
-                'placeholder': '00:00:00'
-            }),
-            'date': forms.DateInput(format=r'%d.%m.%Y', attrs={
-                'class': 'form-control',
-                'placeholder': '2022-12-31'
-            }),
-        }
+            }
+        )
+    )
+    time = forms.IntegerField(
+        label=_('Time'),
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': '00:00',
+            'value': 15
+        })
+    )
+
+    weekdays = {
+        'Monday': _('Monday'),
+        'Tuesday': _('Tuesday'),
+        'Wednesday': _('Wednesday'),
+        'Thursday': _('Thursday'),
+        'Friday': _('Friday'),
+        'Saturday': _('Saturday'),
+        'Sunday': _('Sunday'),
+    }
+    choice = []
+    for i in range(C_datedelta.days+1):
+        if i == 0:
+            date = datetime.date.today() + datetime.timedelta(days=i)
+            day_title = (f"{_('Today')}, "
+                         f"{datetime.datetime.strftime(date, r'%d-%m')}")
+            choice.append((date, day_title))
+            continue
+        date = datetime.date.today() + datetime.timedelta(days=i)
+        day_title = (f"{weekdays[date.strftime('%A')]}, "
+                     f"{datetime.datetime.strftime(date, r'%d-%m')}")
+        choice.append((date, day_title))
+    date = forms.CharField(
+        label=_('Date'),
+        widget=forms.Select(choices=choice, attrs={
+            'class': 'form-control'
+        })
+    )
+    salary = forms.IntegerField(
+        label=_('Cost'),
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'value': 1000
+        })
+    )
 
     def is_valid(self, request, form):
-        """ Checking the overlap of lessons on each other - for all
-        (lesson duration = 1 hour) """
-
-        salary = form['salary'].value()
-        time = form['time'].value()
-        date = form['date'].value()
-
-        try:
-            salary = int(salary)
-        except BaseException:
-            messages.error(request,
-                           _('Payment must be integer'))
-            return False
-
-        try:
-            time = datetime.datetime.strptime(time, r"%H:%M").time()
-        except BaseException:
-            try:
-                time = datetime.datetime.strptime(time, r"%H:%M:%S").time()
-            except BaseException:
-                messages.error(
-                    request,
-                    _("Time must be in 'hours:minutes' or "
-                      "'hours:minutes:seconds' format")
-                )
-                return False
-
-        try:
-            date = datetime.datetime.strptime(date, r"%Y-%m-%d").date()
-        except BaseException:
-            messages.error(request,
-                           _("Date must be in 'year-month-day' format"))
-            return False
 
         if form['student'].value() == '':
             messages.error(
@@ -393,26 +311,5 @@ class AddLessonAdminForm(forms.ModelForm):
             )
             return False
 
-        queryset = Lesson.objects.filter(date=date).values_list('time')
-        times = [item[0] for item in queryset]
-
-        for t1 in times:
-            t2 = datetime.time(t1.hour+1, t1.minute, t1.second)
-            if t1 <= time < t2:
-                messages.error(
-                    request,
-                    _("Some lesson is already scheduled for {} that "
-                      "day").format(t1)
-                )
-                return False
-
-        dt_now = datetime.datetime.now()
-        if date > (dt_now + C_datedelta).date():
-            messages.error(
-                request,
-                _("Please don't book a lesson earlier then {} "
-                  "days in advace").format(C_datedelta.days)
-            )
-            return False
-
-        return super().is_valid()
+        # uses created validator from AddLessonForm class
+        return AddLessonForm.is_valid(self, request, form)

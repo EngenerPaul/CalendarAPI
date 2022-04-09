@@ -2,7 +2,6 @@ from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
 
 from .models import Lesson, UserDetail
 from .validators import AdminValidator, UserValidator, RegistrationValidator
@@ -31,22 +30,12 @@ class DelUserSerializer(serializers.ModelSerializer):
         fields = ('username')
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     """ Get User info (admin only) """
-
-#     id = serializers.StringRelatedField(read_only=True)
-
-#     class Meta:
-#         model = User
-#         fields = ('id', 'username', 'first_name', 'is_staff')
-
-
 class UserDetailSerializer(serializers.ModelSerializer):
     """ Nested relationships for UserSerializer (details) """
 
     class Meta:
         model = UserDetail
-        fields = ('phone', 'telegram', 'whatsapp')
+        fields = ('phone', 'telegram')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -69,10 +58,11 @@ class LessonSerializer(serializers.ModelSerializer):
     """ ViewSet of lesson (allow any (GET) or Authorized only (OTHER)) """
 
     student = PrimaryKeyRelatedField(read_only=True)
+    salary = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Lesson
-        fields = ('id', 'student', 'theme', 'salary', 'time', 'date')
+        fields = ('id', 'student', 'salary', 'time', 'date')
         validators = [
             UserValidator(queryset=Lesson.objects.all())
         ]
@@ -83,7 +73,7 @@ class LessonAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('id', 'student', 'theme', 'salary', 'time', 'date')
+        fields = ('id', 'student', 'salary', 'time', 'date')
         validators = [
             AdminValidator(queryset=Lesson.objects.all())
         ]

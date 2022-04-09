@@ -6,7 +6,7 @@ from .models import Lesson, UserDetail
 
 
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', 'time', 'student', 'theme', 'salary', )
+    list_display = ('id', 'date', 'time', 'student', 'salary', )
     list_display_links = ('id', )
     ordering = ('-date', 'time', )
     list_per_page = 50

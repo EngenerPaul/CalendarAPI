@@ -6,12 +6,6 @@ from django.utils.translation import gettext as _
 
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    theme = models.CharField(
-        max_length=100,
-        default=_('Consultation'),
-        blank=True,
-        null=True
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     salary = models.IntegerField()
     time = models.TimeField()
