@@ -258,7 +258,26 @@ class AddLessonAdminView(LoginRequiredMixin, CreateView):
         if not request.user.is_staff:
             return redirect('add_lesson_url')
         form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+        context = self.get_context_data()
+        context['form'] = form
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['message_1'] = _(
+            "The cost of a usual lesson is {} ₽"
+        ).format(C_salary_common)
+        context['message_2'] = _(
+            "The cost of a lesson in the early morning to {} is {} ₽."
+        ).format(С_morning_time_markup.strftime(r'%H:%M'), C_salary_high)
+        context['message_3'] = _(
+            "The cost of a lesson in the late evening to {} is {} ₽."
+        ).format(C_evening_time_markup.strftime(r'%H:%M'), C_salary_high)
+        context['message_4'] = _(
+            "The cost of a lesson when day is full ({} lessons per day) "
+            "is {} ₽."
+        ).format(C_lesson_threshold, C_salary_high)
+        return context
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
