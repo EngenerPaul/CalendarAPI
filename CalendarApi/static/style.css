@@ -39,3 +39,16 @@ float: none;
     text-align: center;
     margin: 3px 5px;
 }
+
+/* 3 following styles are used for info.html */
+.d-none.d-sm-none.d-md-none.d-lg-none.d-xl-block ul li {
+    margin-left: 600px;
+}
+
+.d-none.d-sm-none.d-md-none.d-lg-none.d-xl-none.d-xxl-block ul li {
+    margin-left: 600px;
+}
+
+.d-none.d-sm-none.d-md-none.d-lg-none.d-xl-block.d-xxl-none ul li {
+    margin-left: 0px;
+}

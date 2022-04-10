@@ -6,108 +6,21 @@
 <h3 style="margin-bottom: 15px;">{% translate 'About me' %}</h3>
 <div class="row">
     <div class="d-none d-sm-none d-md-none d-lg-none d-xl-block">
-        <div style="overflow: hodden">
-            <img src="{% static 'img/photo.jpg' %}" alt="photo" style="margin-right: 40px; margin-bottom: 20px; float: left; background-size: cover;" align="left">
-        </div>
-        
-        <div>
-            <h4>{% translate 'Hello!' %}</h4>
-            <p> 
-                {% blocktranslate %}I am Teplyakov Sergey ({{ age }} years old). I am programming coach. I teach to work with object-oriented language <nobr>Python 3</nobr>. I taught greater than <nobr>2 000</nobr> lessons teaching peoples of all ages. I am ready to help you specific problem or conduct a training lesson based on my materials.{% endblocktranslate %}
-            </p>
-            <p>
-                <h5>{% translate 'Professional achievements' %}</h5>
-                <ul style="margin-left: 600px;">
-                    <li>
-                        {% translate 'I have a master’s degree in information system and technology. Theme of my dissertation is “Monitoring and forecasting of georisks”. The software was created using Python, JavaScript and WebSocket technology.' %}
-                    </li>
-                    <li>{% translate 'I finished course for programmer at ITMO university' %}</li>
-                    <li>{% translate 'Received a patent for a computer program (use graph theory and neural networks for a travel planning)' %}</li>
-                    <li>{% translate 'I have publications in international digest' %}</li>
-                    <li>{% translate 'Develop many parsers, chat-bots and neural networks' %}</li>
-                    <li>{% translate 'I have experience of teaching activities at a university (St.Petersburg polytechnic university)' %}</li>
-                </ul>
-            </p>
-            <p>
-                <h5>{% translate 'Lesson construction' %}</h5>
-                {% translate 'I composes a plan and presentation for every lesson. You can change ratio of theory and practice. If you want more practice (coding, analysis examples etc.), then I’m in!' %}
-            </p>
-            <p>
-                <h5>{% translate 'Payment' %}</h5>
-                {% blocktranslate %}Payment by phone number (Tinkoff, Sber). Lesson cost is <nobr>{{ C_salary_common }}</nobr> rub. Cost of an early morning (until <nobr>{{ С_morning_time_markup }}</nobr>) or late evening (after <nobr>{{ C_evening_time_markup }}</nobr>) lesson is <nobr>{{ C_salary_high }}</nobr> rub. Also cost is <nobr>{{ C_salary_high }}</nobr> rub when day is overflow ({{ C_lesson_threshold }} lessons per day).{% endblocktranslate %}
-            </p>
-            <div class="d-none d-sm-none d-md-none d-lg-none d-xl-none d-xxl-block">
-                <p>
-                    <h5>{% translate 'Contacts' %}</h5>
-                    <ul style="margin-left: 600px;">
-                        <li>{% translate 'Phone number ' %} +7 (952) 220-16-75</li>
-                        <li>{% translate 'Avito announcement ' %} - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">{% translate 'cleek' %}</a></li>
-                        <li>Telegram - <a href="https://t.me/spacepython">@SpacePython</a></li>
-                        <li>Telegram-bot - <a href="https://t.me/space_python_bot">@Space_Python_Bot</a></li>
-                        <li>Discord - <a href="https://discord.com/channels/@me">teplyakovsergey#3111</a></li>
-                        <li>Skype - <a href="https://join.skype.com/EFN0gb6LOjPS">live:a85c3477a38624c3</a></li>
-                    </ul>
-                </p>
-            </div>
-            
-            
+        <img src="{% static 'img/photo.jpg' %}" alt="photo" style="margin-right: 40px; margin-bottom: 20px; float: left;">
+        {% include 'lessons_app/inc/_info_bio.html' %}
+        <div class="d-none d-sm-none d-md-none d-lg-none d-xl-none d-xxl-block">
+            {% include 'lessons_app/inc/_info_contacts.html' %}
         </div>
     </div>
     <div class="d-none d-sm-none d-md-none d-lg-none d-xl-block d-xxl-none">
-        <p>
-            <h5>{% translate 'Contacts' %}</h5>
-            <ul>
-                <li>{% translate 'Phone number ' %} +7 (952) 220-16-75</li>
-                <li>{% translate 'Avito announcement ' %} - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">{% translate 'cleek' %}</a></li>
-                <li>Telegram - <a href="https://t.me/spacepython">@SpacePython</a></li>
-                <li>Telegram-bot - <a href="https://t.me/space_python_bot">@Space_Python_Bot</a></li>
-                <li>Discord - <a href="https://discord.com/channels/@me">teplyakovsergey#3111</a></li>
-                <li>Skype - <a href="https://join.skype.com/EFN0gb6LOjPS">live:a85c3477a38624c3</a></li>
-            </ul>
-        </p>
+        {% include 'lessons_app/inc/_info_contacts.html' %}
     </div>
     <div class="d-block d-sm-block d-md-block d-lg-block d-xl-none">
         <div style="text-align: center;">
-            <img src="{% static 'img/photo.jpg' %}" alt="photo" style="min-width: 150px; max-width: 500px; height: auto; margin-bottom: 20px; background-size: cover;">
+            <img src="{% static 'img/photo.jpg' %}" alt="photo" style="max-width: 500px; width: 100%; margin-bottom: 20px;">
         </div>
-        <div>
-            <h4>{% translate 'Hello!' %}</h4>
-            <p> 
-                {% blocktranslate %}I am Teplyakov Sergey ({{ age }} years old). I am programming coach. I teach to work with object-oriented language <nobr>Python 3</nobr>. I taught greater than <nobr>2 000</nobr> lessons teaching peoples of all ages. I am ready to help you specific problem or conduct a training lesson based on my materials.{% endblocktranslate %}
-            </p>
-            <p>
-                <h5>{% translate 'Professional achievements' %}</h5>
-                <ul>
-                    <li>
-                        {% translate 'I have a master’s degree in information system and technology. Theme of my dissertation is “Monitoring and forecasting of georisks”. The software was created using Python, JavaScript and WebSocket technology.' %}
-                    </li>
-                    <li>{% translate 'I finished course for programmer at ITMO university' %}</li>
-                    <li>{% translate 'Received a patent for a computer program (use graph theory and neural networks for a travel planning)' %}</li>
-                    <li>{% translate 'I have publications in international digest' %}</li>
-                    <li>{% translate 'Develop many parsers, chat-bots and neural networks' %}</li>
-                    <li>{% translate 'I have experience of teaching activities at a university (St.Petersburg polytechnic university)' %}</li>
-                </ul>
-            </p>
-            <p>
-                <h5>{% translate 'Lesson construction' %}</h5>
-                {% translate 'I composes a plan and presentation for every lesson. You can change ratio of theory and practice. If you want more practice (coding, analysis examples etc.), then I’m in!' %}
-            </p>
-            <p>
-                <h5>{% translate 'Payment' %}</h5>
-                {% blocktranslate %}Payment by phone number (Tinkoff, Sber). Lesson cost is <nobr>{{ C_salary_common }}</nobr> rub. Cost of an early morning (until <nobr>{{ С_morning_time_markup }}</nobr>) or late evening (after <nobr>{{ C_evening_time_markup }}</nobr>) lesson is <nobr>{{ C_salary_high }}</nobr> rub. Also cost is <nobr>{{ C_salary_high }}</nobr> rub when day is overflow ({{ C_lesson_threshold }} lessons per day).{% endblocktranslate %}
-            </p>
-            <p>
-                <h5>{% translate 'Contacts' %}</h5>
-                <ul>
-                    <li>{% translate 'Phone number ' %} +7 (952) 220-16-75</li>
-                    <li>{% translate 'Avito announcement ' %} - <a href="https://www.avito.ru/sankt-peterburg/predlozheniya_uslug/uroki_programmirovaniya_na_python_1995818463">{% translate 'cleek' %}</a></li>
-                    <li>Telegram - <a href="https://t.me/spacepython">@SpacePython</a></li>
-                    <li>Telegram-bot - <a href="https://t.me/space_python_bot">@Space_Python_Bot</a></li>
-                    <li>Discord - <a href="https://discord.com/channels/@me">teplyakovsergey#3111</a></li>
-                    <li>Skype - <a href="https://join.skype.com/EFN0gb6LOjPS">live:a85c3477a38624c3</a></li>
-                </ul>
-            </p>
-        </div>
+        {% include 'lessons_app/inc/_info_bio.html' %}
+        {% include 'lessons_app/inc/_info_contacts.html' %}
     </div>
 </div>
 {% endblock content %}
