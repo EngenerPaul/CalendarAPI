@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-10 13:16+0400\n"
+"POT-Creation-Date: 2022-04-10 19:45+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -199,34 +199,11 @@ msgstr "Как узнать стоимость урока?"
 msgid "Add lesson"
 msgstr "Создать"
 
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:14
-msgid "Student id"
-msgstr "Id студента"
-
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:15
-msgid "Lessons id"
-msgstr "Id урока"
-
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:17
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:15
-msgid "Telegram"
-msgstr ""
-
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:18
-msgid "Salary"
-msgstr "Оплата"
-
-#: .\lessons_app\templates\lessons_app\info.html:6
-msgid "About me"
-msgstr "Обо мне"
-
-#: .\lessons_app\templates\lessons_app\info.html:14
-#: .\lessons_app\templates\lessons_app\info.html:74
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:3
 msgid "Hello!"
 msgstr "Добрый день!"
 
-#: .\lessons_app\templates\lessons_app\info.html:16
-#: .\lessons_app\templates\lessons_app\info.html:76
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:5
 #, python-format
 msgid ""
 "I am Teplyakov Sergey (%(age)s years old). I am programming coach. I teach "
@@ -241,13 +218,11 @@ msgstr ""
 "Вам в решении конкретной задачи или провести обучающий урок по моим "
 "материалам. "
 
-#: .\lessons_app\templates\lessons_app\info.html:19
-#: .\lessons_app\templates\lessons_app\info.html:79
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:8
 msgid "Professional achievements"
 msgstr "Профессиональные достижения"
 
-#: .\lessons_app\templates\lessons_app\info.html:22
-#: .\lessons_app\templates\lessons_app\info.html:82
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:11
 msgid ""
 "I have a master’s degree in information system and technology. Theme of my "
 "dissertation is “Monitoring and forecasting of georisks”. The software was "
@@ -257,13 +232,11 @@ msgstr ""
 "“мониторинг и прогнозирование георисков”. Программный продукт был написан на "
 "Python, JavaScript c применением технологии WebSocket"
 
-#: .\lessons_app\templates\lessons_app\info.html:24
-#: .\lessons_app\templates\lessons_app\info.html:84
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:13
 msgid "I finished course for programmer at ITMO university"
 msgstr "Завершил курс для программистов от университета ITMO"
 
-#: .\lessons_app\templates\lessons_app\info.html:25
-#: .\lessons_app\templates\lessons_app\info.html:85
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:14
 msgid ""
 "Received a patent for a computer program (use graph theory and neural "
 "networks for a travel planning)"
@@ -271,31 +244,26 @@ msgstr ""
 "Получил патент на программу для ЭВМ (применение теории графов и нейронных "
 "сетей для планирования путешествий)"
 
-#: .\lessons_app\templates\lessons_app\info.html:26
-#: .\lessons_app\templates\lessons_app\info.html:86
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:15
 msgid "I have publications in international digest"
 msgstr "Имею публикации в международных сборниках"
 
-#: .\lessons_app\templates\lessons_app\info.html:27
-#: .\lessons_app\templates\lessons_app\info.html:87
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:16
 msgid "Develop many parsers, chat-bots and neural networks"
 msgstr "Создал множество парсеров, чат-ботов и нейронных сетей"
 
-#: .\lessons_app\templates\lessons_app\info.html:28
-#: .\lessons_app\templates\lessons_app\info.html:88
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:17
 msgid ""
 "I have experience of teaching activities at a university (St.Petersburg "
 "polytechnic university)"
 msgstr ""
 "Опыт преподавательской деятельности в вузе (Политехнический университет СПБ)"
 
-#: .\lessons_app\templates\lessons_app\info.html:32
-#: .\lessons_app\templates\lessons_app\info.html:92
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:21
 msgid "Lesson construction"
 msgstr "Построение урока"
 
-#: .\lessons_app\templates\lessons_app\info.html:33
-#: .\lessons_app\templates\lessons_app\info.html:93
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:22
 msgid ""
 "I composes a plan and presentation for every lesson. You can change ratio of "
 "theory and practice. If you want more practice (coding, analysis examples "
@@ -305,13 +273,11 @@ msgstr ""
 "теории и практики устанавливается по Вашему желанию. Если Вы хотите больше "
 "практики: написание кода, разбора примеров и так далее, то я только за!"
 
-#: .\lessons_app\templates\lessons_app\info.html:36
-#: .\lessons_app\templates\lessons_app\info.html:96
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:25
 msgid "Payment"
 msgstr "Оплата"
 
-#: .\lessons_app\templates\lessons_app\info.html:37
-#: .\lessons_app\templates\lessons_app\info.html:97
+#: .\lessons_app\templates\lessons_app\inc\_info_bio.html:26
 #, python-format
 msgid ""
 "Payment by phone number (Tinkoff, Sber). Lesson cost is <nobr>"
@@ -329,29 +295,47 @@ msgstr ""
 "урок за день) стоимость также повышенная - <nobr>%(C_salary_high)s</nobr> "
 "руб."
 
-#: .\lessons_app\templates\lessons_app\info.html:41
-#: .\lessons_app\templates\lessons_app\info.html:58
-#: .\lessons_app\templates\lessons_app\info.html:100
+#: .\lessons_app\templates\lessons_app\inc\_info_contacts.html:3
 msgid "Contacts"
 msgstr "Контакты"
 
-#: .\lessons_app\templates\lessons_app\info.html:43
-#: .\lessons_app\templates\lessons_app\info.html:60
-#: .\lessons_app\templates\lessons_app\info.html:102
+#: .\lessons_app\templates\lessons_app\inc\_info_contacts.html:5
 msgid "Phone number "
 msgstr "Номер телефона "
 
-#: .\lessons_app\templates\lessons_app\info.html:44
-#: .\lessons_app\templates\lessons_app\info.html:61
-#: .\lessons_app\templates\lessons_app\info.html:103
+#: .\lessons_app\templates\lessons_app\inc\_info_contacts.html:6
 msgid "Avito announcement "
 msgstr "Объявление на Авито "
 
-#: .\lessons_app\templates\lessons_app\info.html:44
-#: .\lessons_app\templates\lessons_app\info.html:61
-#: .\lessons_app\templates\lessons_app\info.html:103
+#: .\lessons_app\templates\lessons_app\inc\_info_contacts.html:6
 msgid "cleek"
 msgstr "клик"
+
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:14
+msgid "Student id"
+msgstr "Id студента"
+
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:15
+msgid "Lessons id"
+msgstr "Id урока"
+
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:17
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:15
+msgid "Telegram"
+msgstr ""
+
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:18
+msgid "Salary"
+msgstr "Оплата"
+
+#: .\lessons_app\templates\lessons_app\index.html:45
+msgid ""
+"Horizontal scrolling is possible with the wheel and the Shift key pressed"
+msgstr "Горизонтальная прокрутка возможна при помощи колесика и зажатой клавиши Shift"
+
+#: .\lessons_app\templates\lessons_app\info.html:6
+msgid "About me"
+msgstr "Обо мне"
 
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:6
 msgid "My lessons"

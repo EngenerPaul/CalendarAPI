@@ -193,7 +193,7 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         lesson.student_id = request.user.pk
 
         is_morning = С_morning_time <= time < С_morning_time_markup
-        is_evening = C_evening_time_markup <= time <= C_evening_time
+        is_evening = C_evening_time_markup < time <= C_evening_time
         is_over = len(Lesson.objects.filter(date=date)
                       ) >= C_lesson_threshold
         if is_morning or is_evening or is_over:
@@ -456,7 +456,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
         time = serializer.validated_data['time']
         date = serializer.validated_data['date']
         is_morning = С_morning_time <= time < С_morning_time_markup
-        is_evening = C_evening_time_markup <= time <= C_evening_time
+        is_evening = C_evening_time_markup < time <= C_evening_time
         is_over = len(Lesson.objects.filter(date=date)
                       ) >= C_lesson_threshold
         if is_morning or is_evening or is_over:
