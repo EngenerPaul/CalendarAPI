@@ -8,7 +8,6 @@ C_evening_time = datetime.time(hour=23)  # end of business hours
 
 C_salary_common = 1000  # min salary
 C_salary_high = 1300  # salary for morning and evening hours
-C_salary_max = C_salary_common * 10 - 1  # to avoid mistakes
 
 C_timedelta = datetime.timedelta(hours=3)  # students need to book lessons in advance
 C_datedelta = datetime.timedelta(days=7)  # unable to sign up for lessons too early

@@ -331,7 +331,7 @@ class InfoView(View):
         context['C_lesson_threshold'] = C_lesson_threshold
         return context
 
-    def my_age():
+    def my_age(self):
         """this function shows my age today"""
 
         today = date.today()
