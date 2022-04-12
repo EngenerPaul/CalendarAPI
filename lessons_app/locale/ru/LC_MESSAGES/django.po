@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-10 19:45+0400\n"
+"POT-Creation-Date: 2022-04-12 20:33+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgid "Enter your name"
 msgstr "Введите Ваше имя"
 
 #: .\lessons_app\forms.py:44
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:16
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:23
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:12
 msgid "Phone"
 msgstr "Телефон"
@@ -84,7 +84,7 @@ msgid "Enter your username"
 msgstr "Введите Ваш логин"
 
 #: .\lessons_app\forms.py:139 .\lessons_app\forms.py:262
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:20
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:16
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:27
 msgid "Time"
 msgstr "Время"
@@ -118,7 +118,7 @@ msgid "Sunday"
 msgstr "Воскресенье"
 
 #: .\lessons_app\forms.py:169 .\lessons_app\forms.py:292
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:19
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:15
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:26
 msgid "Date"
 msgstr "Дата"
@@ -153,7 +153,6 @@ msgid "Some lesson is already scheduled for {} that day"
 msgstr "На это уремя уже существует запись"
 
 #: .\lessons_app\forms.py:252
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:8
 msgid "Student"
 msgstr "Имя студента"
 
@@ -166,23 +165,23 @@ msgstr "Оплата"
 msgid "Please, select a student"
 msgstr "Пожалуйста выберите студента"
 
-#: .\lessons_app\models.py:15
+#: .\lessons_app\models.py:19
 msgid "Lesson"
 msgstr "Урок"
 
-#: .\lessons_app\models.py:16
+#: .\lessons_app\models.py:20
 msgid "Lessons"
 msgstr "Уроки"
 
-#: .\lessons_app\models.py:20
+#: .\lessons_app\models.py:24
 msgid "The Lesson class: id = {}"
 msgstr "Класс Lesson: id = {}"
 
-#: .\lessons_app\models.py:33 .\lessons_app\models.py:34
+#: .\lessons_app\models.py:44 .\lessons_app\models.py:45
 msgid "Details"
 msgstr "Детали"
 
-#: .\lessons_app\models.py:37
+#: .\lessons_app\models.py:48
 msgid "The UserDetail class: id = {}"
 msgstr "Класс UserDetail: id = {}"
 
@@ -311,27 +310,36 @@ msgstr "Объявление на Авито "
 msgid "cleek"
 msgstr "клик"
 
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:8
+msgid "Alias"
+msgstr "Псевдоним"
+
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:13
+msgid "First name"
+msgstr "Имя"
+
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:14
-msgid "Student id"
-msgstr "Id студента"
+msgid "Salary"
+msgstr "Оплата"
 
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:15
-msgid "Lessons id"
-msgstr "Id урока"
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:18
+msgid "Skype"
+msgstr ""
 
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:17
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:21
+msgid "Discord"
+msgstr ""
+
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:24
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:15
 msgid "Telegram"
 msgstr ""
 
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:18
-msgid "Salary"
-msgstr "Оплата"
-
 #: .\lessons_app\templates\lessons_app\index.html:45
 msgid ""
 "Horizontal scrolling is possible with the wheel and the Shift key pressed"
-msgstr "Горизонтальная прокрутка возможна при помощи колесика и зажатой клавиши Shift"
+msgstr ""
+"Горизонтальная прокрутка возможна при помощи колесика и зажатой клавиши Shift"
 
 #: .\lessons_app\templates\lessons_app\info.html:6
 msgid "About me"
@@ -378,31 +386,37 @@ msgstr "Отправить"
 msgid "Registration completed"
 msgstr "Регистрация завершена"
 
-#: .\lessons_app\views.py:161 .\lessons_app\views.py:268
+#: .\lessons_app\views.py:170 .\lessons_app\views.py:285
 msgid "The cost of a usual lesson is {} ₽"
 msgstr "Стоимость обычного урока - {} ₽"
 
-#: .\lessons_app\views.py:164 .\lessons_app\views.py:271
+#: .\lessons_app\views.py:173 .\lessons_app\views.py:288
 msgid "The cost of a lesson in the early morning to {} is {} ₽."
 msgstr "Стоимость урока рано утром до {} - {} ₽."
 
-#: .\lessons_app\views.py:167 .\lessons_app\views.py:274
+#: .\lessons_app\views.py:176 .\lessons_app\views.py:291
 msgid "The cost of a lesson in the late evening to {} is {} ₽."
 msgstr "Стоимость урока поздно вечером после {} - {} ₽."
 
-#: .\lessons_app\views.py:170 .\lessons_app\views.py:277
+#: .\lessons_app\views.py:179 .\lessons_app\views.py:294
 msgid "The cost of a lesson when day is full ({} lessons per day) is {} ₽."
 msgstr "Стоимость урока в переполненный день ({} уроков в день) - {} ₽."
 
-#: .\lessons_app\views.py:208 .\lessons_app\views.py:306
+#: .\lessons_app\views.py:225 .\lessons_app\views.py:323
 #, python-brace-format
 msgid "Lesson successfully created. Date: {0}. Time: {1}. Cost: {2} ₽"
 msgstr "Урок успешно создан. Дата: {0}. Время: {1}. Стоимость: {2} ₽"
 
-#: .\lessons_app\views.py:235
+#: .\lessons_app\views.py:252
 msgid "Error: the lesson wasn't deleted"
 msgstr "Произошла ошибка: урок не удален"
 
-#: .\lessons_app\views.py:244
+#: .\lessons_app\views.py:261
 msgid "The lesson successfully deleted"
 msgstr "Урок успешно удален"
+
+#~ msgid "Student id"
+#~ msgstr "Id студента"
+
+#~ msgid "Lessons id"
+#~ msgstr "Id урока"

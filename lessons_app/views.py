@@ -151,25 +151,34 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         if request.user.is_staff:
             return redirect('add_lesson_admin_url')
         form = self.form_class()
-        context = self.get_context_data()
+        context = self.get_context_data(request)
         context['form'] = form
         return render(request, self.template_name, context)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, request, **kwargs):
         context = {}
+        # value existence check can be disabled in the future
+        user_detail = UserDetail.objects.get(user_id=request.user.id)
+        if user_detail.usual_cost and user_detail.high_cost:
+            usual_cost = user_detail.usual_cost
+            high_cost = user_detail.high_cost
+        else:
+            usual_cost = C_salary_common
+            high_cost = C_salary_high
+
         context['message_1'] = _(
             "The cost of a usual lesson is {} ₽"
-        ).format(C_salary_common)
+        ).format(usual_cost)
         context['message_2'] = _(
             "The cost of a lesson in the early morning to {} is {} ₽."
-        ).format(С_morning_time_markup.strftime(r'%H:%M'), C_salary_high)
+        ).format(С_morning_time_markup.strftime(r'%H:%M'), high_cost)
         context['message_3'] = _(
             "The cost of a lesson in the late evening to {} is {} ₽."
-        ).format(C_evening_time_markup.strftime(r'%H:%M'), C_salary_high)
+        ).format(C_evening_time_markup.strftime(r'%H:%M'), high_cost)
         context['message_4'] = _(
             "The cost of a lesson when day is full ({} lessons per day) "
             "is {} ₽."
-        ).format(C_lesson_threshold, C_salary_high)
+        ).format(C_lesson_threshold, high_cost)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -195,11 +204,19 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         is_morning = С_morning_time <= time < С_morning_time_markup
         is_evening = C_evening_time_markup < time <= C_evening_time
         is_over = len(Lesson.objects.filter(date=date)
-                      ) >= C_lesson_threshold
+                      ) >= C_lesson_threshold - 1
+        # value existence check can be disabled in the future
+        user_detail = UserDetail.objects.get(user_id=request.user.id)
         if is_morning or is_evening or is_over:
-            lesson.salary = C_salary_high
+            if user_detail.high_cost:
+                lesson.salary = user_detail.high_cost
+            else:
+                lesson.salary = C_salary_high
         else:
-            lesson.salary = C_salary_common
+            if user_detail.usual_cost:
+                lesson.salary = user_detail.usual_cost
+            else:
+                lesson.salary = C_salary_common
 
         lesson.save()
 
@@ -458,11 +475,20 @@ class LessonsViewSet(viewsets.ModelViewSet):
         is_morning = С_morning_time <= time < С_morning_time_markup
         is_evening = C_evening_time_markup < time <= C_evening_time
         is_over = len(Lesson.objects.filter(date=date)
-                      ) >= C_lesson_threshold
+                      ) >= C_lesson_threshold - 1
+        # value existence check can be disabled in the future
+        user_detail = UserDetail.objects.get(user_id=request.user.id)
         if is_morning or is_evening or is_over:
-            salary = C_salary_high
+            if user_detail.high_cost:
+                salary = user_detail.high_cost
+            else:
+                salary = C_salary_high
         else:
-            salary = C_salary_common
+            if user_detail.usual_cost:
+                salary = user_detail.usual_cost
+            else:
+                salary = C_salary_common
+
         serializer.save(student_id=request.user.pk, salary=salary)
 
     def get_object(self):

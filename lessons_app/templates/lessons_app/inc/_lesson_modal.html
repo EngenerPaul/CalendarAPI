@@ -5,19 +5,23 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" style="white-space: normal">
-                    {% translate "Student" %}: {{ lesson.student.first_name }}
-                    
+                    {% translate "Alias" %}: {{ lesson.student.details.alias }}
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <p style="white-space: normal; text-align: left; padding: 10px;">
-                <b>{% translate "Student id" %}:</b> {{ lesson.student.pk }}<br>
-                <b>{% translate "Lessons id" %}:</b> {{ lesson.pk }}<br>
-                <b>{% translate "Phone" %}:</b> {% if lesson.student.details.phone %} {{ lesson.student.details.phone }} {% else %} ⸺ {% endif %}<br>
-                <b>{% translate "Telegram" %}:</b> {% if lesson.student.details.telegram %} {{ lesson.student.details.telegram }} {% else %} ⸺ {% endif %}<br>
+                <b>{% translate "First name" %}:</b> {{ lesson.student.first_name }}<br>
                 <b>{% translate "Salary" %}:</b> {{ lesson.salary }} ₽<br>
                 <b>{% translate "Date" %}:</b> {{ lesson.date|date:"j E, D" }}<br>
-                <b>{% translate "Time" %}:</b> {{ lesson.time|date:"G:i" }}
+                <b>{% translate "Time" %}:</b> {{ lesson.time|date:"G:i" }}<br>
+                {% if lesson.student.details.skype %}
+                <b>{% translate "Skype" %}:</b> {{ lesson.student.details.skype }}<br>
+                {% endif %}
+                {% if lesson.student.details.discord %}
+                <b>{% translate "Discord" %}:</b> {{ lesson.student.details.discord }}
+                {% endif %}
+                <b>{% translate "Phone" %}:</b> {% if lesson.student.details.phone %} {{ lesson.student.details.phone }} {% else %} ⸺ {% endif %}<br>
+                <b>{% translate "Telegram" %}:</b> {% if lesson.student.details.telegram %} {{ lesson.student.details.telegram }} {% else %} ⸺ {% endif %}<br>
             </p>
         </div>
     </div>

@@ -35,7 +35,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserDetail
-        fields = ('phone', 'telegram')
+        fields = ('alias', 'skype', 'discord', 'usual_cost', 'high_cost',
+                  'phone', 'telegram')
 
 
 class UserSerializer(serializers.ModelSerializer):

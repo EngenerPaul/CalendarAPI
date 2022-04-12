@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
+from CalendarApi.constraints import (
+    C_salary_common, C_salary_high
+)
+
 
 class Lesson(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -28,6 +32,13 @@ class UserDetail(models.Model):
                                 related_name='details')
     phone = models.CharField(max_length=11, blank=True, null=True)
     telegram = models.CharField(max_length=30, blank=True, null=True)
+    skype = models.CharField(max_length=30, blank=True, null=True)
+    discord = models.CharField(max_length=30, blank=True, null=True)
+    alias = models.CharField(max_length=50, blank=True, null=True)
+    usual_cost = models.IntegerField(blank=True, null=True,
+                                     default=C_salary_common)
+    high_cost = models.IntegerField(blank=True, null=True,
+                                    default=C_salary_high)
 
     class Meta:
         verbose_name = _('Details')
