@@ -3,8 +3,9 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     CustomRegistrationView, CustomLogOutView, CustomLoginView, AddLessonView,
-    DeleteLessonView, LessonView, LessonByUserView, AddLessonAdminView,
+    DeleteLessonView, LessonView, LessonByUserView,
     InfoView,
+    SettingsAP, AddLessonAP, TimeBlockerAP, StudentsAP, LessonsAP, LessonAP,
     UsersAPI, RegistrationAPI, RelevantLessonsAPI, LessonsViewSet,
     LessonsAdminViewSet, RelevantLessonsAdminViewSet, DeleteUserAPI,
 )
@@ -24,11 +25,23 @@ urlpatterns = [
     path('logout', CustomLogOutView.as_view(), name='logout_url'),
     path('login', CustomLoginView.as_view(), name='login_url'),
     path('add-lesson', AddLessonView.as_view(), name='add_lesson_url'),
-    path('add-lesson-admin', AddLessonAdminView.as_view(),
-         name='add_lesson_admin_url'),
     path('delete-lesson/<int:pk>/', DeleteLessonView.as_view(),
          name='del_lesson_url'),
     path('info', InfoView.as_view(), name='info_url'),
+
+    # Admin panel
+    path('admin-panel/settings', SettingsAP.as_view(),
+         name='settingAP_url'),
+    path('admin-panel/add-lesson', AddLessonAP.as_view(),
+         name='add_lesson_AP_url'),
+    path('admin-panel/block-time', TimeBlockerAP.as_view(),
+         name='time_blocker_AP_url'),
+    path('admin-panel/students', StudentsAP.as_view(),
+         name='students_AP_url'),
+    path('admin-panel/students/lessons/<int:pk>', LessonsAP.as_view(),
+         name='lessons_AP_url'),
+    path('admin-panel/students/lessons/lesson/<int:pk>', LessonAP.as_view(),
+         name='lesson_AP_url'),
 
     # API
     path('api/registration', RegistrationAPI.as_view()),

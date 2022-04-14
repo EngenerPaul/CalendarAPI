@@ -1,0 +1,14 @@
+{% load i18n %}
+
+{% if user.is_staff %}
+<a class="btn btn-primary" href="{% url 'settingAP_url' %}" >{% translate "Management" %}</a>
+{% elif user.is_authenticated %}
+<a class="btn btn-primary" href="{% url 'add_lesson_url' %}" >{% translate "Sign up" %}</a>
+<a class="btn btn-primary" href="{% url 'lesson_by_student_url' %}">{% translate "My lessons" %}</a>
+{% else %}{% endif %}
+{% if request.user.is_authenticated %}
+<a class="btn btn-primary" href="{% url 'logout_url' %}">{% translate "Log out" %}</a>
+{% else %}
+<a class="btn btn-primary" href="{% url 'login_url' %}">{% translate "Log in" %}</a>
+<a class="btn btn-primary" href="{% url 'registration_url'%}">{% translate "Registration" %}</a>
+{% endif %}

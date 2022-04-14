@@ -5,7 +5,9 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
-from django.views.generic import ListView, CreateView, DeleteView, View
+from django.views.generic import (
+    ListView, CreateView, DeleteView, View, TemplateView, UpdateView
+)
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -263,13 +265,63 @@ class DeleteLessonView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class AddLessonAdminView(LoginRequiredMixin, CreateView):
+class InfoView(View):
+    """ All information about me """
+
+    def get(self, request, *arg, **kwargs):
+        context = self.get_context_data()
+        return render(request, 'lessons_app/info.html', context)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['age'] = self.my_age()
+        context['C_salary_common'] = C_salary_common
+        context['C_salary_high'] = C_salary_high
+        context['С_morning_time_markup'] = С_morning_time_markup.strftime(
+            '%H:%M')
+        context['C_evening_time_markup'] = C_evening_time_markup.strftime(
+            '%H:%M')
+        context['C_lesson_threshold'] = C_lesson_threshold
+        return context
+
+    def my_age(self):
+        """this function shows my age today"""
+
+        today = date.today()
+        birthday = date(year=today.year, month=5, day=18)
+        birthdate = date(year=1996, month=8, day=23)
+
+        age = today.year - birthdate.year
+        if today >= birthday:
+            return age
+        else:
+            return age - 1
+
+
+#################################################################
+#                        ADMIN PANEL (AP)                       #
+#################################################################
+
+
+class SettingsAP(TemplateView):
+    title = _('Settings')
+    template_name = 'lessons_app/management/settings.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = admin_panel
+        context['title'] = self.title
+        return context
+
+
+class AddLessonAP(LoginRequiredMixin, CreateView):
     """ Create lesson for students by admin """
 
     model = Lesson
-    template_name = 'lessons_app/add_lesson.html'
+    template_name = 'lessons_app/management/add_lesson_admin.html'
     form_class = AddLessonAdminForm
-    success_url = 'home_url'
+    success_url = 'settingAP_url'
+    title = _('Add lesson by admin')
 
     def get(self, request, *args, **kwargs):
         if not request.user.is_staff:
@@ -294,6 +346,8 @@ class AddLessonAdminView(LoginRequiredMixin, CreateView):
             "The cost of a lesson when day is full ({} lessons per day) "
             "is {} ₽."
         ).format(C_lesson_threshold, C_salary_high)
+        context['menu'] = admin_panel
+        context['title'] = self.title
         return context
 
     def post(self, request, *args, **kwargs):
@@ -329,37 +383,52 @@ class AddLessonAdminView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
 
-class InfoView(View):
-    """ All information about me """
-
-    def get(self, request, *arg, **kwargs):
-        context = self.get_context_data()
-        return render(request, 'lessons_app/info.html', context)
+class TimeBlockerAP(TemplateView):
+    title = _('Time blocker')
+    template_name = 'lessons_app/management/time_blocker.html'
 
     def get_context_data(self, **kwargs):
-        context = {}
-        context['age'] = self.my_age()
-        context['C_salary_common'] = C_salary_common
-        context['C_salary_high'] = C_salary_high
-        context['С_morning_time_markup'] = С_morning_time_markup.strftime(
-            '%H:%M')
-        context['C_evening_time_markup'] = C_evening_time_markup.strftime(
-            '%H:%M')
-        context['C_lesson_threshold'] = C_lesson_threshold
+        context = super().get_context_data(**kwargs)
+        context['menu'] = admin_panel
+        context['title'] = self.title
         return context
 
-    def my_age(self):
-        """this function shows my age today"""
 
-        today = date.today()
-        birthday = date(year=today.year, month=5, day=18)
-        birthdate = date(year=1996, month=8, day=23)
+class StudentsAP(ListView):
 
-        age = today.year - birthdate.year
-        if today >= birthday:
-            return age
-        else:
-            return age - 1
+    model = User
+    title = _('Students')
+    template_name = 'lessons_app/management/student_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = admin_panel
+        context['title'] = self.title
+        return context
+
+
+class LessonsAP(ListView):
+
+    model = Lesson
+    template_name = 'lessons_app/management/lessons_info.html'
+
+
+class LessonAP(UpdateView):
+
+    model = Lesson
+    template_name = 'lessons_app/management/lesson_info.html'
+
+
+admin_panel = [
+    (SettingsAP.title, 'settingAP_url'),
+    (AddLessonAP.title, 'add_lesson_AP_url'),
+    (TimeBlockerAP.title, 'time_blocker_AP_url'),
+    (StudentsAP.title, 'students_AP_url')
+]
+
+#################################################################
+#                        END ADMIN PANEL                        #
+#################################################################
 
 
 #################################################################

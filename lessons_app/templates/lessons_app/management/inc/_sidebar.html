@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<h3 style="text-align: center;">Menu</h3>
+<hr>
+{% for chapter in menu %}
+    {% if title == chapter.0 %}
+    <p>
+        <a href="{% url chapter.1 %}">
+            <strong><h5>{{ chapter.0 }}</h5></strong>
+        </a>
+    </p>
+    {% else %}
+    <p>
+        <a href="{% url chapter.1 %}" style="text-decoration: none; color: black;">
+            <strong>{{ chapter.0 }}</strong>
+            
+        </a>
+    </p>
+    {% endif %}
+{% endfor %}
