@@ -4,6 +4,7 @@ from datetime import date, timedelta, datetime
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.core.cache import cache
 from django.utils.translation import gettext as _
 from django.views.generic import (
     ListView, CreateView, DeleteView, View, TemplateView, UpdateView
@@ -26,7 +27,8 @@ from rest_framework.response import Response
 
 from .models import Lesson, UserDetail
 from .forms import (
-    RegisterUserForm, AuthUserForm, AddLessonForm, AddLessonAdminForm
+    RegisterUserForm, AuthUserForm, AddLessonForm, AddLessonAdminForm,
+    TimeBlockerAPForm
 )
 from .serializers import (
     UserSerializer, LessonSerializer, LessonAdminSerializer,
@@ -34,8 +36,10 @@ from .serializers import (
 )
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
-    C_evening_time, C_salary_common, C_salary_high, C_lesson_threshold
+    C_evening_time, C_salary_common, C_salary_high, C_lesson_threshold,
+    C_datedelta
 )
+from .caches import set_blocked_time, del_blocked_time, get_blocked_time
 
 
 class LessonView(ListView):
@@ -53,11 +57,54 @@ class LessonView(ListView):
                 'student__details'
             )
 
-        lessons = {dt_today + timedelta(days=i): [] for i in range(8)}
+        lessons = {dt_today + timedelta(days=i): [] for i in range(
+            C_datedelta.days+1
+        )}
+        blocked_time = get_blocked_time()
+        blocked_time_dates = list(blocked_time.keys())
         for item in all_lessons:
+            day = blocked_time_dates[0]
+            if (day == item.date):
+                if (blocked_time[day][0][0] < item.time):
+                    lessons[day].append({
+                        'date': day,
+                        'start_time': blocked_time[day][0][0],
+                        'end_time': blocked_time[day][0][1],
+                        'is_block': True
+                    })
+                    blocked_time[day].pop(0)
+                    if len(blocked_time[day]) == 0:
+                        del blocked_time[day]
+                        blocked_time_dates.pop(0)
+            if day < item.date:
+                lessons[day].append({
+                    'date': day,
+                    'start_time': blocked_time[day][0][0],
+                    'end_time': blocked_time[day][0][1],
+                    'is_block': True
+                })
+                blocked_time[day].pop(0)
+                if len(blocked_time[day]) == 0:
+                    del blocked_time[day]
+                    blocked_time_dates.pop(0)
+
             if item.date not in lessons.keys():
-                continue
+                continue  # don't must have. it's for security
             lessons[item.date].append(item)
+
+        while len(blocked_time) > 0:
+            day = blocked_time_dates[0]
+            lessons[day].append({
+                    'date': day,
+                    'start_time': blocked_time[day][0][0],
+                    'end_time': blocked_time[day][0][1],
+                    'is_block': True
+            })
+            blocked_time[day].pop(0)
+            if len(blocked_time[day]) == 0:
+                del blocked_time[day]
+                blocked_time_dates.pop(0)
+
         return lessons
 
 
@@ -151,7 +198,7 @@ class AddLessonView(LoginRequiredMixin, CreateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_staff:
-            return redirect('add_lesson_admin_url')
+            return redirect('add_lesson_AP_url')
         form = self.form_class()
         context = self.get_context_data(request)
         context['form'] = form
@@ -314,13 +361,13 @@ class SettingsAP(TemplateView):
         return context
 
 
-class AddLessonAP(LoginRequiredMixin, CreateView):
+class AddLessonAP(CreateView):
     """ Create lesson for students by admin """
 
     model = Lesson
     template_name = 'lessons_app/management/add_lesson_admin.html'
     form_class = AddLessonAdminForm
-    success_url = 'settingAP_url'
+    success_url = 'home_url'
     title = _('Add lesson by admin')
 
     def get(self, request, *args, **kwargs):
@@ -384,21 +431,74 @@ class AddLessonAP(LoginRequiredMixin, CreateView):
 
 
 class TimeBlockerAP(TemplateView):
+    """ Blocks specified time in the admin panel """
+
     title = _('Time blocker')
     template_name = 'lessons_app/management/time_blocker.html'
+    form_class = TimeBlockerAPForm
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        print(f"cache = {cache.get('blocked_time')}")
+        form = self.form_class
+        context['form'] = form
+        return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menu'] = admin_panel
         context['title'] = self.title
+        context['blocked_time'] = get_blocked_time()
         return context
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('block'):
+            return self.delete(request)
+        form = self.form_class(request.POST)
+        if form.is_valid(request):
+            return self.form_valid(request, form)
+        else:
+            return redirect(reverse_lazy('time_blocker_AP_url'))
+
+    def delete(self, request, *args, **kwargs):
+        obj = request.POST.get('block').split('_')
+        date = datetime.strptime(obj[0], r'%d-%m-%y').date()
+        start_time = datetime.strptime(obj[1], r'%H:%M').time()
+        if del_blocked_time(date, start_time):
+            messages.success(
+                request,
+                _("Block deleted successfully")
+            )
+        messages.error(
+                request,
+                _("Block not deleted")
+            )
+        return redirect(reverse_lazy('time_blocker_AP_url'))
+
+    def form_valid(self, request, form):
+        date = form.cleaned_data['date']
+        start_time = form.cleaned_data['start_time']
+        end_time = form.cleaned_data['end_time']
+        date = datetime.strptime(date, r"%Y-%m-%d").date()
+        start_time = datetime.strptime(str(start_time), r"%H").time()
+        end_time = datetime.strptime(str(end_time), r"%H").time()
+        if set_blocked_time(date, start_time, end_time):
+            messages.success(
+                request,
+                _("Block created successfully")
+            )
+        messages.error(
+                request,
+                _("Block not created")
+            )
+        return redirect(reverse_lazy('time_blocker_AP_url'))
 
 
 class StudentsAP(ListView):
 
     model = User
     title = _('Students')
-    template_name = 'lessons_app/management/student_info.html'
+    template_name = 'lessons_app/management/students_info.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -425,10 +525,6 @@ admin_panel = [
     (TimeBlockerAP.title, 'time_blocker_AP_url'),
     (StudentsAP.title, 'students_AP_url')
 ]
-
-#################################################################
-#                        END ADMIN PANEL                        #
-#################################################################
 
 
 #################################################################

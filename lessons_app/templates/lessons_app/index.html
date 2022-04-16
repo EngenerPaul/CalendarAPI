@@ -11,29 +11,15 @@
                     <p>{{day|date:"j E"}}</p>
                     
                     {% for lesson in lesson_by_day %}
-                    <div class="card" style="width: 100px; margin: 10px auto;">
-                        {% if request.user.is_staff %}
-                        <!-- Link is a modal trigger -->
-                        <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_lesson_{{lesson.pk}}">
+                        {% if lesson.is_block %}
+                            {% include 'lessons_app/inc/card_of_blocked_time.html' %}
+                        {% else %}
+                            {% include 'lessons_app/inc/card_of_lesson.html'%}
                         {% endif %}
-                            {% if request.user == lesson.student %}
-                            <div class="card-body" style="background-color: rgb(167, 255, 226); padding: 10px">
-                            {% else %}
-                            <div class="card-body" style="padding: 10px">
-                            {% endif %}
-                                <div class="row justify-content-center">
-                                    <h6 style="margin-bottom: 0%;">
-                                        {{lesson.time|date:"G:i"}}
-                                    </h6>
-                                </div>
-                            </div>
+
                         {% if request.user.is_staff %}
-                        </a>
+                            {% include "lessons_app/inc/_lesson_modal.html" %}
                         {% endif %}
-                    </div>
-                    {% if request.user.is_staff %}
-                    {% include "lessons_app/inc/_lesson_modal.html" %}
-                    {% endif %}
                     {% endfor %}
                     
                 </div>

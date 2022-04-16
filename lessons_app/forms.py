@@ -10,6 +10,7 @@ from .models import Lesson
 from CalendarApi.constraints import (
     С_morning_time, C_evening_time,  C_timedelta,  C_datedelta
 )
+from .caches import get_blocked_time
 
 
 class RegisterUserForm(forms.Form):
@@ -173,7 +174,6 @@ class AddLessonForm(forms.Form):
     )
 
     def is_valid(self, request, form):
-
         try:
             time = str(form['time'].value()).split(':')[0]
             time = datetime.datetime.strptime(time, r"%H").time()
@@ -236,6 +236,17 @@ class AddLessonForm(forms.Form):
                       "day").format(t1)
                 )
                 return False
+
+        # check blocked time overlap
+        blocked_time = get_blocked_time()
+        if date in blocked_time.keys():
+            for times in blocked_time[date]:
+                if times[0] <= time < times[1]:
+                    messages.error(
+                        request,
+                        _("This time is blocked")
+                    )
+                    return False
 
         # super consist variable because it is used by AddLessonAdminForm class
         return super(forms.Form, self).is_valid()
@@ -303,6 +314,21 @@ class AddLessonAdminForm(forms.Form):
     )
 
     def is_valid(self, request, form):
+        try:
+            time = str(form['time'].value()).split(':')[0]
+            time = datetime.datetime.strptime(time, r"%H").time()
+        except ValueError:
+            messages.error(
+                request,
+                _("Time must be in 'hours' or "
+                    "'hours:minutes' format")
+            )
+            return False
+
+        date = datetime.datetime.strptime(
+            form['date'].value(),
+            r"%Y-%m-%d"
+        ).date()
 
         if form['student'].value() == '':
             messages.error(
@@ -311,5 +337,127 @@ class AddLessonAdminForm(forms.Form):
             )
             return False
 
+        # check blocked time overlap
+        blocked_time = get_blocked_time()
+        if date in blocked_time.keys():
+            for times in blocked_time[date]:
+                if times[0] <= time < times[1]:
+                    messages.error(
+                        request,
+                        _("This time is blocked")
+                    )
+                    return False
+
         # uses created validator from AddLessonForm class
         return AddLessonForm.is_valid(self, request, form)
+
+
+class TimeBlockerAPForm(forms.Form):
+    """ Form for the time blocker in the admin panel """
+
+    weekdays = {
+        'Monday': _('Monday'),
+        'Tuesday': _('Tuesday'),
+        'Wednesday': _('Wednesday'),
+        'Thursday': _('Thursday'),
+        'Friday': _('Friday'),
+        'Saturday': _('Saturday'),
+        'Sunday': _('Sunday'),
+    }
+    choice = []
+    for i in range(C_datedelta.days+1):
+        if i == 0:
+            date = datetime.date.today() + datetime.timedelta(days=i)
+            day_title = (f"{_('Today')}, "
+                         f"{datetime.datetime.strftime(date, r'%d-%m')}")
+            choice.append((date, day_title))
+            continue
+        date = datetime.date.today() + datetime.timedelta(days=i)
+        day_title = (f"{weekdays[date.strftime('%A')]}, "
+                     f"{datetime.datetime.strftime(date, r'%d-%m')}")
+        choice.append((date, day_title))
+    date = forms.CharField(
+        label=_('Date'),
+        widget=forms.Select(choices=choice, attrs={
+            'class': 'form-control'
+        })
+    )
+    start_time = forms.IntegerField(
+        label=_('Start time'),
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': '00:00',
+            'value': 8
+        })
+    )
+    end_time = forms.IntegerField(
+        label=_('End time'),
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': '00:00',
+            'value': 23
+        })
+    )
+
+    def is_valid(self, request) -> bool:
+        date = self['date'].value()
+        start_time = self['start_time'].value()
+        end_time = self['end_time'].value()
+        date = datetime.datetime.strptime(date, r'%Y-%m-%d').date()
+        start_time = datetime.datetime.strptime(start_time, r'%H').time()
+        end_time = datetime.datetime.strptime(end_time, r'%H').time()
+
+        # check of times
+        if start_time > end_time:
+            messages.error(
+                request,
+                _("'Start time' must be earlier than 'End time'")
+            )
+            return False
+        elif start_time == end_time:
+            messages.error(
+                request,
+                _("'Start time' and 'End time' can't be equal")
+            )
+            return False
+
+        # checking if block overlap
+        blocked_time = get_blocked_time()
+        if date in blocked_time.keys():
+            for times in blocked_time[date]:
+                if start_time >= times[0] and start_time < times[1] or \
+                        end_time > times[0] and end_time <= times[1]:
+                    messages.error(
+                        request,
+                        _("The new block overlaps the existing one")
+                    )
+                    return False
+
+        # check for future date (date > today)
+        today = datetime.date.today()
+        if date < today:
+            messages.error(
+                request,
+                _("Date can't be earlier than today")
+            )
+            return False
+
+        # check for date in the current period (8 day)
+        if date > today + C_datedelta:
+            messages.error(
+                request,
+                _("You are creating the block too early")
+            )
+            return False
+
+        # check for non-existence of lessons
+        lessons = Lesson.objects.filter(date=date).values('time')
+        for lesson in lessons:
+            if start_time <= lesson['time'] < end_time:
+                messages.error(
+                    request,
+                    _("Your block overlaps an existing lesson")
+                )
+                return False
+
+        return super().is_valid()

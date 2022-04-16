@@ -1,0 +1,20 @@
+<div class="card" style="width: 100px; margin: 10px auto;">
+    {% if request.user.is_staff %}
+    <!-- Link is a modal trigger -->
+    <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_lesson_{{lesson.pk}}">
+    {% endif %}
+        {% if request.user == lesson.student %}
+        <div class="card-body" style="background-color: rgb(167, 255, 226); padding: 10px">
+        {% else %}
+        <div class="card-body" style="padding: 10px">
+        {% endif %}
+            <div class="row justify-content-center">
+                <h6 style="margin-bottom: 0%;">
+                    {{lesson.time|date:"G:i"}}
+                </h6>
+            </div>
+        </div>
+    {% if request.user.is_staff %}
+    </a>
+    {% endif %}
+</div>
