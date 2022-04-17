@@ -241,7 +241,8 @@ class AddLessonForm(forms.Form):
         blocked_time = get_blocked_time()
         if date in blocked_time.keys():
             for times in blocked_time[date]:
-                if times[0] <= time < times[1]:
+                if (times[0] <= time < times[1]) or \
+                        (time == times[1] == datetime.time(23)):
                     messages.error(
                         request,
                         _("This time is blocked")
@@ -341,7 +342,8 @@ class AddLessonAdminForm(forms.Form):
         blocked_time = get_blocked_time()
         if date in blocked_time.keys():
             for times in blocked_time[date]:
-                if times[0] <= time < times[1]:
+                if (times[0] <= time < times[1]) or \
+                        (time == times[1] == datetime.time(23)):
                     messages.error(
                         request,
                         _("This time is blocked")

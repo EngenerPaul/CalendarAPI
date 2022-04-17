@@ -163,7 +163,7 @@ msgstr "На это уремя уже существует запись"
 
 #: .\lessons_app\forms.py:247 .\lessons_app\forms.py:347
 msgid "This time is blocked"
-msgstr "Блокировщик времени"
+msgstr "Это время заблокировано"
 
 #: .\lessons_app\forms.py:263
 msgid "Student"

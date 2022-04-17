@@ -350,7 +350,16 @@ class InfoView(View):
 #################################################################
 
 
-class SettingsAP(TemplateView):
+class AdminAccessMixin:
+    """ Admin access only. Other users go to the homepage """
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return redirect('home_url')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class SettingsAP(AdminAccessMixin, TemplateView):
     title = _('Settings')
     template_name = 'lessons_app/management/settings.html'
 
@@ -361,7 +370,7 @@ class SettingsAP(TemplateView):
         return context
 
 
-class AddLessonAP(CreateView):
+class AddLessonAP(AdminAccessMixin, CreateView):
     """ Create lesson for students by admin """
 
     model = Lesson
@@ -430,7 +439,7 @@ class AddLessonAP(CreateView):
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
 
-class TimeBlockerAP(TemplateView):
+class TimeBlockerAP(AdminAccessMixin, TemplateView):
     """ Blocks specified time in the admin panel """
 
     title = _('Time blocker')
@@ -494,7 +503,7 @@ class TimeBlockerAP(TemplateView):
         return redirect(reverse_lazy('time_blocker_AP_url'))
 
 
-class StudentsAP(ListView):
+class StudentsAP(AdminAccessMixin, ListView):
 
     model = User
     title = _('Students')
@@ -507,13 +516,13 @@ class StudentsAP(ListView):
         return context
 
 
-class LessonsAP(ListView):
+class LessonsAP(AdminAccessMixin, ListView):
 
     model = Lesson
     template_name = 'lessons_app/management/lessons_info.html'
 
 
-class LessonAP(UpdateView):
+class LessonAP(AdminAccessMixin, UpdateView):
 
     model = Lesson
     template_name = 'lessons_app/management/lesson_info.html'
