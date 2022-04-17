@@ -478,10 +478,11 @@ class TimeBlockerAP(AdminAccessMixin, TemplateView):
                 request,
                 _("Block deleted successfully")
             )
-        messages.error(
-                request,
-                _("Block not deleted")
-            )
+        else:
+            messages.error(
+                    request,
+                    _("Block not deleted")
+                )
         return redirect(reverse_lazy('time_blocker_AP_url'))
 
     def form_valid(self, request, form):
@@ -496,10 +497,11 @@ class TimeBlockerAP(AdminAccessMixin, TemplateView):
                 request,
                 _("Block created successfully")
             )
-        messages.error(
-                request,
-                _("Block not created")
-            )
+        else:
+            messages.error(
+                    request,
+                    _("Block not created")
+                )
         return redirect(reverse_lazy('time_blocker_AP_url'))
 
 

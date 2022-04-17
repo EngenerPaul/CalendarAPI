@@ -1,0 +1,21 @@
+<div class="container testimonial-group" style="margin-bottom: 20px;">
+    <div class="row text-center">
+        <ul class="nav nav-tabs">
+            <div class="row string-menu" style="flex-wrap: nowrap; text-align: center; overflow-y: hidden;">
+                {% for chapter in menu %}
+                    <li class="nav-item" style="width: auto; padding: 0px 16px; margin: auto 0;">
+                        {% if title == chapter.0 %}
+                            <a class="nav-link active" aria-current="page" href="{% url chapter.1 %}" style="color: black; background-color: inherit;">
+                                <strong><h5>{{ chapter.0 }}</h5></strong>
+                            </a>
+                        {% else %}
+                            <a class="nav-item" href="{% url chapter.1 %}" style="text-decoration: none; color: #656e77;">
+                                <strong>{{ chapter.0 }}</strong>
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </div>
+        </ul>
+    </div>
+</div>

@@ -52,3 +52,15 @@ float: none;
 .d-none.d-sm-none.d-md-none.d-lg-none.d-xl-block.d-xxl-none ul li {
     margin-left: 0px;
 }
+
+/* remove display of string menu scroll bar */
+.string-menu {
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.string-menu::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}

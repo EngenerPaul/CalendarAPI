@@ -1,7 +1,24 @@
-{% extends 'lessons_app/management/management_base.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 
-{% block menu %}
-<h3>{% translate "Students info" %}</h3>
-<b>Ожидает модерации</b> <br> <br>
-{% endblock menu %}
+{% block content %}
+<div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+    <div class="container">
+        <div class="row flex-nowrap">
+            <div class="col-2" style="min-width: 200px;">
+                {% include 'lessons_app/management/inc/_sidebar_menu.html' %}
+            </div>
+            <div class="col" style="padding-left: 50px;">
+                <h3>{% translate "Students info" %}</h3>
+                <b>Ожидает модерации...</b> <br> <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+    {% include 'lessons_app/management/inc/_string_menu.html' %}
+    <b>Ожидает модерации...</b> <br> <br>
+</div>
+
+{% endblock content %}
