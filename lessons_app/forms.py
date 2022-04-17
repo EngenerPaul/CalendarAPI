@@ -239,15 +239,16 @@ class AddLessonForm(forms.Form):
 
         # check blocked time overlap
         blocked_time = get_blocked_time()
-        if date in blocked_time.keys():
-            for times in blocked_time[date]:
-                if (times[0] <= time < times[1]) or \
-                        (time == times[1] == datetime.time(23)):
-                    messages.error(
-                        request,
-                        _("This time is blocked")
-                    )
-                    return False
+        if blocked_time:
+            if date in blocked_time.keys():
+                for times in blocked_time[date]:
+                    if (times[0] <= time < times[1]) or \
+                            (time == times[1] == datetime.time(23)):
+                        messages.error(
+                            request,
+                            _("This time is blocked")
+                        )
+                        return False
 
         # super consist variable because it is used by AddLessonAdminForm class
         return super(forms.Form, self).is_valid()
@@ -340,15 +341,16 @@ class AddLessonAdminForm(forms.Form):
 
         # check blocked time overlap
         blocked_time = get_blocked_time()
-        if date in blocked_time.keys():
-            for times in blocked_time[date]:
-                if (times[0] <= time < times[1]) or \
-                        (time == times[1] == datetime.time(23)):
-                    messages.error(
-                        request,
-                        _("This time is blocked")
-                    )
-                    return False
+        if blocked_time:
+            if date in blocked_time.keys():
+                for times in blocked_time[date]:
+                    if (times[0] <= time < times[1]) or \
+                            (time == times[1] == datetime.time(23)):
+                        messages.error(
+                            request,
+                            _("This time is blocked")
+                        )
+                        return False
 
         # uses created validator from AddLessonForm class
         return AddLessonForm.is_valid(self, request, form)
@@ -425,15 +427,16 @@ class TimeBlockerAPForm(forms.Form):
 
         # checking if block overlap
         blocked_time = get_blocked_time()
-        if date in blocked_time.keys():
-            for times in blocked_time[date]:
-                if start_time >= times[0] and start_time < times[1] or \
-                        end_time > times[0] and end_time <= times[1]:
-                    messages.error(
-                        request,
-                        _("The new block overlaps the existing one")
-                    )
-                    return False
+        if blocked_time:
+            if date in blocked_time.keys():
+                for times in blocked_time[date]:
+                    if start_time >= times[0] and start_time < times[1] or \
+                            end_time > times[0] and end_time <= times[1]:
+                        messages.error(
+                            request,
+                            _("The new block overlaps the existing one")
+                        )
+                        return False
 
         # check for future date (date > today)
         today = datetime.date.today()

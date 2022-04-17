@@ -52,11 +52,11 @@
                 
             </form>
         </div>
-        <div class="col" style="max-width: 700px; min-width: 400px; padding-top: 15px;">
+        <div class="col" style="max-width: 700px; min-width: 400px; padding-top: 15px; padding-left: 0;">
             {% if blocked_time %}
                 {% include "lessons_app/management/inc/_time_blocker_table.html" %}
             {% else %}
-                <p style="font-size: 14pt; color: rgb(168, 168, 168);">
+                <p style="font-size: 14pt; color: rgb(168, 168, 168); text-align: center;">
                     {% translate "Blocks don't exist" %}
                 </p>
             {% endif %}

@@ -61,11 +61,23 @@ class LessonView(ListView):
             C_datedelta.days+1
         )}
         blocked_time = get_blocked_time()
-        blocked_time_dates = list(blocked_time.keys())
-        for item in all_lessons:
-            day = blocked_time_dates[0]
-            if (day == item.date):
-                if (blocked_time[day][0][0] < item.time):
+        if blocked_time:
+            blocked_time_dates = list(blocked_time.keys())
+            for item in all_lessons:
+                day = blocked_time_dates[0]
+                if (day == item.date):
+                    if (blocked_time[day][0][0] < item.time):
+                        lessons[day].append({
+                            'date': day,
+                            'start_time': blocked_time[day][0][0],
+                            'end_time': blocked_time[day][0][1],
+                            'is_block': True
+                        })
+                        blocked_time[day].pop(0)
+                        if len(blocked_time[day]) == 0:
+                            del blocked_time[day]
+                            blocked_time_dates.pop(0)
+                if day < item.date:
                     lessons[day].append({
                         'date': day,
                         'start_time': blocked_time[day][0][0],
@@ -76,34 +88,28 @@ class LessonView(ListView):
                     if len(blocked_time[day]) == 0:
                         del blocked_time[day]
                         blocked_time_dates.pop(0)
-            if day < item.date:
+
+                if item.date not in lessons.keys():
+                    continue  # don't must have. it's for security
+                lessons[item.date].append(item)
+
+            while len(blocked_time) > 0:
+                day = blocked_time_dates[0]
                 lessons[day].append({
-                    'date': day,
-                    'start_time': blocked_time[day][0][0],
-                    'end_time': blocked_time[day][0][1],
-                    'is_block': True
+                        'date': day,
+                        'start_time': blocked_time[day][0][0],
+                        'end_time': blocked_time[day][0][1],
+                        'is_block': True
                 })
                 blocked_time[day].pop(0)
                 if len(blocked_time[day]) == 0:
                     del blocked_time[day]
                     blocked_time_dates.pop(0)
-
-            if item.date not in lessons.keys():
-                continue  # don't must have. it's for security
-            lessons[item.date].append(item)
-
-        while len(blocked_time) > 0:
-            day = blocked_time_dates[0]
-            lessons[day].append({
-                    'date': day,
-                    'start_time': blocked_time[day][0][0],
-                    'end_time': blocked_time[day][0][1],
-                    'is_block': True
-            })
-            blocked_time[day].pop(0)
-            if len(blocked_time[day]) == 0:
-                del blocked_time[day]
-                blocked_time_dates.pop(0)
+        else:
+            for item in all_lessons:
+                if item.date not in lessons.keys():
+                    continue  # don't must have. it's for security
+                lessons[item.date].append(item)
 
         return lessons
 
