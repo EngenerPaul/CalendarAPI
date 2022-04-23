@@ -20,7 +20,7 @@
                         </form>
                     </div>
                     <div class="col" style="max-width: 700px; min-width: 400px;">
-                        {% if blocked_time %}
+                        {% if blocked_times %}
                         <div class="d-none d-sm-none d-md-none d-lg-none d-xl-block" style="margin-top: -50px;">
                             {% include "lessons_app/management/inc/_time_blocker_table.html" %}
                         </div>
@@ -53,7 +53,7 @@
             </form>
         </div>
         <div class="col" style="max-width: 700px; min-width: 400px; padding-top: 15px; padding-left: 0;">
-            {% if blocked_time %}
+            {% if blocked_times %}
                 {% include "lessons_app/management/inc/_time_blocker_table.html" %}
             {% else %}
                 <p style="font-size: 14pt; color: rgb(168, 168, 168); text-align: center;">

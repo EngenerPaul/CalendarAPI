@@ -15,28 +15,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for date, times in blocked_time.items %}
-                            {% for time in times %}
+                        {% for blocked_time in blocked_times %}
                             <tr>
                                 <th style="vertical-align: middle; text-align: center;">
-                                    {{ date|date:"j b, D" }}
+                                    {{ blocked_time.date|date:"j b, D" }}
                                 </th>
                                 <th style="vertical-align: middle; text-align: center;">
-                                    {{ time.0 }}
+                                    {{ blocked_time.start_time|date:"G:i" }}
                                 </th>
                                 <th style="vertical-align: middle; text-align: center;">
-                                    {{ time.1 }}
+                                    {{ blocked_time.end_time|date:"G:i" }}
                                 </th>
                                 <th style="vertical-align: middle; text-align: center;">
                                     <form method="post">
                                         {% csrf_token %}
-                                        <button type='submit' class='btn btn-danger btn-block' name="block" value="{{ date|date:'d-m-y' }}_{{ time.0 }}" style="padding: 6px 12px 6px 6px; width: 100%; width: 50px; padding: 6px 0px;">
+                                        <button type='submit' class='btn btn-danger btn-block' name="delete block" value="{{ blocked_time.pk }}" style="padding: 6px 12px 6px 6px; width: 100%; width: 50px; padding: 6px 0px;">
                                             <img src="{% static 'img/white-cross.png' %}" alt="delete" width="20px">
                                         </button>
                                     </form>
                                 </th>
                             </tr>
-                            {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>

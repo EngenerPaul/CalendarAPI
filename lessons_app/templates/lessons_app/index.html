@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load index_card %}
 
 {% block content %}
 <div class="container testimonial-group">
@@ -11,7 +12,8 @@
                     <p>{{day|date:"j E"}}</p>
                     
                     {% for lesson in lesson_by_day %}
-                        {% if lesson.is_block %}
+                        {% is_TimeBlock lesson as is_block %}
+                        {% if is_block %}
                             {% include 'lessons_app/inc/card_of_blocked_time.html' %}
                         {% else %}
                             {% include 'lessons_app/inc/card_of_lesson.html'%}

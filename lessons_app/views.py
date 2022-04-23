@@ -25,7 +25,7 @@ from rest_framework.generics import (
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from .models import Lesson, UserDetail
+from .models import Lesson, UserDetail, TimeBlock
 from .forms import (
     RegisterUserForm, AuthUserForm, AddLessonForm, AddLessonAdminForm,
     TimeBlockerAPForm
@@ -39,7 +39,6 @@ from CalendarApi.constraints import (
     C_evening_time, C_salary_common, C_salary_high, C_lesson_threshold,
     C_datedelta
 )
-from .caches import set_blocked_time, del_blocked_time, get_blocked_time
 
 
 class LessonView(ListView):
@@ -50,68 +49,40 @@ class LessonView(ListView):
     context_object_name = 'lessons'
 
     def get_queryset(self):
-        dt_today = date.today()
-        all_lessons = self.model.objects.filter(
-            date__gte=dt_today).select_related(
-                'student',
-                'student__details'
-            )
-
-        lessons = {dt_today + timedelta(days=i): [] for i in range(
+        today = date.today()
+        lessons = self.model.objects.filter(
+            date__gte=today
+        ).select_related(
+            'student',
+            'student__details'
+        )
+        lessons = list(lessons)
+        blocked_times = TimeBlock.objects.filter(
+            date__gte=today,
+            date__lte=today + C_datedelta
+        )
+        blocked_times = list(blocked_times)
+        query = {today + timedelta(days=i): [] for i in range(
             C_datedelta.days+1
         )}
-        blocked_time = get_blocked_time()
-        if blocked_time:
-            blocked_time_dates = list(blocked_time.keys())
-            for item in all_lessons:
-                day = blocked_time_dates[0]
-                if (day == item.date):
-                    if (blocked_time[day][0][0] < item.time):
-                        lessons[day].append({
-                            'date': day,
-                            'start_time': blocked_time[day][0][0],
-                            'end_time': blocked_time[day][0][1],
-                            'is_block': True
-                        })
-                        blocked_time[day].pop(0)
-                        if len(blocked_time[day]) == 0:
-                            del blocked_time[day]
-                            blocked_time_dates.pop(0)
-                if day < item.date:
-                    lessons[day].append({
-                        'date': day,
-                        'start_time': blocked_time[day][0][0],
-                        'end_time': blocked_time[day][0][1],
-                        'is_block': True
-                    })
-                    blocked_time[day].pop(0)
-                    if len(blocked_time[day]) == 0:
-                        del blocked_time[day]
-                        blocked_time_dates.pop(0)
-
-                if item.date not in lessons.keys():
-                    continue  # don't must have. it's for security
-                lessons[item.date].append(item)
-
-            while len(blocked_time) > 0:
-                day = blocked_time_dates[0]
-                lessons[day].append({
-                        'date': day,
-                        'start_time': blocked_time[day][0][0],
-                        'end_time': blocked_time[day][0][1],
-                        'is_block': True
-                })
-                blocked_time[day].pop(0)
-                if len(blocked_time[day]) == 0:
-                    del blocked_time[day]
-                    blocked_time_dates.pop(0)
-        else:
-            for item in all_lessons:
-                if item.date not in lessons.keys():
-                    continue  # don't must have. it's for security
-                lessons[item.date].append(item)
-
-        return lessons
+        for _ in range(len(lessons) + len(blocked_times)):
+            if lessons and blocked_times:
+                condition_1 = lessons[0].date < blocked_times[0].date
+                condition_2 = (
+                    lessons[0].date == blocked_times[0].date and
+                    lessons[0].time < blocked_times[0].start_time
+                )
+                if condition_1 or condition_2:
+                    day = lessons[0].date
+                    query[day].append(lessons.pop(0))
+                else:
+                    day = blocked_times[0].date
+                    query[day].append(blocked_times.pop(0))
+            else:
+                exists = lessons or blocked_times
+                day = exists[0].date
+                query[day].append(exists.pop(0))
+        return query
 
 
 class LessonByUserView(LoginRequiredMixin, ListView):
@@ -445,29 +416,28 @@ class AddLessonAP(AdminAccessMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
 
-class TimeBlockerAP(AdminAccessMixin, TemplateView):
+class TimeBlockerAP(AdminAccessMixin, ListView):
     """ Blocks specified time in the admin panel """
 
+    model = TimeBlock
+    context_object_name = 'blocked_times'
     title = _('Time blocker')
     template_name = 'lessons_app/management/time_blocker.html'
     form_class = TimeBlockerAPForm
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        print(f"cache = {cache.get('blocked_time')}")
-        form = self.form_class
-        context['form'] = form
-        return self.render_to_response(context)
+    def get_queryset(self):
+        return self.model.objects.filter(date__gte=date.today())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menu'] = admin_panel
         context['title'] = self.title
-        context['blocked_time'] = get_blocked_time()
+        form = self.form_class
+        context['form'] = form
         return context
 
     def post(self, request, *args, **kwargs):
-        if request.POST.get('block'):
+        if request.POST.get('delete block'):
             return self.delete(request)
         form = self.form_class(request.POST)
         if form.is_valid(request):
@@ -476,19 +446,12 @@ class TimeBlockerAP(AdminAccessMixin, TemplateView):
             return redirect(reverse_lazy('time_blocker_AP_url'))
 
     def delete(self, request, *args, **kwargs):
-        obj = request.POST.get('block').split('_')
-        date = datetime.strptime(obj[0], r'%d-%m-%y').date()
-        start_time = datetime.strptime(obj[1], r'%H:%M').time()
-        if del_blocked_time(date, start_time):
-            messages.success(
-                request,
-                _("Block deleted successfully")
-            )
-        else:
-            messages.error(
-                    request,
-                    _("Block not deleted")
-                )
+        pk = request.POST.get('delete block')
+        self.model.objects.get(pk=pk).delete()
+        messages.success(
+            request,
+            _("Block deleted successfully")
+        )
         return redirect(reverse_lazy('time_blocker_AP_url'))
 
     def form_valid(self, request, form):
@@ -498,16 +461,17 @@ class TimeBlockerAP(AdminAccessMixin, TemplateView):
         date = datetime.strptime(date, r"%Y-%m-%d").date()
         start_time = datetime.strptime(str(start_time), r"%H").time()
         end_time = datetime.strptime(str(end_time), r"%H").time()
-        if set_blocked_time(date, start_time, end_time):
-            messages.success(
-                request,
-                _("Block created successfully")
-            )
-        else:
-            messages.error(
-                    request,
-                    _("Block not created")
-                )
+
+        blocked_time = self.model()
+        blocked_time.date = date
+        blocked_time.start_time = start_time
+        blocked_time.end_time = end_time
+        blocked_time.save()
+
+        messages.success(
+            request,
+            _("Block created successfully")
+        )
         return redirect(reverse_lazy('time_blocker_AP_url'))
 
 

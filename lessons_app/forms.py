@@ -6,11 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext as _
 
-from .models import Lesson
+from .models import Lesson, TimeBlock
 from CalendarApi.constraints import (
     С_morning_time, C_evening_time,  C_timedelta,  C_datedelta
 )
-from .caches import get_blocked_time
 
 
 class RegisterUserForm(forms.Form):
@@ -238,17 +237,16 @@ class AddLessonForm(forms.Form):
                 return False
 
         # check blocked time overlap
-        blocked_time = get_blocked_time()
-        if blocked_time:
-            if date in blocked_time.keys():
-                for times in blocked_time[date]:
-                    if (times[0] <= time < times[1]) or \
-                            (time == times[1] == datetime.time(23)):
-                        messages.error(
-                            request,
-                            _("This time is blocked")
-                        )
-                        return False
+        blocked_times = TimeBlock.objects.filter(date=date).values(
+            'start_time', 'end_time')
+        for blocked_time in blocked_times:
+            if (blocked_time['start_time'] <= time < blocked_time['end_time']
+                    or time == blocked_time['end_time'] == datetime.time(23)):
+                messages.error(
+                    request,
+                    _("This time is blocked")
+                )
+                return False
 
         # super consist variable because it is used by AddLessonAdminForm class
         return super(forms.Form, self).is_valid()
@@ -340,17 +338,16 @@ class AddLessonAdminForm(forms.Form):
             return False
 
         # check blocked time overlap
-        blocked_time = get_blocked_time()
-        if blocked_time:
-            if date in blocked_time.keys():
-                for times in blocked_time[date]:
-                    if (times[0] <= time < times[1]) or \
-                            (time == times[1] == datetime.time(23)):
-                        messages.error(
-                            request,
-                            _("This time is blocked")
-                        )
-                        return False
+        blocked_times = TimeBlock.objects.filter(date=date).values(
+            'start_time', 'end_time')
+        for blocked_time in blocked_times:
+            if (blocked_time['start_time'] <= time < blocked_time['end_time']
+                    or time == blocked_time['end_time'] == datetime.time(23)):
+                messages.error(
+                    request,
+                    _("This time is blocked")
+                )
+                return False
 
         # uses created validator from AddLessonForm class
         return AddLessonForm.is_valid(self, request, form)
@@ -426,17 +423,21 @@ class TimeBlockerAPForm(forms.Form):
             return False
 
         # checking if block overlap
-        blocked_time = get_blocked_time()
-        if blocked_time:
-            if date in blocked_time.keys():
-                for times in blocked_time[date]:
-                    if start_time >= times[0] and start_time < times[1] or \
-                            end_time > times[0] and end_time <= times[1]:
-                        messages.error(
-                            request,
-                            _("The new block overlaps the existing one")
-                        )
-                        return False
+        blocked_times = TimeBlock.objects.filter(date=date).values(
+            'start_time', 'end_time')
+        for blocked_time in blocked_times:
+            condition_1 = (blocked_time['start_time'] <= start_time
+                           < blocked_time['end_time'])
+            condition_2 = (blocked_time['start_time'] < end_time
+                           < blocked_time['end_time'])
+            condition_3 = (start_time < blocked_time['end_time']
+                           and end_time > blocked_time['start_time'])
+            if condition_1 or condition_2 or condition_3:
+                messages.error(
+                    request,
+                    _("The new block overlaps the existing one")
+                )
+                return False
 
         # check for future date (date > today)
         today = datetime.date.today()

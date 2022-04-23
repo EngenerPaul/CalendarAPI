@@ -46,3 +46,16 @@ class UserDetail(models.Model):
 
     def __str__(self):
         return _('The UserDetail class: id = {}').format(self.user)
+
+
+class TimeBlock(models.Model):
+    """ Time blocking model in admin panel (AP) """
+
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    class Meta:
+        verbose_name = _('TimeBlock')
+        verbose_name_plural = _('Timeblocks')
+        ordering = ('date', 'start_time')
