@@ -32,7 +32,8 @@ from .forms import (
 )
 from .serializers import (
     UserSerializer, LessonSerializer, LessonAdminSerializer,
-    RegistrationSerializer, DelUserSerializer
+    RegistrationSerializer, DelUserSerializer,
+    TimeBlockSerializer
 )
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
@@ -666,3 +667,19 @@ class RelevantLessonsAdminViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.filter(date__gte=date.today())
     serializer_class = LessonAdminSerializer
     permission_classes = [IsAdminUser]
+
+
+#################################################################
+#                      ADMIN PANEL (AP) API                     #
+#################################################################
+
+
+class TimeBlockAPI(ListAPIView):
+    """ Getting block list """
+
+    queryset = TimeBlock.objects.filter(
+        date__gte=date.today(),
+        date__lte=date.today() + C_datedelta
+    )
+    serializer_class = TimeBlockSerializer
+    permission_classes = [AllowAny]
