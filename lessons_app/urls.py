@@ -8,7 +8,7 @@ from .views import (
     SettingsAP, AddLessonAP, TimeBlockerAP, StudentsAP, LessonsAP, LessonAP,
     UsersAPI, RegistrationAPI, RelevantLessonsAPI, LessonsViewSet,
     LessonsAdminViewSet, RelevantLessonsAdminViewSet, DeleteUserAPI,
-    TimeBlockAPI,
+    TimeBlockAPI, TimeBlockAdminAPI
 )
 
 router = DefaultRouter()
@@ -16,6 +16,7 @@ router.register('api/set-my-lessons', LessonsViewSet,
                 basename='my_lessons')
 router.register('api/all-lessons', LessonsAdminViewSet)
 router.register('api/all-relevant-lessons', RelevantLessonsAdminViewSet)
+router.register('api/admin/admin-panel/timeblock', TimeBlockAdminAPI)
 
 urlpatterns = [
     path('', LessonView.as_view(), name='home_url'),

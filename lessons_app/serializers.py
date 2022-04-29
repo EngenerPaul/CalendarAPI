@@ -4,7 +4,9 @@ from rest_framework.relations import PrimaryKeyRelatedField
 from django.contrib.auth.models import User
 
 from .models import Lesson, UserDetail, TimeBlock
-from .validators import AdminValidator, UserValidator, RegistrationValidator
+from .validators import (
+    AdminValidator, UserValidator, RegistrationValidator, TimeBlockValidator
+)
 
 
 class RegistrationSerializer(serializers.Serializer):
@@ -86,3 +88,14 @@ class TimeBlockSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeBlock
         fields = ('date', 'start_time', 'end_time')
+
+
+class TimeBlockAdminSerializer(serializers.ModelSerializer):
+    """ Admin viewset of Timeblock (admin only) """
+
+    class Meta:
+        model = TimeBlock
+        fields = ('id', 'date', 'start_time', 'end_time')
+        validators = [
+            TimeBlockValidator(queryset=model.objects.all())
+        ]

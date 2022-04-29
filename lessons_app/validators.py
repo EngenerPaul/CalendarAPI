@@ -8,6 +8,7 @@ from rest_framework.utils.representation import smart_repr
 from CalendarApi.constraints import (
     С_morning_time, C_evening_time, C_timedelta, C_datedelta,
 )
+from .models import TimeBlock, Lesson
 
 
 class RegistrationValidator():
@@ -133,6 +134,70 @@ class UserValidator():
                 raise ValidationError(
                     _("Some lesson is already scheduled for "
                       "{} that day").format(t1)
+                )
+
+    def __repr__(self):
+        return '<%s(queryset=%s)>' % (
+            self.__class__.__name__,
+            smart_repr(self.queryset)
+        )
+
+
+class TimeBlockValidator():
+    """ Validator of Timeblock """
+
+    def __init__(self, queryset):
+        self.queryset = queryset
+
+    def __call__(self, attrs):
+        date = attrs['date']
+        start_time = attrs['start_time']
+        end_time = attrs['end_time']
+
+        # check of times
+        if start_time > end_time:
+            raise ValidationError(
+                _("'Start time' must be earlier than 'End time'")
+            )
+        elif start_time == end_time:
+            raise ValidationError(
+                _("'Start time' and 'End time' can't be equal")
+            )
+
+        # checking if block overlap
+        blocked_times = self.queryset.filter(date=date).values(
+            'start_time', 'end_time')
+        for blocked_time in blocked_times:
+            condition_1 = (blocked_time['start_time'] <= start_time
+                           < blocked_time['end_time'])
+            condition_2 = (blocked_time['start_time'] < end_time
+                           < blocked_time['end_time'])
+            condition_3 = (start_time < blocked_time['end_time']
+                           and end_time > blocked_time['start_time'])
+            if condition_1 or condition_2 or condition_3:
+                raise ValidationError(
+                    _("The new block overlaps the existing one")
+                )
+
+        # check for future date (date > today)
+        today = datetime.date.today()
+        if date < today:
+            raise ValidationError(
+                _("Date can't be earlier than today")
+            )
+
+        # check for date in the current period (8 day)
+        if date > today + C_datedelta:
+            raise ValidationError(
+                _("You are creating the block too early")
+            )
+
+        # check for non-existence of lessons
+        lessons = Lesson.objects.filter(date=date).values('time')
+        for lesson in lessons:
+            if start_time <= lesson['time'] < end_time:
+                raise ValidationError(
+                    _("Your block overlaps an existing lesson")
                 )
 
     def __repr__(self):

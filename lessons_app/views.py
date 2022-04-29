@@ -33,7 +33,7 @@ from .forms import (
 from .serializers import (
     UserSerializer, LessonSerializer, LessonAdminSerializer,
     RegistrationSerializer, DelUserSerializer,
-    TimeBlockSerializer
+    TimeBlockSerializer, TimeBlockAdminSerializer
 )
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
@@ -683,3 +683,11 @@ class TimeBlockAPI(ListAPIView):
     )
     serializer_class = TimeBlockSerializer
     permission_classes = [AllowAny]
+
+
+class TimeBlockAdminAPI(viewsets.ModelViewSet):
+    """ ViewSet of all future Timeblocks for admin """
+
+    queryset = TimeBlock.objects.filter(date__gte=date.today())
+    serializer_class = TimeBlockAdminSerializer
+    permission_classes = [IsAdminUser]
