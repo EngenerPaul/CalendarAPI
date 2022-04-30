@@ -9,11 +9,70 @@
             {% csrf_token %}
             {{ form.as_p }}
             <p>
-                <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_cost" style="color: black; font-size: 9pt;">{% translate "How to find out the cost?" %}</a><br>
+                <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_sign_up" style="color: black; font-size: 9pt;">{% translate "How to take time?" %}</a><br>
+                <a href="#" class="thumbnail" data-bs-toggle="modal" data-bs-target="#M_cost" style="color: black; font-size: 9pt;">{% translate "How to find out the cost?" %}</a>
             </p>
             <button type='submit' class='btn btn-primary btn-block'>{% translate "Add lesson" %}</button>
         </form>
     </div> 
+</div>
+
+<div class="modal fade" id="M_sign_up" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="padding-bottom: 10px;">
+            <div class="modal-header">
+                <h5 class="modal-title" style="white-space: normal">
+                    {% translate "How to take time?" %}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <p style="white-space: normal; text-align: left; padding: 10px; margin-bottom: 0;">
+                {% blocktranslate %}You must choose date and time for recording. You can to sign up for a lesson {{ C_timedelta }} hours before it starts. Before creating a new lesson, visit the homepage and make the time isn't taken by another person. After creating a lesson, a label with your time will appear on the homepage. To delete a lesson, you need to follow the link “My lessons”.{% endblocktranslate %}
+            </p>
+            <p style="margin-bottom: 0; padding: 0px 10px;">{% translate "There are three types of labels on the homepage:" %}</p>
+            
+            <div class="table" style="padding: 0 10px;">
+                <table>
+                    <tbody>
+                        <tr style="border-style: none;">
+                            <td>
+                                <div class="card" style="margin-bottom: 0; width: 80px; height: 25px;"></div>
+                            </td>
+                            <td style="font-weight: normal; padding: 0 5px;">
+                                -
+                            </td>
+                            <td style="font-weight: normal; padding: 5px 0;">
+                                {% translate "indicates that the time is taken by another person" %};
+                            </td>
+                        </tr>
+                        <tr style="border-style: none;">
+                            <td>
+                                <div class="card" style="background-color: rgb(167, 255, 226); margin-bottom: 0; width: 80px; height: 25px;"></div>
+                            </td>
+                            <th style="font-weight: normal; padding: 0 5px;">
+                                -
+                            </td>
+                            <th style="font-weight: normal; padding: 5px 0;">
+                                {% translate "indicates your own lesson" %};
+                            </td>
+                        </tr>
+                        <tr style="border-style: none;">
+                            <td>
+                                <div class="card" style="background-color: rgb(255, 200, 200); margin-bottom: 0; width: 80px; height: 25px;"></div>
+                            </td>
+                            <th style="font-weight: normal; padding: 0 5px;">
+                                -
+                            </td>
+                            <th style="font-weight: normal; padding: 5px 0;;">
+                                {% translate "indicates that at this time I will not be able to teach" %};
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="M_cost" tabindex="-1" aria-hidden="true">

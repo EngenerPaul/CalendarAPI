@@ -1,0 +1,47 @@
+{% load i18n %}
+
+<h5>{% translate "How site works?" %}</h5>
+<p style="margin-bottom: 8px;"> 
+    {% blocktranslate %}You can sign up for a lesson on this site. To do this, you need to register/log in and choose a suitable time for you. After creating a lesson, a label with your time will appear on the homepage. Note: before creating a new lesson, visit the homepage and make the time isn't taken by another person. You can to sign up for a lesson {{ C_timedelta }} hours before it starts. To delete a lesson, you need to follow the link “My lessons”.{% endblocktranslate %}
+</p>
+<p style="margin-bottom: 0;">{% translate "There are three types of labels on the homepage:" %}</p>
+
+<div class="table">
+    <table>
+        <tbody>
+            <tr style="border-style: none;">
+                <td>
+                    <div class="card" style="margin-bottom: 0; width: 80px; height: 25px;"></div>
+                </td>
+                <td style="font-weight: normal; padding: 0 5px;">
+                    -
+                </td>
+                <td style="font-weight: normal; padding: 5px 0;">
+                    {% translate "indicates that the time is taken by another person" %};
+                </td>
+            </tr>
+            <tr style="border-style: none;">
+                <td>
+                    <div class="card" style="background-color: rgb(167, 255, 226); margin-bottom: 0; width: 80px; height: 25px;"></div>
+                </td>
+                <th style="font-weight: normal; padding: 0 5px;">
+                    -
+                </td>
+                <th style="font-weight: normal; padding: 5px 0;">
+                    {% translate "indicates your own lesson" %};
+                </td>
+            </tr>
+            <tr style="border-style: none;">
+                <td>
+                    <div class="card" style="background-color: rgb(255, 200, 200); margin-bottom: 0; width: 80px; height: 25px;"></div>
+                </td>
+                <th style="font-weight: normal; padding: 0 5px;">
+                    -
+                </td>
+                <th style="font-weight: normal; padding: 5px 0;;">
+                    {% translate "indicates that at this time I will not be able to teach" %};
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

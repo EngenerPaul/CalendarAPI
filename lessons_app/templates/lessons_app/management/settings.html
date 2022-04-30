@@ -10,20 +10,17 @@
             </div>
             <div class="col" style="padding-left: 50px;">
                 <h3>{% translate "Settings" %}</h3>
-                <b>Ожидает модерации...</b> <br> <br>
                 <p>
-                    С_morning_time = datetime.time(hour=8)  # start of business hours <br>
-                    С_morning_time_markup = datetime.time(hour=10)  # until that time the salary is high <br>
-                    C_evening_time_markup = datetime.time(hour=22)  # after that time the salary is high <br>
-                    C_evening_time = datetime.time(hour=23)  # end of business hours <br>
-
-                    C_salary_common = 1000  # min salary <br>
-                    C_salary_high = 1300  # salary for morning and evening hours <br>
-
-                    C_timedelta = datetime.timedelta(hours=3)  # students need to book lessons in advance <br>
-                    C_datedelta = datetime.timedelta(days=7)  # unable to sign up for lessons too early <br>
-
-                    C_lesson_threshold = 8  # > this value a lesson cost will be higher <br>
+                    {% blocktranslate %}Work starts at {{ С_morning_time }} (included). <br>The lesson cost is higher until {{ С_morning_time_markup }} (not included). <br>The lesson cost is higher after {{ C_evening_time_markup }} (not included). <br>Work ends at {{ C_evening_time }} (not included). {% endblocktranslate %}
+                </p>
+                <p>
+                    {% blocktranslate %}The cost of the lesson for beginners is {{ C_salary_common }} rubles. <br>The higher cost of the lesson for beginners is {{ C_salary_high }} rubles. {% endblocktranslate %}
+                </p>
+                <p>
+                    {% blocktranslate %}Registration for the lesson is allowed at least {{ C_timedelta }} before it starts. <br>The number of future days for which students can sign up is {{ C_datedelta }}. {% endblocktranslate %}
+                </p>
+                <p>
+                    {% blocktranslate %}The cost of the lesson be higher when recorded {{ C_lesson_threshold }} people on the same day. {% endblocktranslate %}
                 </p>
             </div>
         </div>

@@ -4,7 +4,6 @@ from datetime import date, timedelta, datetime
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.core.cache import cache
 from django.utils.translation import gettext as _
 from django.views.generic import (
     ListView, CreateView, DeleteView, View, TemplateView, UpdateView
@@ -38,8 +37,9 @@ from .serializers import (
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
     C_evening_time, C_salary_common, C_salary_high, C_lesson_threshold,
-    C_datedelta
+    C_timedelta, C_datedelta
 )
+from CalendarApi.settings import LANGUAGE_CODE
 
 
 class LessonView(ListView):
@@ -206,6 +206,7 @@ class AddLessonView(LoginRequiredMixin, CreateView):
             "The cost of a lesson when day is full ({} lessons per day) "
             "is {} ₽."
         ).format(C_lesson_threshold, high_cost)
+        context['C_timedelta'] = C_timedelta.seconds // 3600
         return context
 
     def post(self, request, *args, **kwargs):
@@ -307,6 +308,7 @@ class InfoView(View):
         context['C_evening_time_markup'] = C_evening_time_markup.strftime(
             '%H:%M')
         context['C_lesson_threshold'] = C_lesson_threshold
+        context['C_timedelta'] = C_timedelta.seconds // 3600
         return context
 
     def my_age(self):
@@ -345,6 +347,17 @@ class SettingsAP(AdminAccessMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['menu'] = admin_panel
         context['title'] = self.title
+        context['С_morning_time'] = С_morning_time
+        context['С_morning_time_markup'] = С_morning_time_markup
+        context['C_evening_time_markup'] = C_evening_time_markup
+        context['C_evening_time'] = C_evening_time
+        context['C_salary_common'] = C_salary_common
+        context['C_salary_high'] = C_salary_high
+        C_timedelta_hours = str(C_timedelta.seconds // 3600)
+        C_timedelta_minutes = str(C_timedelta.seconds % 60).ljust(2, '0')
+        context['C_timedelta'] = C_timedelta_hours + ':' + C_timedelta_minutes
+        context['C_datedelta'] = C_datedelta.days
+        context['C_lesson_threshold'] = C_lesson_threshold - 1
         return context
 
 
