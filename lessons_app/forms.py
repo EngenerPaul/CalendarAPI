@@ -258,7 +258,16 @@ class AddLessonAdminForm(forms.Form):
     students = User.objects.filter(is_staff=False, is_active=True)
     choice = []
     for student in students:
-        choice.append((student.id, student.first_name))
+        try:
+            choice.append((
+                student.id,
+                f"{student.first_name} ({student.details.alias})"
+            ))
+        except BaseException:
+            choice.append((
+                student.id,
+                f"{student.first_name}"
+            ))
     student = forms.CharField(
         label=_('Student'),
         widget=forms.Select(
