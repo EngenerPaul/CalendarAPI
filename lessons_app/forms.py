@@ -255,7 +255,8 @@ class AddLessonForm(forms.Form):
 class AddLessonAdminForm(forms.Form):
     """ Create a new lesson for students by admin """
 
-    students = User.objects.filter(is_staff=False, is_active=True)
+    students = User.objects.filter(
+        is_staff=False, is_active=True).select_related('details')
     choice = []
     for student in students:
         try:
