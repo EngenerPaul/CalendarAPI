@@ -47,6 +47,9 @@ class UserDetail(models.Model):
     def __str__(self):
         return _('The UserDetail class: id = {}').format(self.user)
 
+    def get_absolute_url(self):
+        return reverse('student_detail_AP_url', kwargs={'pk': self.user.pk})
+
 
 class TimeBlock(models.Model):
     """ Time blocking model in admin panel (AP) """

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-30 19:30+0400\n"
+"POT-Creation-Date: 2022-05-01 23:58+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgstr "Ваше имя"
 msgid "Enter your name"
 msgstr "Введите Ваше имя"
 
-#: .\lessons_app\forms.py:44
+#: .\lessons_app\forms.py:44 .\lessons_app\forms.py:526
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:23
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:12
 msgid "Phone"
@@ -86,6 +86,7 @@ msgstr "Введите Ваш логин"
 #: .\lessons_app\forms.py:139 .\lessons_app\forms.py:282
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:16
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:27
+#: .\lessons_app\templates\lessons_app\management\inc\_student_lessons.html:13
 msgid "Time"
 msgstr "Время"
 
@@ -128,6 +129,7 @@ msgstr "Воскресенье"
 #: .\lessons_app\forms.py:390
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:15
 #: .\lessons_app\templates\lessons_app\lessons_by_student.html:26
+#: .\lessons_app\templates\lessons_app\management\inc\_student_lessons.html:12
 #: .\lessons_app\templates\lessons_app\management\inc\_time_blocker_table.html:11
 msgid "Date"
 msgstr "Дата"
@@ -212,11 +214,56 @@ msgstr "Вы создаете блокировку слишком рано"
 msgid "Your block overlaps an existing lesson"
 msgstr "На время блокировки уже запланирован урок"
 
+#: .\lessons_app\forms.py:495
+#: .\lessons_app\templates\lessons_app\management\inc\_students_table.html:10
+msgid "Student name"
+msgstr "Имя"
+
+#: .\lessons_app\forms.py:502
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:8
+#: .\lessons_app\templates\lessons_app\management\inc\_students_table.html:11
+msgid "Alias"
+msgstr "Псевдоним"
+
+#: .\lessons_app\forms.py:510
+msgid "Usual cost"
+msgstr "Обычная цена"
+
+#: .\lessons_app\forms.py:518
+msgid "High cost"
+msgstr "Повышенная цена"
+
+#: .\lessons_app\forms.py:535
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:24
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:15
+#: .\lessons_app\templates\lessons_app\management\inc\_students_table.html:12
+msgid "Telegram"
+msgstr ""
+
+#: .\lessons_app\forms.py:544
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:21
+msgid "Discord"
+msgstr ""
+
+#: .\lessons_app\forms.py:552
+#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:18
+msgid "Skype"
+msgstr ""
+
+#: .\lessons_app\forms.py:560
+msgid "Last login"
+msgstr "Последний вход"
+
+#: .\lessons_app\forms.py:569
+msgid "Student is active?"
+msgstr "Студент активен?"
+
 #: .\lessons_app\models.py:19
 msgid "Lesson"
 msgstr "Урок"
 
 #: .\lessons_app\models.py:20
+#: .\lessons_app\templates\lessons_app\management\inc\_student_lessons.html:6
 msgid "Lessons"
 msgstr "Уроки"
 
@@ -232,15 +279,11 @@ msgstr "Детали"
 msgid "The UserDetail class: id = {}"
 msgstr "Класс UserDetail: id = {}"
 
-#: .\lessons_app\models.py:59
-#, fuzzy
-#| msgid "Time blocker"
+#: .\lessons_app\models.py:63
 msgid "TimeBlock"
 msgstr "Блокировщик времени"
 
-#: .\lessons_app\models.py:60
-#, fuzzy
-#| msgid "Time blocker"
+#: .\lessons_app\models.py:64
 msgid "Timeblocks"
 msgstr "Блокировщик времени"
 
@@ -303,10 +346,6 @@ msgstr "указывает на Ваш собственный урок"
 msgid "indicates that at this time I will not be able to teach"
 msgstr "показывает, что в данное время я не смогу проводить уроки"
 
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:8
-msgid "Alias"
-msgstr "Псевдоним"
-
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:13
 msgid "First name"
 msgstr "Имя"
@@ -314,19 +353,6 @@ msgstr "Имя"
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:14
 msgid "Salary"
 msgstr "Оплата"
-
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:18
-msgid "Skype"
-msgstr ""
-
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:21
-msgid "Discord"
-msgstr ""
-
-#: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:24
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:15
-msgid "Telegram"
-msgstr ""
 
 #: .\lessons_app\templates\lessons_app\inc\info\_bio.html:3
 msgid "Hello!"
@@ -480,20 +506,16 @@ msgstr "Авторизация"
 msgid "Log in"
 msgstr "Войти"
 
-#: .\lessons_app\templates\lessons_app\management\lesson_info.html:12
-#, fuzzy
-#| msgid "Lesson"
-msgid "Lesson info"
-msgstr "Урок"
+#: .\lessons_app\templates\lessons_app\management\inc\_student_lessons.html:39
+msgid "Lessons don't exist"
+msgstr "Уроков нет"
 
-#: .\lessons_app\templates\lessons_app\management\lessons_info.html:12
-#, fuzzy
-#| msgid "Lessons"
-msgid "Lessons info"
-msgstr "Уроки"
+#: .\lessons_app\templates\lessons_app\management\inc\_student_update_form.html:89
+msgid "Change"
+msgstr "Изменить"
 
 #: .\lessons_app\templates\lessons_app\management\settings.html:12
-#: .\lessons_app\views.py:343
+#: .\lessons_app\views.py:344
 msgid "Settings"
 msgstr "Настройки"
 
@@ -540,12 +562,18 @@ msgstr ""
 "Стоимотсь урока становится повышенной, если на один день записалось "
 "%(C_lesson_threshold)s человек. "
 
-#: .\lessons_app\templates\lessons_app\management\students_info.html:12
+#: .\lessons_app\templates\lessons_app\management\student_info.html:13
+#: .\lessons_app\templates\lessons_app\management\student_info.html:31
+msgid "Student details"
+msgstr "Информация о студенте"
+
+#: .\lessons_app\templates\lessons_app\management\students_info.html:13
+#: .\lessons_app\templates\lessons_app\management\students_info.html:22
 msgid "Students info"
 msgstr "Информация о студентах"
 
 #: .\lessons_app\templates\lessons_app\management\time_blocker.html:13
-#: .\lessons_app\views.py:438
+#: .\lessons_app\views.py:439
 msgid "Time blocker"
 msgstr "Блокировщик времени"
 
@@ -588,51 +616,59 @@ msgstr "телефоне"
 msgid "Send"
 msgstr "Отправить"
 
-#: .\lessons_app\views.py:152
+#: .\lessons_app\views.py:153
 msgid "Registration completed"
 msgstr "Регистрация завершена"
 
-#: .\lessons_app\views.py:197 .\lessons_app\views.py:384
+#: .\lessons_app\views.py:198 .\lessons_app\views.py:385
 msgid "The cost of a usual lesson is {} ₽"
 msgstr "Стоимость обычного урока - {} ₽"
 
-#: .\lessons_app\views.py:200 .\lessons_app\views.py:387
+#: .\lessons_app\views.py:201 .\lessons_app\views.py:388
 msgid "The cost of a lesson in the early morning to {} is {} ₽."
 msgstr "Стоимость урока рано утром до {} - {} ₽."
 
-#: .\lessons_app\views.py:203 .\lessons_app\views.py:390
+#: .\lessons_app\views.py:204 .\lessons_app\views.py:391
 msgid "The cost of a lesson in the late evening to {} is {} ₽."
 msgstr "Стоимость урока поздно вечером после {} - {} ₽."
 
-#: .\lessons_app\views.py:206 .\lessons_app\views.py:393
+#: .\lessons_app\views.py:207 .\lessons_app\views.py:394
 msgid "The cost of a lesson when day is full ({} lessons per day) is {} ₽."
 msgstr "Стоимость урока в переполненный день ({} уроков в день) - {} ₽."
 
-#: .\lessons_app\views.py:253 .\lessons_app\views.py:424
+#: .\lessons_app\views.py:254 .\lessons_app\views.py:425
 #, python-brace-format
 msgid "Lesson successfully created. Date: {0}. Time: {1}. Cost: {2} ₽"
 msgstr "Урок успешно создан. Дата: {0}. Время: {1}. Стоимость: {2} ₽"
 
-#: .\lessons_app\views.py:280
+#: .\lessons_app\views.py:281
 msgid "Error: the lesson wasn't deleted"
 msgstr "Произошла ошибка: урок не удален"
 
-#: .\lessons_app\views.py:289
+#: .\lessons_app\views.py:290
 msgid "The lesson successfully deleted"
 msgstr "Урок успешно удален"
 
-#: .\lessons_app\views.py:371
+#: .\lessons_app\views.py:372
 msgid "Add lesson by admin"
 msgstr "Запланировать"
 
-#: .\lessons_app\views.py:467
+#: .\lessons_app\views.py:468
 msgid "Block deleted successfully"
 msgstr "Блокировка успешно удалена"
 
-#: .\lessons_app\views.py:487
+#: .\lessons_app\views.py:488
 msgid "Block created successfully"
 msgstr "Блокировка успешно создана"
 
-#: .\lessons_app\views.py:495
+#: .\lessons_app\views.py:498
 msgid "Students"
 msgstr "Студенты"
+
+#: .\lessons_app\views.py:574
+msgid "User information changed successfully"
+msgstr "Информация о студенте успешно изменена"
+
+#: .\lessons_app\views.py:584
+msgid "Lesson deleted successfully"
+msgstr "Урок успешно удален"

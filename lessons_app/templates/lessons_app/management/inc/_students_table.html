@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load extra_tags %}
+
+<div class="container testimonial-group">
+    <div class="row">
+        <div class="table" style="max-width: 500px;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 30%; text-align: center; min-width: 100px; max-width: 250px; vertical-align: middle; white-space: normal; font-size: 1rem;"><h5>{% translate "Student name" %}</h5></th>
+                        <th style="width: 30%; text-align: center; min-width: 100px; max-width: 250px; vertical-align: middle; white-space: normal; font-size: 1rem;"><h5>{% translate "Alias" %}</h5></th>
+                        <th style="width: 30%; text-align: center; min-width: 100px; max-width: 250px; vertical-align: middle; font-size: 1rem;"><h5>{% translate "Telegram" %}</h5></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><a href="{{ student.details.get_absolute_url }}">{{ student.first_name }}</a></td>
+                        <td style="text-align: center;">
+                            {% if student.details.alias %}
+                            {{ student.details.alias }}
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center;">
+                            {% if student.details.telegram %}
+                            {% get_telegram student.details.telegram as link %}
+                            <a href="https://t.me/{{ link }}">{{ student.details.telegram }}</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

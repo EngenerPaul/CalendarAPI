@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="d-none d-sm-none d-md-block d-lg-block d-xl-block">
+    <div class="container">
+        <div class="row flex-nowrap">
+            <div class="col-2" style="min-width: 200px;">
+                {% include 'lessons_app/management/inc/_sidebar_menu.html' %}
+            </div>
+            <div class="col" style="padding-left: 50px;">
+                <h3>{% translate "Student details" %}</h3>
+                
+                <div class="row">
+                    <div class="col">
+                        {% include "lessons_app/management/inc/_student_update_form.html" %}
+                    </div>
+                    <div class="col">
+                        {% include "lessons_app/management/inc/_student_lessons.html" %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-block d-sm-block d-md-none d-lg-none d-xl-none">
+    {% include 'lessons_app/management/inc/_string_menu.html' %}
+    <h3>{% translate "Student details" %}</h3>
+    {% include "lessons_app/management/inc/_student_update_form.html" %}
+    {% include "lessons_app/management/inc/_student_lessons.html" %}
+</div>
+{% endblock content %}

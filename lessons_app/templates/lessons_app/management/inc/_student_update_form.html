@@ -1,0 +1,93 @@
+{% load i18n %}
+
+<form method="post">
+    {% csrf_token %}
+    <div class="row" style="min-width: 300px; max-width: 500px; margin-bottom: 15px;">
+        <div class="row" style="margin-left: 0;">
+            <div class="col-6">
+                <p>
+                    {{ form.pk.label }}
+                    {{ form.pk }}
+                </p>
+            </div>
+        </div>
+
+        <div class="row" style="margin-left: 0;">
+            <div class="col">
+                <p>
+                    {{ form.first_name.label }}
+                    {{ form.first_name }}
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    {{ form.alias.label }}
+                    {{ form.alias }}
+                </p>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 0;">
+            <div class="col">
+                <p>
+                    {{ form.usual_cost.label }}
+                    {{ form.usual_cost }}
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    {{ form.high_cost.label }}
+                    {{ form.high_cost }}
+                </p>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 0;">
+            <div class="col">
+                <p>
+                    {{ form.phone.label }}
+                    {{ form.phone }}
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    {{ form.telegram.label }}
+                    {{ form.telegram }}
+                </p>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 0;">
+            <div class="col">
+                <p>
+                    {{ form.discord.label }}
+                    {{ form.discord }}
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    {{ form.skype.label }}
+                    {{ form.skype }}
+                </p>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 0;">
+            <div class="col-6">
+                <p>
+                    {{ form.last_login.label }}
+                    {{ form.last_login }}
+                </p>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 0;">
+            <div class="col-6">
+                <p>
+                    {{ form.is_active.label }}
+                    {{ form.is_active }}
+                </p>
+            </div>
+        </div>
+        <div class="row" style="text-align: center; margin-left: 0;">
+            <div class="col">
+                <button type='submit' class='btn btn-primary btn-block' value="update" style="width: 120px;">{% translate "Change" %}</button>
+            </div>
+        </div>
+    </div>
+</form>

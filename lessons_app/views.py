@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from django.views.generic import (
-    ListView, CreateView, DeleteView, View, TemplateView, UpdateView
+    ListView, CreateView, DeleteView, View, TemplateView, DetailView
 )
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -27,7 +27,7 @@ from rest_framework.response import Response
 from .models import Lesson, UserDetail, TimeBlock
 from .forms import (
     RegisterUserForm, AuthUserForm, AddLessonForm, AddLessonAdminForm,
-    TimeBlockerAPForm
+    TimeBlockerAPForm, StudentUpdateForm
 )
 from .serializers import (
     UserSerializer, LessonSerializer, LessonAdminSerializer,
@@ -490,10 +490,16 @@ class TimeBlockerAP(AdminAccessMixin, ListView):
 
 
 class StudentsAP(AdminAccessMixin, ListView):
+    """ Student list in the admin panel """
 
     model = User
+    context_object_name = 'students'
     title = _('Students')
     template_name = 'lessons_app/management/students_info.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(
+            is_staff=False).order_by('pk').select_related('details')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -502,16 +508,81 @@ class StudentsAP(AdminAccessMixin, ListView):
         return context
 
 
-class LessonsAP(AdminAccessMixin, ListView):
+class StudentDetailAP(AdminAccessMixin, DetailView):
+    """ User details in the admin panel """
 
-    model = Lesson
-    template_name = 'lessons_app/management/lessons_info.html'
+    model = User
+    template_name = 'lessons_app/management/student_info.html'
+    context_object_name = 'user_details'
+    form_class = StudentUpdateForm
 
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('delete lesson'):
+            return self.delete(request)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            return self.form_valid(request, form)
+        else:
+            return self.form_invalid(form)
 
-class LessonAP(AdminAccessMixin, UpdateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = admin_panel
 
-    model = Lesson
-    template_name = 'lessons_app/management/lesson_info.html'
+        user_pk = self.kwargs.get(self.pk_url_kwarg)
+        user = self.model.objects.select_related('details').get(pk=user_pk)
+        context['form'] = self.form_class(initial={
+            'pk': user.pk,
+            'first_name': user.first_name,
+            'alias': user.details.alias,
+            'usual_cost': user.details.usual_cost,
+            'high_cost': user.details.high_cost,
+            'phone': user.details.phone,
+            'telegram': user.details.telegram,
+            'discord': user.details.discord,
+            'skype': user.details.skype,
+            'last_login': user.last_login,
+            'is_active': user.is_active
+            })
+
+        context['student_lessons'] = Lesson.objects.filter(
+            student_id=user_pk,
+            date__gte=date.today()
+        )
+        context['title'] = StudentsAP.title
+        return context
+
+    def form_valid(self, request, form):
+        pk = form.cleaned_data['pk']
+        user = self.model.objects.select_related('details').get(pk=pk)
+
+        user.first_name = form.cleaned_data['first_name']
+        user.details.alias = form.cleaned_data['alias']
+        user.details.usual_cost = form.cleaned_data['usual_cost']
+        user.details.high_cost = form.cleaned_data['high_cost']
+        user.details.phone = form.cleaned_data['phone']
+        user.details.telegram = form.cleaned_data['telegram']
+        user.details.discord = form.cleaned_data['discord']
+        user.details.skype = form.cleaned_data['skype']
+        user.is_active = form.cleaned_data['is_active']
+
+        user.details.save()
+        user.save()
+        messages.success(request, _('User information changed successfully'))
+        return redirect(reverse_lazy('student_detail_AP_url',
+                                     kwargs={'pk': form.cleaned_data['pk']}))
+
+    def delete(self, request):
+        lesson_id = request.POST.get('delete lesson')
+        lesson = Lesson.objects.get(pk=lesson_id)
+        lesson.delete()
+        messages.success(
+            request,
+            _("Lesson deleted successfully")
+        )
+        url_pk = self.kwargs.get(self.pk_url_kwarg)
+        return redirect(reverse_lazy('student_detail_AP_url',
+                                     kwargs={'pk': url_pk}))
 
 
 admin_panel = [

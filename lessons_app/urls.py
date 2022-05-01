@@ -5,7 +5,7 @@ from .views import (
     CustomRegistrationView, CustomLogOutView, CustomLoginView, AddLessonView,
     DeleteLessonView, LessonView, LessonByUserView,
     InfoView,
-    SettingsAP, AddLessonAP, TimeBlockerAP, StudentsAP, LessonsAP, LessonAP,
+    SettingsAP, AddLessonAP, TimeBlockerAP, StudentsAP, StudentDetailAP,
     UsersAPI, RegistrationAPI, RelevantLessonsAPI, LessonsViewSet,
     LessonsAdminViewSet, RelevantLessonsAdminViewSet, DeleteUserAPI,
     TimeBlockAPI, TimeBlockAdminAPI
@@ -40,10 +40,8 @@ urlpatterns = [
          name='time_blocker_AP_url'),
     path('admin-panel/students', StudentsAP.as_view(),
          name='students_AP_url'),
-    path('admin-panel/students/lessons/<int:pk>', LessonsAP.as_view(),
-         name='lessons_AP_url'),
-    path('admin-panel/students/lessons/lesson/<int:pk>', LessonAP.as_view(),
-         name='lesson_AP_url'),
+    path('admin-panel/students/<int:pk>', StudentDetailAP.as_view(),
+         name='student_detail_AP_url'),
 
     # API
     path('api/registration', RegistrationAPI.as_view()),

@@ -476,3 +476,85 @@ class TimeBlockerAPForm(forms.Form):
                 return False
 
         return super().is_valid()
+
+
+class StudentUpdateForm(forms.Form):
+    """ Form for updating student information in admin panel """
+
+    pk = forms.IntegerField(
+        label='ID',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'readonly': 'readonly'
+        }),
+        required=False
+    )
+    first_name = forms.CharField(
+        label=_('Student name'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+        })
+    )
+    alias = forms.CharField(
+        label=_('Alias'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False
+    )
+    usual_cost = forms.IntegerField(
+        label=_('Usual cost'),
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False
+    )
+    high_cost = forms.IntegerField(
+        label=_('High cost'),
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False
+    )
+    phone = forms.CharField(
+        label=_('Phone'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '89001234567'
+        }),
+        required=False
+    )
+    telegram = forms.CharField(
+        label=_('Telegram'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': '@xxxxxxx'
+        }),
+        required=False
+    )
+    discord = forms.CharField(
+        label=_('Discord'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False
+    )
+    skype = forms.CharField(
+        label=_('Skype'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+        }),
+        required=False
+    )
+    last_login = forms.DateField(
+        label=_('Last login'),
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'readonly': 'readonly'
+        }),
+        required=False
+    )
+    is_active = forms.BooleanField(
+        label=_('Student is active?'),
+        required=False
+    )
