@@ -126,10 +126,10 @@ class AuthUserForm(AuthenticationForm, forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
-            self.fields['username'].widget.attrs[
-                'placeholder'] = _('Enter your username')
-            self.fields['password'].widget.attrs[
-                'placeholder'] = _('Enter your password')
+        self.fields['username'].widget.attrs[
+            'placeholder'] = _('Enter your username')
+        self.fields['password'].widget.attrs[
+            'placeholder'] = _('Enter your password')
 
 
 class AddLessonForm(forms.Form):
@@ -143,33 +143,14 @@ class AddLessonForm(forms.Form):
             'value': 15
         })
     )
-
-    weekdays = {
-        'Monday': _('Monday'),
-        'Tuesday': _('Tuesday'),
-        'Wednesday': _('Wednesday'),
-        'Thursday': _('Thursday'),
-        'Friday': _('Friday'),
-        'Saturday': _('Saturday'),
-        'Sunday': _('Sunday'),
-    }
-    choice = []
-    for i in range(C_datedelta.days+1):
-        if i == 0:
-            date = datetime.date.today() + datetime.timedelta(days=i)
-            day_title = (f"{_('Today')}, "
-                         f"{datetime.datetime.strftime(date, r'%d-%m')}")
-            choice.append((date, day_title))
-            continue
-        date = datetime.date.today() + datetime.timedelta(days=i)
-        day_title = (f"{weekdays[date.strftime('%A')]}, "
-                     f"{datetime.datetime.strftime(date, r'%d-%m')}")
-        choice.append((date, day_title))
     date = forms.CharField(
         label=_('Date'),
-        widget=forms.Select(choices=choice, attrs={
-            'class': 'form-control'
-        })
+        widget=forms.Select(
+            choices=[],
+            attrs={
+                'class': 'form-control'
+            }
+        )
     )
 
     def is_valid(self, request, form):
@@ -255,24 +236,10 @@ class AddLessonForm(forms.Form):
 class AddLessonAdminForm(forms.Form):
     """ Create a new lesson for students by admin """
 
-    students = User.objects.filter(
-        is_staff=False, is_active=True).select_related('details')
-    choice = []
-    for student in students:
-        try:
-            choice.append((
-                student.id,
-                f"{student.first_name} ({student.details.alias})"
-            ))
-        except BaseException:
-            choice.append((
-                student.id,
-                f"{student.first_name}"
-            ))
     student = forms.CharField(
         label=_('Student'),
         widget=forms.Select(
-            choices=choice,
+            choices=[],  # is taken from view (get_context_date AddLessonAP)
             attrs={
                 'class': 'form-control',
                 'size': 10
@@ -287,33 +254,14 @@ class AddLessonAdminForm(forms.Form):
             'value': 15
         })
     )
-
-    weekdays = {
-        'Monday': _('Monday'),
-        'Tuesday': _('Tuesday'),
-        'Wednesday': _('Wednesday'),
-        'Thursday': _('Thursday'),
-        'Friday': _('Friday'),
-        'Saturday': _('Saturday'),
-        'Sunday': _('Sunday'),
-    }
-    choice = []
-    for i in range(C_datedelta.days+1):
-        if i == 0:
-            date = datetime.date.today() + datetime.timedelta(days=i)
-            day_title = (f"{_('Today')}, "
-                         f"{datetime.datetime.strftime(date, r'%d-%m')}")
-            choice.append((date, day_title))
-            continue
-        date = datetime.date.today() + datetime.timedelta(days=i)
-        day_title = (f"{weekdays[date.strftime('%A')]}, "
-                     f"{datetime.datetime.strftime(date, r'%d-%m')}")
-        choice.append((date, day_title))
     date = forms.CharField(
         label=_('Date'),
-        widget=forms.Select(choices=choice, attrs={
-            'class': 'form-control'
-        })
+        widget=forms.Select(
+            choices=[],  # is taken from view (get_context_date AddLessonAP)
+            attrs={
+                'class': 'form-control'
+            }
+        )
     )
     salary = forms.IntegerField(
         label=_('Cost'),
@@ -366,32 +314,14 @@ class AddLessonAdminForm(forms.Form):
 class TimeBlockerAPForm(forms.Form):
     """ Form for the time blocker in the admin panel """
 
-    weekdays = {
-        'Monday': _('Monday'),
-        'Tuesday': _('Tuesday'),
-        'Wednesday': _('Wednesday'),
-        'Thursday': _('Thursday'),
-        'Friday': _('Friday'),
-        'Saturday': _('Saturday'),
-        'Sunday': _('Sunday'),
-    }
-    choice = []
-    for i in range(C_datedelta.days+1):
-        if i == 0:
-            date = datetime.date.today() + datetime.timedelta(days=i)
-            day_title = (f"{_('Today')}, "
-                         f"{datetime.datetime.strftime(date, r'%d-%m')}")
-            choice.append((date, day_title))
-            continue
-        date = datetime.date.today() + datetime.timedelta(days=i)
-        day_title = (f"{weekdays[date.strftime('%A')]}, "
-                     f"{datetime.datetime.strftime(date, r'%d-%m')}")
-        choice.append((date, day_title))
     date = forms.CharField(
         label=_('Date'),
-        widget=forms.Select(choices=choice, attrs={
-            'class': 'form-control'
-        })
+        widget=forms.Select(
+            choices=[],
+            attrs={
+                'class': 'form-control'
+            }
+        )
     )
     start_time = forms.IntegerField(
         label=_('Start time'),

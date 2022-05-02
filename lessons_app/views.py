@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import (
     ListView, CreateView, DeleteView, View, TemplateView, DetailView
 )
+from django.views.generic.edit import FormMixin
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -39,7 +40,32 @@ from CalendarApi.constraints import (
     C_evening_time, C_salary_common, C_salary_high, C_lesson_threshold,
     C_timedelta, C_datedelta
 )
-from CalendarApi.settings import LANGUAGE_CODE
+
+
+def get_weekdays():
+    date_choices = []
+    weekdays = {
+        'Monday': _('Monday'),
+        'Tuesday': _('Tuesday'),
+        'Wednesday': _('Wednesday'),
+        'Thursday': _('Thursday'),
+        'Friday': _('Friday'),
+        'Saturday': _('Saturday'),
+        'Sunday': _('Sunday'),
+    }
+    for i in range(C_datedelta.days+1):
+        if i == 0:
+            day = date.today() + timedelta(days=i)
+            day_title = (f"{_('Today')}, "
+                         f"{datetime.strftime(day, r'%d-%m')}")
+            date_choices.append((day, day_title))
+            continue
+        day = date.today() + timedelta(days=i)
+        day_title = (f"{weekdays[day.strftime('%A')]}, "
+                     f"{datetime.strftime(day, r'%d-%m')}")
+        date_choices.append((day, day_title))
+
+    return date_choices
 
 
 class LessonView(ListView):
@@ -177,10 +203,8 @@ class AddLessonView(LoginRequiredMixin, CreateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_staff:
             return redirect('add_lesson_AP_url')
-        form = self.form_class()
-        context = self.get_context_data(request)
-        context['form'] = form
-        return render(request, self.template_name, context)
+        return render(request, self.template_name,
+                      self.get_context_data(request))
 
     def get_context_data(self, request, **kwargs):
         context = {}
@@ -207,7 +231,16 @@ class AddLessonView(LoginRequiredMixin, CreateView):
             "is {} ₽."
         ).format(C_lesson_threshold, high_cost)
         context['C_timedelta'] = C_timedelta.seconds // 3600
+
+        form = self.get_form(self.form_class)
+        context['form'] = form
         return context
+
+    def get_form(self, form_class):
+        form = super().get_form(form_class)
+        date_choices = get_weekdays()
+        form.fields['date'].widget.choices = date_choices
+        return form
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -371,12 +404,7 @@ class AddLessonAP(AdminAccessMixin, CreateView):
     title = _('Add lesson by admin')
 
     def get(self, request, *args, **kwargs):
-        if not request.user.is_staff:
-            return redirect('add_lesson_url')
-        form = self.form_class()
-        context = self.get_context_data()
-        context['form'] = form
-        return render(request, self.template_name, context)
+        return render(request, self.template_name, self.get_context_data())
 
     def get_context_data(self, **kwargs):
         context = {}
@@ -395,7 +423,35 @@ class AddLessonAP(AdminAccessMixin, CreateView):
         ).format(C_lesson_threshold, C_salary_high)
         context['menu'] = admin_panel
         context['title'] = self.title
+
+        form = self.get_form(self.form_class)
+        context['form'] = form
         return context
+
+    def get_form(self, form_class):
+        form = super().get_form(form_class)
+
+        student_choices = []
+        students = User.objects.filter(
+            is_staff=False, is_active=True
+        ).select_related('details').order_by('details__alias')
+        for student in students:
+            if student.details.alias:
+                student_choices.append((
+                    student.id,
+                    f"{student.details.alias} ({student.first_name})"
+                ))
+            else:
+                student_choices.append((
+                    student.id,
+                    f"{student.first_name}"
+                ))
+        form.fields['student'].widget.choices = student_choices
+
+        date_choices = get_weekdays()
+        form.fields['date'].widget.choices = date_choices
+
+        return form
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
@@ -430,7 +486,7 @@ class AddLessonAP(AdminAccessMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
 
-class TimeBlockerAP(AdminAccessMixin, ListView):
+class TimeBlockerAP(AdminAccessMixin, FormMixin, ListView):
     """ Blocks specified time in the admin panel """
 
     model = TimeBlock
@@ -446,9 +502,15 @@ class TimeBlockerAP(AdminAccessMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['menu'] = admin_panel
         context['title'] = self.title
-        form = self.form_class
+        form = self.get_form()
         context['form'] = form
         return context
+
+    def get_form(self):
+        form = super().get_form()
+        date_choices = get_weekdays()
+        form.fields['date'].widget.choices = date_choices
+        return form
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('delete block'):
