@@ -57,10 +57,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <p style="white-space: normal; text-align: left; padding: 10px;">
-                {{ message_1 }} <br>
-                {{ message_2 }} <br>
-                {{ message_3 }} <br>
-                {{ message_4 }}
+                {% for message in cost_messages %}
+                    {{ message }} <br>
+                {% endfor %}
             </p>
         </div>
     </div>

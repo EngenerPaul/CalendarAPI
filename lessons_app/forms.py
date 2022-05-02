@@ -107,6 +107,16 @@ class RegisterUserForm(forms.Form):
                 )
                 return False
 
+        # check of login existence
+        all_usernames = User.objects.values_list('username')
+        all_usernames = {username[0] for username in all_usernames}
+        if form['username'].value() in all_usernames:
+            messages.error(
+                request,
+                message=_("This login exists")
+            )
+            return False
+
         return super().is_valid()
 
 
@@ -262,13 +272,6 @@ class AddLessonAdminForm(forms.Form):
                 'class': 'form-control'
             }
         )
-    )
-    salary = forms.IntegerField(
-        label=_('Cost'),
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'value': 1000
-        })
     )
 
     def is_valid(self, request, form):

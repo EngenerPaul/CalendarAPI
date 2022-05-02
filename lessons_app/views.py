@@ -143,7 +143,7 @@ class CustomLoginView(LoginView):
 class CustomRegistrationView(CreateView):
     """Registration"""
 
-    # model = User
+    model = User
     template_name = 'lessons_app/registration.html'
     success_url = reverse_lazy('home_url')
 
@@ -162,7 +162,7 @@ class CustomRegistrationView(CreateView):
         """ Create user and userdetail records and also added
         auto-authentication """
 
-        user = User()
+        user = self.model()
         userdetail = UserDetail()
 
         user.username = form.cleaned_data['username']
@@ -175,7 +175,11 @@ class CustomRegistrationView(CreateView):
 
         user.save()
         userdetail.save()
-        messages.success(request, _("Registration completed"))
+        messages.success(
+            request,
+            _("Registration completed. Please write down your "
+              "username and password so you don't forget")
+        )
 
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
@@ -217,19 +221,26 @@ class AddLessonView(LoginRequiredMixin, CreateView):
             usual_cost = C_salary_common
             high_cost = C_salary_high
 
-        context['message_1'] = _(
-            "The cost of a usual lesson is {} ₽"
-        ).format(usual_cost)
-        context['message_2'] = _(
-            "The cost of a lesson in the early morning to {} is {} ₽."
-        ).format(С_morning_time_markup.strftime(r'%H:%M'), high_cost)
-        context['message_3'] = _(
-            "The cost of a lesson in the late evening to {} is {} ₽."
-        ).format(C_evening_time_markup.strftime(r'%H:%M'), high_cost)
-        context['message_4'] = _(
-            "The cost of a lesson when day is full ({} lessons per day) "
-            "is {} ₽."
-        ).format(C_lesson_threshold, high_cost)
+        cost_messages = []
+        cost_messages.append(_(
+                "The cost of a usual lesson is {} ₽"
+            ).format(usual_cost)
+        )
+        cost_messages.append(_(
+                "The cost of a lesson in the early morning to {} is {} ₽."
+            ).format(С_morning_time_markup.strftime(r'%H:%M'), high_cost)
+        )
+        cost_messages.append(_(
+                "The cost of a lesson in the late evening to {} is {} ₽."
+            ).format(C_evening_time_markup.strftime(r'%H:%M'), high_cost)
+        )
+        cost_messages.append(_(
+                "The cost of a lesson when day is full ({} lessons per day) "
+                "is {} ₽."
+            ).format(C_lesson_threshold, high_cost)
+        )
+        context['cost_messages'] = cost_messages
+
         context['C_timedelta'] = C_timedelta.seconds // 3600
 
         form = self.get_form(self.form_class)
@@ -408,19 +419,27 @@ class AddLessonAP(AdminAccessMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = {}
-        context['message_1'] = _(
-            "The cost of a usual lesson is {} ₽"
-        ).format(C_salary_common)
-        context['message_2'] = _(
-            "The cost of a lesson in the early morning to {} is {} ₽."
-        ).format(С_morning_time_markup.strftime(r'%H:%M'), C_salary_high)
-        context['message_3'] = _(
-            "The cost of a lesson in the late evening to {} is {} ₽."
-        ).format(C_evening_time_markup.strftime(r'%H:%M'), C_salary_high)
-        context['message_4'] = _(
-            "The cost of a lesson when day is full ({} lessons per day) "
-            "is {} ₽."
-        ).format(C_lesson_threshold, C_salary_high)
+
+        cost_messages = []
+        cost_messages.append(_(
+                "The cost of a usual lesson is {} ₽"
+            ).format(C_salary_common)
+        )
+        cost_messages.append(_(
+                "The cost of a lesson in the early morning to {} is {} ₽."
+            ).format(С_morning_time_markup.strftime(r'%H:%M'), C_salary_high)
+        )
+        cost_messages.append(_(
+                "The cost of a lesson in the late evening to {} is {} ₽."
+            ).format(C_evening_time_markup.strftime(r'%H:%M'), C_salary_high)
+        )
+        cost_messages.append(_(
+                "The cost of a lesson when day is full ({} lessons per day) "
+                "is {} ₽."
+            ).format(C_lesson_threshold, C_salary_high)
+        )
+        context['cost_messages'] = cost_messages
+
         context['menu'] = admin_panel
         context['title'] = self.title
 
@@ -469,10 +488,30 @@ class AddLessonAP(AdminAccessMixin, CreateView):
         ).date()
 
         lesson = self.model()
+        lesson.student_id = form.cleaned_data['student']
+
+        is_morning = С_morning_time <= time < С_morning_time_markup
+        is_evening = C_evening_time_markup < time <= C_evening_time
+        is_over = len(Lesson.objects.filter(date=date)
+                      ) >= C_lesson_threshold - 1
+        # value existence check can be disabled in the future
+        user_detail = UserDetail.objects.get(
+            user_id=form.cleaned_data['student']
+        )
+        if is_morning or is_evening or is_over:
+            if user_detail.high_cost:
+                lesson.salary = user_detail.high_cost
+            else:
+                lesson.salary = C_salary_high
+        else:
+            if user_detail.usual_cost:
+                lesson.salary = user_detail.usual_cost
+            else:
+                lesson.salary = C_salary_common
+
         lesson.time = time
         lesson.date = date
-        lesson.student_id = form.cleaned_data['student']
-        lesson.salary = form.cleaned_data['salary']
+
         lesson.save()
 
         messages.success(
@@ -561,7 +600,8 @@ class StudentsAP(AdminAccessMixin, ListView):
 
     def get_queryset(self):
         return self.model.objects.filter(
-            is_staff=False).order_by('pk').select_related('details')
+            is_staff=False
+        ).select_related('details').order_by('details__alias', 'first_name')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
