@@ -66,23 +66,32 @@ class AdminValidator():
 
     def __init__(self, queryset):
         self.queryset = queryset
-        self.message = _("Some lesson is already scheduled for {} that day")
 
     def __call__(self, attrs):
         student = attrs['student']
         time = attrs['time']
         date = attrs['date']
 
+        # free time check
         self.queryset = self.queryset.filter(date=date).values_list('time')
         times = [item[0] for item in self.queryset]
-
         for t1 in times:
             t2 = datetime.time(t1.hour+1, t1.minute, t1.second)
             if t1 <= time < t2:
-                raise ValidationError(self.message.format(t1))
+                raise ValidationError(_(
+                    "Some lesson is already scheduled for {} that day"
+                ).format(t1))
 
         if student == '':
             raise ValidationError(_("Please, select a student"))
+
+        # check blocked time overlap
+        blocked_times = TimeBlock.objects.filter(date=date).values(
+            'start_time', 'end_time')
+        for blocked_time in blocked_times:
+            if (blocked_time['start_time'] <= time < blocked_time['end_time']
+                    or time == blocked_time['end_time'] == datetime.time(23)):
+                raise ValidationError(_("This time is blocked"))
 
     def __repr__(self):
         return '<%s(queryset=%s)>' % (
@@ -135,6 +144,14 @@ class UserValidator():
                     _("Some lesson is already scheduled for "
                       "{} that day").format(t1)
                 )
+
+        # check blocked time overlap
+        blocked_times = TimeBlock.objects.filter(date=date).values(
+            'start_time', 'end_time')
+        for blocked_time in blocked_times:
+            if (blocked_time['start_time'] <= time < blocked_time['end_time']
+                    or time == blocked_time['end_time'] == datetime.time(23)):
+                raise ValidationError(_("This time is blocked"))
 
     def __repr__(self):
         return '<%s(queryset=%s)>' % (

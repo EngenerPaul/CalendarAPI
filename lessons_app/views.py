@@ -16,8 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.hashers import make_password
 
-from rest_framework import viewsets
-from rest_framework import status
+from rest_framework import viewsets, status, mixins
 from rest_framework.views import APIView
 from rest_framework.generics import (
     ListAPIView, CreateAPIView, DestroyAPIView, get_object_or_404
@@ -33,7 +32,7 @@ from .forms import (
 from .serializers import (
     UserSerializer, LessonSerializer, LessonAdminSerializer,
     RegistrationSerializer, DelUserSerializer,
-    TimeBlockSerializer, TimeBlockAdminSerializer
+    TimeBlockSerializer, TimeBlockAdminSerializer, StudentAdminSerializer
 )
 from CalendarApi.constraints import (
     С_morning_time, С_morning_time_markup, C_evening_time_markup,
@@ -759,50 +758,32 @@ class UsersAPI(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class RelevantLessonsAPI(ListAPIView):
     """ Gets relevant lesson list """
 
-    queryset = Lesson.objects.filter(date__gte=date.today())
     serializer_class = LessonSerializer
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        queryset = Lesson.objects.filter(
+            student=self.request.user,
+            date__gte=date.today()
+        )
+        return queryset
 
 
 class LessonsViewSet(viewsets.ModelViewSet):
     """ ViewSet of own relevant lessons for authenticated user.
     Request type: GET, POST, PUT, PATCH, DELETE """
 
+    queryset = Lesson.objects.filter(date__gte=date.today())
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self, request):
-        queryset = Lesson.objects.filter(
-            student=request.user,
-            date__gte=date.today()
-        )
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset(request))
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(request, serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers=headers)
-
-    def perform_create(self, request, serializer):
+    def perform_create(self, serializer):
         time = serializer.validated_data['time']
         date = serializer.validated_data['date']
         is_morning = С_morning_time <= time < С_morning_time_markup
@@ -810,7 +791,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
         is_over = len(Lesson.objects.filter(date=date)
                       ) >= C_lesson_threshold - 1
         # value existence check can be disabled in the future
-        user_detail = UserDetail.objects.get(user_id=request.user.id)
+        user_detail = UserDetail.objects.get(user_id=self.request.user.id)
         if is_morning or is_evening or is_over:
             if user_detail.high_cost:
                 salary = user_detail.high_cost
@@ -822,21 +803,7 @@ class LessonsViewSet(viewsets.ModelViewSet):
             else:
                 salary = C_salary_common
 
-        serializer.save(student_id=request.user.pk, salary=salary)
-
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset(self.request))
-        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-        assert lookup_url_kwarg in self.kwargs, (
-            'Expected view %s to be called with a URL keyword argument '
-            'named "%s". Fix your URL conf, or set the `.lookup_field` '
-            'attribute on the view correctly.' %
-            (self.__class__.__name__, lookup_url_kwarg)
-        )
-        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
-        obj = get_object_or_404(queryset, **filter_kwargs)
-        self.check_object_permissions(self.request, obj)
-        return obj
+        serializer.save(student_id=self.request.user.pk, salary=salary)
 
 
 class LessonsAdminViewSet(viewsets.ModelViewSet):
@@ -876,4 +843,15 @@ class TimeBlockAdminAPI(viewsets.ModelViewSet):
 
     queryset = TimeBlock.objects.filter(date__gte=date.today())
     serializer_class = TimeBlockAdminSerializer
+    permission_classes = [IsAdminUser]
+
+
+class StudentAdminAPI(mixins.RetrieveModelMixin,
+                      mixins.UpdateModelMixin,
+                      mixins.ListModelMixin,
+                      viewsets.GenericViewSet):
+    """ ViewSet to receive and change students for admin """
+
+    queryset = User.objects.select_related('details').filter(is_staff=False)
+    serializer_class = StudentAdminSerializer
     permission_classes = [IsAdminUser]

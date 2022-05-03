@@ -125,13 +125,6 @@ class AuthUserForm(AuthenticationForm, forms.ModelForm):
     Use in views - CustomLoginView, template - login.html"""
     # AuthenticationForm needed for using authentication
 
-    class Meta:
-        model = User
-        fields = ('username', 'password')
-
-        # labels = {...}  doesn't work!
-        # widgets = {...}  doesn't work!
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
@@ -140,6 +133,13 @@ class AuthUserForm(AuthenticationForm, forms.ModelForm):
             'placeholder'] = _('Enter your username')
         self.fields['password'].widget.attrs[
             'placeholder'] = _('Enter your password')
+
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+
+        # labels = {...}  doesn't work!
+        # widgets = {...}  doesn't work!
 
 
 class AddLessonForm(forms.Form):

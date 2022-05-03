@@ -99,3 +99,34 @@ class TimeBlockAdminSerializer(serializers.ModelSerializer):
         validators = [
             TimeBlockValidator(queryset=model.objects.all())
         ]
+
+
+class StudentAdminSerializer(serializers.Serializer):
+    """ Admin viewset of students (admin only) """
+
+    id = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(read_only=True)
+    password = serializers.CharField(read_only=True)
+    first_name = serializers.CharField()
+    alias = serializers.CharField(source='details.alias')
+    usual_cost = serializers.IntegerField(source='details.usual_cost')
+    high_cost = serializers.IntegerField(source='details.high_cost')
+    telegram = serializers.CharField(source='details.telegram')
+    phone = serializers.CharField(source='details.phone')
+    discord = serializers.CharField(source='details.discord')
+    skype = serializers.CharField(source='details.skype')
+    last_login = serializers.DateTimeField(read_only=True)
+    is_active = serializers.BooleanField()
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            if isinstance(value, dict):
+                # instead instance.details (foreign key)
+                field = getattr(instance, attr)
+                for attr, value in value.items():
+                    setattr(field, attr, value)
+                field.save()
+            else:
+                setattr(instance, attr, value)
+        instance.save()
+        return instance
