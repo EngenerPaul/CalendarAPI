@@ -769,7 +769,6 @@ class RelevantLessonsAPI(ListAPIView):
 
     def get_queryset(self):
         queryset = Lesson.objects.filter(
-            student=self.request.user,
             date__gte=date.today()
         )
         return queryset
