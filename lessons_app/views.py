@@ -618,8 +618,10 @@ class StudentDetailAP(AdminAccessMixin, DetailView):
     form_class = StudentUpdateForm
 
     def post(self, request, *args, **kwargs):
+        if request.POST.get('new_password'):
+            return self.change_password(request)
         if request.POST.get('delete lesson'):
-            return self.delete(request)
+            return self.delete_lesson(request)
         form = self.form_class(request.POST)
         if form.is_valid():
             return self.form_valid(request, form)
@@ -673,7 +675,7 @@ class StudentDetailAP(AdminAccessMixin, DetailView):
         return redirect(reverse_lazy('student_detail_AP_url',
                                      kwargs={'pk': form.cleaned_data['pk']}))
 
-    def delete(self, request):
+    def delete_lesson(self, request):
         lesson_id = request.POST.get('delete lesson')
         lesson = Lesson.objects.get(pk=lesson_id)
         lesson.delete()
@@ -682,6 +684,20 @@ class StudentDetailAP(AdminAccessMixin, DetailView):
             _("Lesson deleted successfully")
         )
         url_pk = self.kwargs.get(self.pk_url_kwarg)
+        return redirect(reverse_lazy('student_detail_AP_url',
+                                     kwargs={'pk': url_pk}))
+
+    def change_password(self, request):
+        new_pass = request.POST.get("new_password")
+        url_pk = self.kwargs.get(self.pk_url_kwarg)
+        student = User.objects.get(pk=url_pk)
+        student.password = make_password(new_pass)
+        student.save()
+        messages.success(
+            request,
+            _("Student password changed successfully. New pass: {}").format(
+                new_pass)
+        )
         return redirect(reverse_lazy('student_detail_AP_url',
                                      kwargs={'pk': url_pk}))
 
