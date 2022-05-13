@@ -138,6 +138,18 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         return self.success_url
 
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            messages.error(
+                request,
+                _('You can write to me on telegram @spacepython if you forgot '
+                  'your password')
+            )
+            return self.form_invalid(form)
+
 
 class CustomRegistrationView(CreateView):
     """Registration"""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-07 10:39+0400\n"
+"POT-Creation-Date: 2022-05-13 20:05+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -289,7 +289,7 @@ msgstr ""
 "менее, чем за %(C_timedelta)s часа до его начала. Перед созданием нового "
 "урока посетите главную страницу и убедитесь, что время не занято другим "
 "человеком. После создания урока на главной странице появится метка с Вашим "
-"временем. Отменить урок можно перейдя по вкладе «Мои уроки»."
+"временем. Отменить урок можно, перейдя по вкладе «Мои уроки»."
 
 #: .\lessons_app\templates\lessons_app\add_lesson.html:32
 #: .\lessons_app\templates\lessons_app\inc\info\_how_site_works.html:7
@@ -446,7 +446,7 @@ msgstr ""
 "время. После создания урока на главной странице появится метка с Вашим "
 "временем. Примечание: перед созданием нового урока посетите главную страницу "
 "и убедитесь, что время не занято другим человеком. Записаться на урок можно "
-"не менее, чем за %(C_timedelta)s часа до его начала. Отменить урок можно "
+"не менее, чем за %(C_timedelta)s часа до его начала. Отменить урок можно, "
 "перейдя по вкладе «Мои уроки»."
 
 #: .\lessons_app\templates\lessons_app\index.html:33
@@ -489,7 +489,7 @@ msgid "Change password"
 msgstr "Изменить пароль"
 
 #: .\lessons_app\templates\lessons_app\management\settings.html:12
-#: .\lessons_app\views.py:386
+#: .\lessons_app\views.py:399
 msgid "Settings"
 msgstr "Настройки"
 
@@ -555,7 +555,7 @@ msgid "Students info"
 msgstr "Информация о студентах"
 
 #: .\lessons_app\templates\lessons_app\management\time_blocker.html:13
-#: .\lessons_app\views.py:532
+#: .\lessons_app\views.py:545
 msgid "Time blocker"
 msgstr "Блокировщик времени"
 
@@ -626,7 +626,12 @@ msgstr "Суббота"
 msgid "Sunday"
 msgstr "Воскресенье"
 
-#: .\lessons_app\views.py:179
+#: .\lessons_app\views.py:148
+msgid ""
+"You can write to me on telegram @spacepython if you forgot your password"
+msgstr "Если вы забыли пароль, то можете написать мне в telegram @spacepython"
+
+#: .\lessons_app\views.py:192
 msgid ""
 "Registration completed. Please write down your username and password so you "
 "don't forget"
@@ -634,59 +639,59 @@ msgstr ""
 "Регистрация успешно завершена. Пожалуйста, запишите Ваши логин и пароль, "
 "чтобы не забыть их"
 
-#: .\lessons_app\views.py:225 .\lessons_app\views.py:424
+#: .\lessons_app\views.py:238 .\lessons_app\views.py:437
 msgid "The cost of a usual lesson is {} ₽"
 msgstr "Стоимость обычного урока - {} ₽"
 
-#: .\lessons_app\views.py:229 .\lessons_app\views.py:428
+#: .\lessons_app\views.py:242 .\lessons_app\views.py:441
 msgid "The cost of a lesson in the early morning to {} is {} ₽."
 msgstr "Стоимость урока рано утром до {} - {} ₽."
 
-#: .\lessons_app\views.py:233 .\lessons_app\views.py:432
+#: .\lessons_app\views.py:246 .\lessons_app\views.py:445
 msgid "The cost of a lesson in the late evening to {} is {} ₽."
 msgstr "Стоимость урока поздно вечером после {} - {} ₽."
 
-#: .\lessons_app\views.py:237 .\lessons_app\views.py:436
+#: .\lessons_app\views.py:250 .\lessons_app\views.py:449
 msgid "The cost of a lesson when day is full ({} lessons per day) is {} ₽."
 msgstr "Стоимость урока в переполненный день ({} уроков в день) - {} ₽."
 
-#: .\lessons_app\views.py:296 .\lessons_app\views.py:518
+#: .\lessons_app\views.py:309 .\lessons_app\views.py:531
 #, python-brace-format
 msgid "Lesson successfully created. Date: {0}. Time: {1}. Cost: {2} ₽"
 msgstr "Урок успешно создан. Дата: {0}. Время: {1}. Стоимость: {2} ₽"
 
-#: .\lessons_app\views.py:323
+#: .\lessons_app\views.py:336
 msgid "Error: the lesson wasn't deleted"
 msgstr "Произошла ошибка: урок не удален"
 
-#: .\lessons_app\views.py:332
+#: .\lessons_app\views.py:345
 msgid "The lesson successfully deleted"
 msgstr "Урок успешно удален"
 
-#: .\lessons_app\views.py:414
+#: .\lessons_app\views.py:427
 msgid "Add lesson by admin"
 msgstr "Запланировать"
 
-#: .\lessons_app\views.py:567
+#: .\lessons_app\views.py:580
 msgid "Block deleted successfully"
 msgstr "Блокировка успешно удалена"
 
-#: .\lessons_app\views.py:587
+#: .\lessons_app\views.py:600
 msgid "Block created successfully"
 msgstr "Блокировка успешно создана"
 
-#: .\lessons_app\views.py:597
+#: .\lessons_app\views.py:610
 msgid "Students"
 msgstr "Студенты"
 
-#: .\lessons_app\views.py:674
+#: .\lessons_app\views.py:687
 msgid "User information changed successfully"
 msgstr "Информация о студенте успешно изменена"
 
-#: .\lessons_app\views.py:684
+#: .\lessons_app\views.py:697
 msgid "Lesson deleted successfully"
 msgstr "Урок успешно удален"
 
-#: .\lessons_app\views.py:698
+#: .\lessons_app\views.py:711
 msgid "Student password changed successfully. New pass: {}"
 msgstr "Пароль студента успешно изменен. Новый пароль: {}"
