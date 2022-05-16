@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-16 20:26+0400\n"
+"POT-Creation-Date: 2022-05-16 22:17+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -89,7 +89,7 @@ msgstr "Введите Ваш логин"
 
 #: .\lessons_app\forms.py:149 .\lessons_app\forms.py:260
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:16
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:27
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:28
 #: .\lessons_app\templates\lessons_app\management\inc\_student_lessons.html:13
 msgid "Time"
 msgstr "Время"
@@ -97,7 +97,7 @@ msgstr "Время"
 #: .\lessons_app\forms.py:157 .\lessons_app\forms.py:268
 #: .\lessons_app\forms.py:321
 #: .\lessons_app\templates\lessons_app\inc\_lesson_modal.html:15
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:26
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:27
 #: .\lessons_app\templates\lessons_app\management\inc\_student_lessons.html:12
 #: .\lessons_app\templates\lessons_app\management\inc\_time_blocker_table.html:11
 msgid "Date"
@@ -467,9 +467,26 @@ msgstr "Обо мне"
 msgid "My lessons"
 msgstr "Мои уроки"
 
-#: .\lessons_app\templates\lessons_app\lessons_by_student.html:28
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:17
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:81
+#: .\lessons_app\templates\lessons_app\management\inc\_student_update_form.html:99
+#: .\lessons_app\templates\lessons_app\management\student_info.html:50
+msgid "Change password"
+msgstr "Изменить пароль"
+
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:29
 msgid "Cost"
 msgstr "Оплата"
+
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:71
+#: .\lessons_app\templates\lessons_app\management\student_info.html:40
+msgid "Password change"
+msgstr "Пароль"
+
+#: .\lessons_app\templates\lessons_app\lessons_by_student.html:77
+#: .\lessons_app\templates\lessons_app\management\student_info.html:46
+msgid "Enter a new password"
+msgstr "Введите Ваш пароль"
 
 #: .\lessons_app\templates\lessons_app\login.html:6
 msgid "Authenticate"
@@ -487,13 +504,8 @@ msgstr "Уроков нет"
 msgid "Save changes"
 msgstr "Сохранить"
 
-#: .\lessons_app\templates\lessons_app\management\inc\_student_update_form.html:99
-#: .\lessons_app\templates\lessons_app\management\student_info.html:50
-msgid "Change password"
-msgstr "Изменить пароль"
-
 #: .\lessons_app\templates\lessons_app\management\settings.html:12
-#: .\lessons_app\views.py:398
+#: .\lessons_app\views.py:417
 msgid "Settings"
 msgstr "Настройки"
 
@@ -545,21 +557,13 @@ msgstr ""
 msgid "Student details"
 msgstr "Информация о студенте"
 
-#: .\lessons_app\templates\lessons_app\management\student_info.html:40
-msgid "Password change"
-msgstr "Пароль"
-
-#: .\lessons_app\templates\lessons_app\management\student_info.html:46
-msgid "Enter a new password"
-msgstr "Введите Ваш пароль"
-
 #: .\lessons_app\templates\lessons_app\management\students_info.html:13
 #: .\lessons_app\templates\lessons_app\management\students_info.html:22
 msgid "Students info"
 msgstr "Информация о студентах"
 
 #: .\lessons_app\templates\lessons_app\management\time_blocker.html:13
-#: .\lessons_app\views.py:544
+#: .\lessons_app\views.py:563
 msgid "Time blocker"
 msgstr "Блокировщик времени"
 
@@ -602,40 +606,44 @@ msgstr "телефоне"
 msgid "Send"
 msgstr "Отправить"
 
-#: .\lessons_app\views.py:47
+#: .\lessons_app\views.py:48
 msgid "Monday"
 msgstr "Понедельник"
 
-#: .\lessons_app\views.py:48
+#: .\lessons_app\views.py:49
 msgid "Tuesday"
 msgstr "Вторник"
 
-#: .\lessons_app\views.py:49
+#: .\lessons_app\views.py:50
 msgid "Wednesday"
 msgstr "Среда"
 
-#: .\lessons_app\views.py:50
+#: .\lessons_app\views.py:51
 msgid "Thursday"
 msgstr "Четверг"
 
-#: .\lessons_app\views.py:51
+#: .\lessons_app\views.py:52
 msgid "Friday"
 msgstr "Пятница"
 
-#: .\lessons_app\views.py:52
+#: .\lessons_app\views.py:53
 msgid "Saturday"
 msgstr "Суббота"
 
-#: .\lessons_app\views.py:53
+#: .\lessons_app\views.py:54
 msgid "Sunday"
 msgstr "Воскресенье"
 
-#: .\lessons_app\views.py:148
+#: .\lessons_app\views.py:142
+msgid "Your password changed successfully. Login: {}, new password: {}"
+msgstr "Ваш пароль успешно изменен. Логин: {}, новый пароль: {}"
+
+#: .\lessons_app\views.py:167
 msgid ""
 "You can write to me on telegram @spacepython if you forgot your password"
 msgstr "Если вы забыли пароль, то можете написать мне в telegram @spacepython"
 
-#: .\lessons_app\views.py:191
+#: .\lessons_app\views.py:210
 msgid ""
 "Registration completed. Please write down your username and password so you "
 "don't forget"
@@ -643,59 +651,59 @@ msgstr ""
 "Регистрация успешно завершена. Пожалуйста, запишите Ваши логин и пароль, "
 "чтобы не забыть их"
 
-#: .\lessons_app\views.py:237 .\lessons_app\views.py:436
+#: .\lessons_app\views.py:256 .\lessons_app\views.py:455
 msgid "The cost of a usual lesson is {} ₽"
 msgstr "Стоимость обычного урока - {} ₽"
 
-#: .\lessons_app\views.py:241 .\lessons_app\views.py:440
+#: .\lessons_app\views.py:260 .\lessons_app\views.py:459
 msgid "The cost of a lesson in the early morning to {} is {} ₽."
 msgstr "Стоимость урока рано утром до {} - {} ₽."
 
-#: .\lessons_app\views.py:245 .\lessons_app\views.py:444
+#: .\lessons_app\views.py:264 .\lessons_app\views.py:463
 msgid "The cost of a lesson in the late evening to {} is {} ₽."
 msgstr "Стоимость урока поздно вечером после {} - {} ₽."
 
-#: .\lessons_app\views.py:249 .\lessons_app\views.py:448
+#: .\lessons_app\views.py:268 .\lessons_app\views.py:467
 msgid "The cost of a lesson when day is full ({} lessons per day) is {} ₽."
 msgstr "Стоимость урока в переполненный день ({} уроков в день) - {} ₽."
 
-#: .\lessons_app\views.py:308 .\lessons_app\views.py:530
+#: .\lessons_app\views.py:327 .\lessons_app\views.py:549
 #, python-brace-format
 msgid "Lesson successfully created. Date: {0}. Time: {1}. Cost: {2} ₽"
 msgstr "Урок успешно создан. Дата: {0}. Время: {1}. Стоимость: {2} ₽"
 
-#: .\lessons_app\views.py:335
+#: .\lessons_app\views.py:354
 msgid "Error: the lesson wasn't deleted"
 msgstr "Произошла ошибка: урок не удален"
 
-#: .\lessons_app\views.py:344
+#: .\lessons_app\views.py:363
 msgid "The lesson successfully deleted"
 msgstr "Урок успешно удален"
 
-#: .\lessons_app\views.py:426
+#: .\lessons_app\views.py:445
 msgid "Add lesson by admin"
 msgstr "Запланировать"
 
-#: .\lessons_app\views.py:579
+#: .\lessons_app\views.py:598
 msgid "Block deleted successfully"
 msgstr "Блокировка успешно удалена"
 
-#: .\lessons_app\views.py:599
+#: .\lessons_app\views.py:618
 msgid "Block created successfully"
 msgstr "Блокировка успешно создана"
 
-#: .\lessons_app\views.py:609
+#: .\lessons_app\views.py:628
 msgid "Students"
 msgstr "Студенты"
 
-#: .\lessons_app\views.py:687
+#: .\lessons_app\views.py:706
 msgid "User information changed successfully"
 msgstr "Информация о студенте успешно изменена"
 
-#: .\lessons_app\views.py:697
+#: .\lessons_app\views.py:716
 msgid "Lesson deleted successfully"
 msgstr "Урок успешно удален"
 
-#: .\lessons_app\views.py:711
+#: .\lessons_app\views.py:730
 msgid "Student password changed successfully. Username: {}, new password: {}"
 msgstr "Пароль студента успешно изменен. Логин: {}, новый пароль: {}"

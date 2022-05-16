@@ -1,5 +1,6 @@
 from copy import deepcopy
 from datetime import date, timedelta, datetime
+from gc import get_objects
 
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
@@ -125,6 +126,30 @@ class LessonByUserView(LoginRequiredMixin, ListView):
             student_id=self.request.user.id
         )
         return lessons
+
+    def post(self, request):
+        if request.POST.get('new_password'):
+            return self.change_password(request)
+        return redirect('lesson_by_student_url')
+
+    def change_password(self, request):
+        new_pass = request.POST.get("new_password")
+        student = request.user
+        student.password = make_password(new_pass)
+        student.save()
+
+        auth_user = authenticate(
+            username=student.username,
+            password=student.password
+        )
+        login(self.request, auth_user)
+        messages.success(
+            request,
+            _("Your password changed successfully. Login: {}, "
+              "new password: {}").format(
+                  student.username, new_pass)
+        )
+        return redirect('lesson_by_student_url')
 
 
 class CustomLoginView(LoginView):

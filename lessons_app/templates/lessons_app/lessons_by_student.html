@@ -14,6 +14,7 @@
             {% if request.user.details.telegram %}
             <p>{% translate "Telegram" %}: {{ request.user.details.telegram }}</p>
             {% endif %}
+            <p><a href="#" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#M_change_password" style="width: 160px;">{% translate "Change password" %}</a></p>
         </div>
         <div class="col">
             <div class="container testimonial-group">
@@ -59,6 +60,30 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="M_change_password" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 style="margin-bottom: 0;">{% translate "Password change" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <p style="margin-bottom: 0;">{% translate "Enter a new password" %}</p>
+                    <input class="form-control" type="text" name="new_password" required>
+                    <div class="row justify-content-center">
+                    <p style="margin-top: 15px; width: 184px;">
+                        <button type='submit' class='btn btn-primary btn-block' style="width: 160px;">{% translate "Change password" %}</button>
+                    </p>
+                    </div>
+                </form>
+            </div>
+            
         </div>
     </div>
 </div>
