@@ -648,6 +648,7 @@ class StudentDetailAP(AdminAccessMixin, DetailView):
         user = self.model.objects.select_related('details').get(pk=user_pk)
         context['form'] = self.form_class(initial={
             'pk': user.pk,
+            'username': user.username,
             'first_name': user.first_name,
             'alias': user.details.alias,
             'usual_cost': user.details.usual_cost,
@@ -707,8 +708,9 @@ class StudentDetailAP(AdminAccessMixin, DetailView):
         student.save()
         messages.success(
             request,
-            _("Student password changed successfully. New pass: {}").format(
-                new_pass)
+            _("Student password changed successfully. Username: {}, "
+              "new password: {}").format(
+                  student.username, new_pass)
         )
         return redirect(reverse_lazy('student_detail_AP_url',
                                      kwargs={'pk': url_pk}))

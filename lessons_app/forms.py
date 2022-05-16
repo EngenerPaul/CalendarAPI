@@ -423,6 +423,14 @@ class StudentUpdateForm(forms.Form):
         }),
         required=False
     )
+    username = forms.CharField(
+        label=_('Login'),
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'readonly': 'readonly'
+        }),
+        required=False
+    )
     first_name = forms.CharField(
         label=_('Student name'),
         widget=forms.TextInput(attrs={

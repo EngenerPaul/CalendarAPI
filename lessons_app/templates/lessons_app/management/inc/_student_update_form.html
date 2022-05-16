@@ -4,10 +4,16 @@
     {% csrf_token %}
     <div class="row" style="min-width: 300px; max-width: 500px; margin-bottom: 15px;">
         <div class="row" style="margin-left: 0;">
-            <div class="col-6">
+            <div class="col">
                 <p>
                     {{ form.pk.label }}
                     {{ form.pk }}
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    {{ form.username.label }}
+                    {{ form.username }}
                 </p>
             </div>
         </div>
