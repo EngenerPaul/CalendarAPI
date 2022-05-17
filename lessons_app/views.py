@@ -1,6 +1,5 @@
 from copy import deepcopy
 from datetime import date, timedelta, datetime
-from gc import get_objects
 
 from django.urls import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
