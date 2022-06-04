@@ -149,7 +149,6 @@ class AddLessonForm(forms.Form):
         label=_('Time'),
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': '00:00',
             'value': 15
         })
     )

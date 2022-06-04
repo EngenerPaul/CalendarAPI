@@ -119,6 +119,11 @@ class LessonByUserView(LoginRequiredMixin, ListView):
     context_object_name = 'lessons'
     login_url = 'login_url'
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return redirect('home_url')
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         lessons = self.model.objects.filter(
             date__gte=date.today(),
@@ -162,6 +167,11 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         return self.success_url
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('home_url')
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid():
@@ -181,6 +191,11 @@ class CustomRegistrationView(CreateView):
     model = User
     template_name = 'lessons_app/registration.html'
     success_url = reverse_lazy('home_url')
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('home_url')
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         form = RegisterUserForm()
@@ -239,9 +254,12 @@ class AddLessonView(LoginRequiredMixin, CreateView):
     success_url = 'home_url'
     login_url = 'login_url'
 
-    def get(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         if request.user.is_staff:
             return redirect('add_lesson_AP_url')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
         return render(request, self.template_name,
                       self.get_context_data(request))
 

@@ -1,8 +1,6 @@
-""" These tests verify that pages are loading correctly.
-Run: python manage.py test lessons_app.tests.test_page_loading """
+""" These tests verify pages are loading correctly """
 
 from django.test.testcases import TestCase
-from django.test.client import Client
 from django.contrib.auth.models import User
 
 from lessons_app.models import UserDetail
@@ -81,13 +79,19 @@ class TestPagesLoadsByAuthenticatedUser(TestCase):
     """ These tests check proper loading of all pages access
     to which authenticated user has access """
 
-    def setUp(self):
-        username = 'test_user'
-        password = 'test_user_pass'
-        user = User.objects.create_user(username=username, password=password)
+    user_credentials = {
+        'username': 'test_user',
+        'password': 'test_user_pass'
+    }
+
+    @classmethod
+    def setUpTestData(cls):
+        user = User.objects.create_user(**cls.user_credentials)
         UserDetail.objects.create(user=user)
-        self.client = Client()
-        self.client.login(username=username, password=password)
+        # cls.client = Client()
+
+    def setUp(self):
+        self.client.login(**self.user_credentials)
 
     # pages for anonymous user
     def test_index_page(self):
@@ -158,13 +162,18 @@ class TestPagesLoadsByAdmin(TestCase):
     """ These tests check proper loading of all pages access
     to which admin user has access """
 
+    admin_credentials = {
+        'username': 'test_admin',
+        'password': 'test_admin_pass'
+    }
+
+    @classmethod
+    def setUpTestData(cls):
+        User.objects.create_user(is_staff=True, is_superuser=True,
+                                 **cls.admin_credentials)
+
     def setUp(self):
-        username = 'test_admin'
-        password = 'test_admin_pass'
-        User.objects.create_user(username=username, password=password,
-                                 is_staff=True, is_superuser=True)
-        self.client = Client()
-        self.client.login(username=username, password=password)
+        self.client.login(**self.admin_credentials)
 
     # pages for anonymous user
     def test_index_page(self):
