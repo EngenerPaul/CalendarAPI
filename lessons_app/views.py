@@ -290,7 +290,7 @@ class AddLessonView(LoginRequiredMixin, CreateView):
         cost_messages.append(_(
                 "The cost of a lesson when day is full ({} lessons per day) "
                 "is {} ₽."
-            ).format(C_lesson_threshold, high_cost)
+            ).format(C_lesson_threshold - 1, high_cost)
         )
         context['cost_messages'] = cost_messages
 
@@ -345,13 +345,26 @@ class AddLessonView(LoginRequiredMixin, CreateView):
 
         lesson.save()
 
+        if lesson.salary == user_detail.high_cost:
+            msg = _(
+                "Lesson successfully created. Date: {0}. "
+                "Time: {1}. Cost: {2} ₽. "
+                "Cost is higher because a lot of people "
+                "signed up today").format(
+                    date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
+                    lesson.salary
+                )
+        else:
+            msg = _(
+                "Lesson successfully created. Date: {0}. "
+                "Time: {1}. Cost: {2} ₽").format(
+                    date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
+                    lesson.salary
+                )
+
         messages.success(
             request,
-            _("Lesson successfully created. Date: {0}. "
-              "Time: {1}. Cost: {2} ₽").format(
-                  date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
-                  lesson.salary
-            )
+            msg
         )
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 
@@ -489,7 +502,7 @@ class AddLessonAP(AdminAccessMixin, CreateView):
         cost_messages.append(_(
                 "The cost of a lesson when day is full ({} lessons per day) "
                 "is {} ₽."
-            ).format(C_lesson_threshold, C_salary_high)
+            ).format(C_lesson_threshold - 1, C_salary_high)
         )
         context['cost_messages'] = cost_messages
 
@@ -567,13 +580,26 @@ class AddLessonAP(AdminAccessMixin, CreateView):
 
         lesson.save()
 
+        if lesson.salary == user_detail.high_cost:
+            msg = _(
+                "Lesson successfully created. Date: {0}. "
+                "Time: {1}. Cost: {2} ₽. "
+                "Cost is higher because a lot of people "
+                "signed up today").format(
+                    date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
+                    lesson.salary
+                )
+        else:
+            msg = _(
+                "Lesson successfully created. Date: {0}. "
+                "Time: {1}. Cost: {2} ₽").format(
+                    date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
+                    lesson.salary
+                )
+
         messages.success(
             request,
-            _("Lesson successfully created. Date: {0}. "
-              "Time: {1}. Cost: {2} ₽").format(
-                  date.strftime(r'%d-%m-%Y'), time.strftime(r'%H:%M'),
-                  lesson.salary
-            )
+            msg
         )
         return HttpResponseRedirect(reverse_lazy(self.success_url))
 

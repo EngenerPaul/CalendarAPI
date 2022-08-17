@@ -12,4 +12,4 @@ C_salary_high = 1300  # salary for morning and evening hours
 C_timedelta = datetime.timedelta(hours=3)  # students need to book lessons in advance
 C_datedelta = datetime.timedelta(days=7)  # unable to sign up for lessons too early
 
-C_lesson_threshold = 8  # > this value a lesson cost will be higher
+C_lesson_threshold = 5  # >= this value a lesson cost will be higher
